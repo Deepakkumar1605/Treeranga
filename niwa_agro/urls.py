@@ -24,7 +24,7 @@ urlpatterns = [
     path("", include("users.urls.urls")),
     path("", include("users.urls.api_urls")),
 
-    path("niwa_agro", include("app_common.urls.urls")),
+    path("common", include("app_common.urls.urls")),
     path("product", include("product.urls.urls")),
     path("product_api", include("product.urls.api_urls")),
     path("cart", include("cart.urls.urls")),

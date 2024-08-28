@@ -26,6 +26,7 @@ class CartSerializer(serializers.ModelSerializer):
         has_non_flat_delivery_product = False
 
         for key, value in obj.products.items():
+            print(key,value)
             product_key_parts = key.split('_')
             product_id = product_key_parts[0]
 

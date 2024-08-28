@@ -40,15 +40,18 @@
                             </td>
                             <td>
                                 <div class="quantity_add mt-lg-4">
-                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" >
-                                        <i  class="fas fa-minus-square"></i>
+                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=min">
+                                        <i class="fas fa-minus-square"></i>
                                     </a>
-                                    <input  class="" type="number" value="{{ value.quantity }}" readonly/>
-                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=plus">
-                                        <i  class="fas fa-plus-square"></i>
+                                    <input class="" id="quantity-{{ value.info.uid }}" type="number" value="{{ value.quantity }}" readonly />
+                                    <a href="{% if value.quantity < 6 %}{% url 'cart:managecart' value.info.uid %}?operation=plus{% else %}javascript:void(0);{% endif %}" 
+                                       class="{% if value.quantity >= 6 %}disabled{% endif %}" 
+                                       onclick="checkQuantity('{{ value.info.uid }}', {{ value.quantity }})">
+                                        <i class="fas fa-plus-square"></i>
                                     </a>
                                 </div>
                             </td>
+                            
                             <td >
                                 <div class="mt-lg-4 ms-lg-4">
                                     <a href="{% url 'cart:removefromcart' key %}" >
@@ -122,4 +125,29 @@
         </div>
     </div>
 </section>
+
+<script>
+    function checkQuantity(productUid, currentQuantity) {
+    const maxQuantity = 6;
+
+    if (currentQuantity >= maxQuantity) {
+        alert(`You cannot add more than ${maxQuantity} units of this product.`);
+    }
+}
+
+</script>
+
+<script>
+function addToCart(productUid) {
+    const maxQuantity = 6;
+    const currentQuantity = parseInt(document.getElementById('quantity-' + productUid).innerText);
+    
+    if (currentQuantity < maxQuantity) {
+        window.location.href = `/manage-cart/${productUid}?operation=plus`;
+    } else {
+        alert('You cannot add more than ' + maxQuantity + ' units of this product.');
+    }
+}
+</script>
+
 {% endblock content %}

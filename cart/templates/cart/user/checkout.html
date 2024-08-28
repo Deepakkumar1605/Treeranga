@@ -332,7 +332,8 @@ Checkout | NiwaAgro.com
                                     "razorpay_payment_id": response.razorpay_payment_id,
                                     "razorpay_order_id": response.razorpay_order_id,
                                     "razorpay_signature": response.razorpay_signature,
-                                    "address_id": selectedAddress
+                                    "address_id": selectedAddress,
+                                    "payment_method":"razorpay"
                                 };
                                 $.ajax({
                                     url: '{% url "payment:paymentsuccess" %}',

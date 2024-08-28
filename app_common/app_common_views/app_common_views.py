@@ -7,6 +7,7 @@ from users.forms import LoginForm
 from app_common.models import ContactMessage
 from app_common.forms import ContactMessageForm
 from product.models import Category,Products,SimpleProduct,ImageGallery
+from cart.models import Cart
 from django.conf import settings
 from django.db.models import Prefetch
 
@@ -24,12 +25,19 @@ class HomeView(View):
         categories = Category.objects.all()
         trending_products = Products.objects.filter(trending="yes").order_by('-id')[:6]
         new_products = Products.objects.filter(show_as_new="yes").order_by('-id')[:6]
-
+        # cart = Cart.objects.filter(user=request.user).first()
+        # if cart:
+        # # Assuming 'products' is stored as a list of dictionaries in JSON
+        #     cart_products = cart.products
+        #     cart_count = sum(item['quantity'] for item in cart_products.values()) if cart_products else 0
+        # else:
+        #     cart_count = 0
         
         context = {
             'categories': categories,
             'trending_products': trending_products,
             'new_products': new_products,
+            # 'cart_count': cart_count,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template, context)

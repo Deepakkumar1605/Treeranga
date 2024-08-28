@@ -83,7 +83,7 @@ class ShowCart(View):
         if user.is_authenticated and cart_items:
             cart_items.total_price = float(total_price)
             cart_items.save()
-
+        print(products)
         context = {
             'category_obj': category_obj,
             'cartItems': cart_items,
@@ -178,12 +178,17 @@ class ManageCart(View):
             products = cart.get('products', {})
 
         product_found = False
+        max_quantity = 6  # Define the maximum quantity allowed
+
         for product_key, product_info in products.items():
             if c_p_uid == product_info['info']['uid']:
                 product_found = True
                 if operation_type == 'plus':
-                    product_info['quantity'] += 1
-                    product_info['total_price'] += product_info['info']['discount_price']
+                    if product_info['quantity'] < max_quantity:
+                        product_info['quantity'] += 1
+                        product_info['total_price'] += product_info['info']['discount_price']
+                    else:
+                        return HttpResponse(f"Cannot add more than {max_quantity} of this product.", status=400)
                 elif operation_type == 'min':
                     if product_info['quantity'] > 1:
                         product_info['quantity'] -= 1
@@ -237,11 +242,14 @@ class Checkout(View):
     model = Order
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('users:login')}?next={request.path}")
+
         user = request.user
 
         try:
             # Merge session cart with user cart if available
-            session_cart = request.session.get('cart', {})
+            session_cart = request.session.get('cart', {}).get('products', {})
             if session_cart:
                 user_cart, created = Cart.objects.get_or_create(user=user)
                 user_cart_products = user_cart.products or {}
@@ -252,14 +260,22 @@ class Checkout(View):
                     else:
                         user_cart_products[key] = value
 
+                # Update the total price in the user cart
                 user_cart.products = user_cart_products
+                user_cart.total_price = sum(item['total_price'] for item in user_cart_products.values())
                 user_cart.save()
-                del request.session['cart']  # Clear session cart after merging
+
+                # Clear session cart after merging
+                request.session.pop('cart', None)
 
             cart = Cart.objects.get(user=user)
         except Cart.DoesNotExist:
             return redirect("cart:showcart")
+        except Exception as e:
+            print(f"Error in checkout process: {e}")
+            return redirect("cart:showcart")
 
+        # Serialize cart details
         order_details = CartSerializer(cart).data
         totaloriginalprice = 0
         totalPrice = 0
@@ -455,3 +471,27 @@ class DeleteAddress(View):
 
         # Redirect to the checkout page
         return redirect('cart:checkout')
+
+
+
+def transfer_session_cart_to_user(request, user):
+    session_cart = request.session.get('cart', {}).get('products', {})
+    if session_cart:
+        try:
+            user_cart, created = Cart.objects.get_or_create(user=user)
+            user_cart_products = user_cart.products or {}
+
+            for product_key, product_info in session_cart.items():
+                if product_key in user_cart_products:
+                    user_cart_products[product_key]['quantity'] += product_info['quantity']
+                else:
+                    user_cart_products[product_key] = product_info
+
+            user_cart.products = user_cart_products
+            user_cart.total_price = sum(item['total_price'] for item in user_cart_products.values())
+            user_cart.save()
+            request.session.pop('cart', None)
+            request.session.modified = True
+        except Exception as e:
+            print(f"Error transferring session cart: {e}")
+            messages.error(request, "There was an issue transferring your cart items.")

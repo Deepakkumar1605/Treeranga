@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect , HttpResponse
+from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 from django.http import JsonResponse
@@ -28,7 +29,7 @@ from django.urls import reverse_lazy
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-
+from cart.cart_views.user_cart_views import transfer_session_cart_to_user
 from users.user_views.emails import send_template_email
 
 app = "users/"
@@ -40,10 +41,12 @@ class Registration(View):
 
     def get(self, request):
         form = SignUpForm()
-        return render(request, self.template, {'form': form})
+        next_url = request.GET.get('next', reverse('users:home'))
+        return render(request, self.template, {'form': form, 'next': next_url})
 
     def post(self, request):
         form = SignUpForm(request.POST)
+        next_url = request.POST.get('next', reverse('users:home'))
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -51,27 +54,38 @@ class Registration(View):
             full_name = form.cleaned_data.get('full_name')
 
             try:
+                # Create new user
                 new_user = self.model(email=email, full_name=full_name, contact=contact)
                 new_user.set_password(password)
                 new_user.save()
+
+                # Authenticate the new user
                 new_user_login = authenticate(request, username=email, password=password)
                 if new_user_login is not None:
                     login(request, new_user_login)
+
+                    # Transfer session cart to user cart
+                    transfer_session_cart_to_user(request, new_user_login)
                     
+                    # Send registration confirmation email
                     context = {
                         'full_name': full_name,
                         'email': email,
                     }
-
                     send_template_email(
                         subject='Registration Confirmation',
                         template_name='users/email/register_email.html',
                         context=context,
                         recipient_list=[email]
                     )
-                    
+
                     messages.success(request, "Registration successful! You are now logged in.")
-                    return redirect('users:home')
+                    
+                    # Redirect to checkout if `next` is checkout or else redirect to `next_url`
+                    if 'checkout' in next_url:
+                        return redirect(next_url)
+                    
+                    return redirect(next_url)
                 else:
                     messages.error(request, "Authentication failed. Please try again.")
             except Exception as e:
@@ -80,40 +94,43 @@ class Registration(View):
         else:
             messages.error(request, 'Please correct the errors below.')
 
-        return render(request, self.template, {'form': form})
-
+        return render(request, self.template, {'form': form, 'next': next_url})
 
 class Login(View):
-    model=models.User
-    template = app + "authtemp/login.html"
+    model = models.User
+    template = app + 'authtemp/login.html'
 
     def get(self, request):
         form = LoginForm()
-        form2 = ForgotPasswordForm()
-        return render(request, self.template, {'form': form})
+        next_url = request.GET.get('next', reverse('users:home'))
+        return render(request, self.template, {'form': form, 'next': next_url})
     
     def post(self, request):
         form = LoginForm(request.POST)
+        next_url = request.POST.get('next', reverse('users:home'))
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             
             try:
-                user = models.User.objects.get(email=email)
-                user = authenticate(username=email, password=password)
+                user = authenticate(request, username=email, password=password)
                 if user is not None:
                     login(request, user)
-                    if user.is_superuser:
-                        return redirect('users:admin_dashboard')
-                    else:
-                        return redirect('users:home')
+                    
+                    transfer_session_cart_to_user(request, user)
+                    
+                    # Redirect to checkout if `next` is checkout or else redirect to `home` if user was unauthenticated
+                    if 'checkout' in next_url:
+                        return redirect(next_url)
+                    
+                    return redirect(reverse('users:home'))  # Redirect to home if not redirected to checkout
                 else:
-                    messages.error(request, "Incorrect password")
-            except models.User.DoesNotExist:
-                messages.error(request, "Invalid email")
+                    messages.error(request, "Incorrect email or password")
+            except Exception as e:
+                print(e)
+                messages.error(request, "There was an issue logging you in. Please try again.")
         
-        return render(request, self.template, {'form': form})
-
+        return render(request, self.template, {'form': form, 'next': next_url})
 class Logout(View):
     template_name = app +'authtemp/logout_confirmation.html'
     def get(self, request, *args, **kwargs):

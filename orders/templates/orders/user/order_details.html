@@ -26,6 +26,12 @@
   #amt_table {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   }
+  .additional-info {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+  }
 </style>
 
 <main class="py-6 container" style="min-height: 60vh;">
@@ -38,21 +44,27 @@
                             <table class="table w-100">
                                 <thead>
                                     <tr>
-                                        <th id="tb_hd" class="ps-4" scope="col">ID</th>
                                         <th id="tb_hd" class="ps-4" scope="col">Image</th>
                                         <th id="tb_hd" class="ps-4" scope="col">Name</th>
                                         <th id="tb_hd" class="ps-4" scope="col">Quantity</th>
+                                        <th id="tb_hd" class="ps-4" scope="col">Price Per Unit</th>
+                                        <th id="tb_hd" class="ps-4" scope="col">CGST</th>
+                                        <th id="tb_hd" class="ps-4" scope="col">SGST</th>
+                                        <th id="tb_hd" class="ps-4" scope="col">Total Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for product, quantity in zipproduct %}
+                                    {% for product, quantity, price_per_unit, total_price in zipproduct %}
                                         <tr>
-                                            <th id="t_heaD" class="ps-4" scope="row">{{ product.id }}</th>
                                             <td class="ps-4">
                                                 <img src="{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
                                             </td>
                                             <td class="ps-4">{{ product.name }}</td>
                                             <td class="ps-4">{{ quantity }}</td>
+                                            <td class="ps-4">{{ price_per_unit|default:"N/A" }}</td>
+                                            <td class="ps-4">{{ product.cgst|default:"N/A" }}%</td>
+                                            <td class="ps-4">{{ product.sgst|default:"N/A" }}%</td>
+                                            <td class="ps-4">{{ total_price|default:"N/A" }}</td>
                                         </tr>
                                     {% endfor %}
                                     <tr>
@@ -60,90 +72,110 @@
                                         <td class="ps-4"></td>
                                         <td class="ps-4">Total Quantity</td>
                                         <td class="ps-4">{{ total_quantity }}</td>
-                                    </tr>
-                                    <tr>
                                         <td class="ps-4"></td>
                                         <td class="ps-4"></td>
                                         <td class="ps-4"></td>
-                                        <th class="ps-4" id="t_heaD">Gross Amt:</th>
-                                        <td class="ps-4">{{ gross_cart_value|default:"N/A" }}</td>
-                                    </tr>
-                                    <tr>
                                         <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <th class="ps-4" id="t_heaD">Discount:</th>
-                                        <td class="ps-4">{{ discount_amount|default:"N/A" }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <th class="ps-4" id="t_heaD">CGST:</th>
-                                        <td class="ps-4">{{ cgst_amount|default:"N/A" }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <th class="ps-4" id="t_heaD">SGST:</th>
-                                        <td class="ps-4">{{ sgst_amount|default:"N/A" }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <th class="ps-4" id="t_heaD">Delivery Charges:</th>
-                                        <td class="ps-4">{{ delivery_charge|default:"N/A" }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <th class="ps-4" id="t_heaD">Sub Total:</th>
-                                        <td class="ps-4">{{ grand_total|default:"N/A" }}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            {% if order.order_status == 'Cancel' %}
-                                <button type="button" class="btn btn-secondary" disabled>Order Canceled</button>
-                            {% else %}
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
-                            {% endif %}
-                            <!-- Cancel Order Modal -->
-                            <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form method="post" action="">
-                                            {% csrf_token %}
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="cancelReason">Reason for Cancellation:</label>
-                                                    <select class="form-control" id="cancelReason" name="reason" required>
-                                                        <option value="product_damage">Product Damage</option>
-                                                        <option value="wrong_product">Wrong Product</option>
-                                                        <option value="not_satisfied">Not Satisfied</option>
-                                                        <option value="other">Other</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="additionalInfo">Additional Information (optional):</label>
-                                                    <textarea class="form-control" id="additionalInfo" name="additional_info" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-danger">Submit Cancellation</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information Section -->
+                <div class="additional-info">
+                    <h3>Order Summary</h3>
+                    <table class="table w-100" id="amt_table">
+                        <tbody>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">Payment Method:</th>
+                                <td class="ps-4">{{ payment_method|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">Gross Amt:</th>
+                                <td class="ps-4" colspan="4">{{ gross_cart_value|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">Discount:</th>
+                                <td class="ps-4" colspan="4">{{ discount_amount|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">CGST:</th>
+                                <td class="ps-4" colspan="4">{{ cgst_amount|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">SGST:</th>
+                                <td class="ps-4" colspan="4">{{ sgst_amount|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">Delivery Charges:</th>
+                                <td class="ps-4" colspan="4">{{ delivery_charge|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <td class="ps-4"></td>
+                                <th class="ps-4" id="t_heaD">Sub Total:</th>
+                                <td class="ps-4" colspan="4">{{ grand_total|default:"N/A" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% if order.order_status == 'Cancel' %}
+                        <button type="button" class="btn btn-secondary" disabled>Order Canceled</button>
+                    {% else %}
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
+                    {% endif %}
+                    <!-- Cancel Order Modal -->
+                    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
+                                <form method="post" action="">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="cancelReason">Reason for Cancellation:</label>
+                                            <select class="form-control" id="cancelReason" name="reason" required>
+                                                <option value="product_damage">Product Damage</option>
+                                                <option value="wrong_product">Wrong Product</option>
+                                                <option value="not_satisfied">Not Satisfied</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="additionalInfo">Additional Information (optional):</label>
+                                            <textarea class="form-control" id="additionalInfo" name="additional_info" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger">Cancel Order</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -152,9 +184,8 @@
         </div>
     </div>
 </main>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 {% endblock content %}
