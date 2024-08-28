@@ -3,110 +3,80 @@
 {% block title %}Add Address{% endblock title %}
 
 {% block content %}
-<style>
- 
-    .form_body {
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-        width: 100%; /* Ensure the form body takes full width */
-    }
-    .btn-success {
-        /* background-color: #198754; */
-        padding: 7px;
-        font-size: 16px;
-        border-radius: 4px;
-        transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
-    }
-    .btn-success:hover {
-        /* background-color: #069f57; */
-    }
-    .form-group label {
-        font-weight: bold;
-        color: #343a40;
-        margin-bottom: 4px;
-        font-size: 14px;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="password"],
-    .form-group input[type="email"],
-    .form-group input[type="number"],
-    .form-group textarea {
-        width: 100%;
-        padding: 5px;
-        margin-top: 5px;
-        margin-bottom: .5em;
-        border: none;
-        border-bottom: 1px solid #ced4da;
-        border-radius: none !important;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        transition: border-color 0.3s ease-in-out;
-        font-size: 14px;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus {
-        border-color: #55ca53;
-        box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
-        outline: none;
-    }
-    .alert {
-        margin-top: 10px;
-    }
-    .shadow {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .rounded {
-        border-radius: 10px;
-    }
-    .bg-white {
-        background-color: #ffffff;
-    }
-    .update-form {
-        width: 450px; /* Adjust the width as needed */
-    }
-    /* Responsive adjustments */
-    @media (max-width: 576px) {
-        .container {
-            max-width: 100%;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="password"],
-        .form-group input[type="email"],
-        .form-group input[type="number"],
-        .form-group textarea {
-            padding: 5px;
-        }
-        .update-form {
-            width: 100%;
-        }
-        .btn-success {
-            padding: 8px;
-        }
-        .btn-success
-        .btn-success:hover {
-            font-size: 14px;
-        }
-    }
-    .active {
-        color: #ffffff;
-        /* background-color: #00836C; */
-        border-radius: 5px;
-        box-shadow: none;
-        outline: none;
-    }
-</style>
-<div class="" style="min-height: 60vh;">
+
+<section class="">
     <div class="row mx-0">
         {% include 'users/user/index.html' %}
-        <div class="col-sm-9 col-lg-9 d-flex justify-content-center p-lg-3">
-            <div class="update-form mt-2">
-                <form method="post" enctype="multipart/form-data" class="form_body bg-white form-group px-4 py-4">
+        <div class="col-sm-12 col-lg-9 d-flex justify-content-center my-lg-5 ">
+            <div class="update-form">
+                <form method="post" enctype="multipart/form-data" class="form_body ">
                     {% csrf_token %}
-                    {{form.as_p}}
+                    
+                    <div class="row">
+                        <!-- First row: Address1, Address2, and Contact -->
+                        <div class="col-md-12">
+                            <div class="form-group group-form">
+                                <label for="id_Address1">Address 1</label>
+                                {{ form.Address1 }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- First row: Address1, Address2, and Contact -->
+                        <div class="col-md-12">
+                            <div class="form-group group-form">
+                                <label for="id_Address2">Address 2</label>
+                                {{ form.Address2 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group group-form">
+                                <label for="id_contact">Contact</label>
+                                {{ form.contact }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group group-form">
+                                <label for="id_city">City</label>
+                                {{ form.city }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group group-form" >
+                                <label for="id_state">State</label>
+                                {{ form.state }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group group-form">
+                                <label for="id_country">Country</label>
+                                {{ form.country }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group group-form">
+                                <label for="id_pincode">Pincode</label>
+                                {{ form.pincode }}
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-center">
-                        <button class="btn-success btn w-100 my-lg-3" type="submit">Add</button>
+                        <button class=" btn w-100 my-lg-3 p-lg-2" id="save-btn" type="submit">Add</button>
                     </div>
                 </form>
+                
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock content %}

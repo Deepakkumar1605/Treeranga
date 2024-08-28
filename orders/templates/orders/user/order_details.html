@@ -1,7 +1,7 @@
 {% extends 'app_common/base.html' %}
 {% load static %}
 {% block title %}
-    Order Information
+    Order Information|NiwaAgro.com
 {% endblock title %}
 
 {% block content %}
@@ -33,55 +33,73 @@
     padding: 15px;
   }
 </style>
+<section class="container">
+    <div class="row mx-0">
+      <div class="col-lg-12  my-lg-5">
+        <div class="card table-responsive">
+          <div class="">
+            <table class="table table-hover table-nowrap">
+              <thead class="table-light">
+                <tr>
+                  <th id="tb-head" scope="col">Image</th>
+                  <th id="tb-head" scope="col">Name</th>
+                  <th id="tb-head" scope="col">Quantity</th>
+                  <th id="tb-head" scope="col">Price Per Unit</th>
+                  <th id="tb-head" scope="col">CGST</th>
+                  <th id="tb-head" scope="col">SGST</th>
+                  <th id="tb-head" scope="col">Total Price</th>
+                </tr>
+              </thead>
+              <tbody >
+                {% for product, quantity, price_per_unit, total_price in zipproduct %}
+                <tr>
+                  <td class="tb-body">
+                    <img src="{{ product.image.url }}" style="height: 60px; width: 60px;" alt="{{ product.name }}"/>
+                  </td>
+                  <td class="tb-body">
+                    {{ product.name }}
+                  </td>
+                  <td class="tb-body">
+                    {{ quantity }}
+                  </td>
+                  <td class="tb-body">
+                    {{ price_per_unit|default:"N/A" }}
+                  </td>
+                  <td class="tb-body">
+                    {{ product.cgst|default:"N/A" }}%
+                  </td>
+                  
+                  <td class="tb-body">
+                    {{ product.sgst|default:"N/A" }}%
+                  </td>
+                  <td class="tb-body">
+                    {{ total_price|default:"N/A" }}
+                  </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td class="tb-body"></td>
+                    <td class="tb-body">Total Quantity</td>
+                    <td class="tb-body"> {{ total_quantity }}</td>
+                    <td class="tb-body"></td>
+                    <td class="tb-body"></td>
+                    <td class="tb-body"></td>
+                    <td class="tb-body"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+      </div>
+    </div>
+  </section>
+  
 
 <main class="py-6 container" style="min-height: 60vh;">
     <div class="row mt-5">
         <div class="col-lg-12">
             <div class="vstack gap-4">
-                <div class="card order_details">
-                    <div class="row mx-0">
-                        <div class="col-md-12 px-0 col-12 col-sm-12">
-                            <table class="table w-100">
-                                <thead>
-                                    <tr>
-                                        <th id="tb_hd" class="ps-4" scope="col">Image</th>
-                                        <th id="tb_hd" class="ps-4" scope="col">Name</th>
-                                        <th id="tb_hd" class="ps-4" scope="col">Quantity</th>
-                                        <th id="tb_hd" class="ps-4" scope="col">Price Per Unit</th>
-                                        <th id="tb_hd" class="ps-4" scope="col">CGST</th>
-                                        <th id="tb_hd" class="ps-4" scope="col">SGST</th>
-                                        <th id="tb_hd" class="ps-4" scope="col">Total Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for product, quantity, price_per_unit, total_price in zipproduct %}
-                                        <tr>
-                                            <td class="ps-4">
-                                                <img src="{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
-                                            </td>
-                                            <td class="ps-4">{{ product.name }}</td>
-                                            <td class="ps-4">{{ quantity }}</td>
-                                            <td class="ps-4">{{ price_per_unit|default:"N/A" }}</td>
-                                            <td class="ps-4">{{ product.cgst|default:"N/A" }}%</td>
-                                            <td class="ps-4">{{ product.sgst|default:"N/A" }}%</td>
-                                            <td class="ps-4">{{ total_price|default:"N/A" }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    <tr>
-                                        <th class="ps-4" scope="row"></th>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4">Total Quantity</td>
-                                        <td class="ps-4">{{ total_quantity }}</td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                        <td class="ps-4"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <!-- Additional Information Section -->
                 <div class="additional-info">

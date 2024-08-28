@@ -7,55 +7,7 @@ Product Details - {{ product_obj.name }}
 
 {% block content %}
 <style>
-   .review-summary h4{
-    font-family:"Poppins",sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    line-height:25px;
-    font-size: 22px;
-    color: var(--para);
-   }
-   .Rating_forms label{
-    font-family:"Inter",sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    line-height:35px;
-    font-size: 16px;
-    color: var(--para);
-   }
-   .Rating_forms input{
-    width: 100%;
-    padding: 5px;
-    font-family:"Inter",sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 15px;
-    color: var(--para);
-    letter-spacing: 2px;
-    word-spacing: 2px;
-   }
-   .u-button.Review{
-    background-color: var(--third2);
-    color: var(--third);
-   }
-    .review-rating {
-        display: flex;
-        direction: ltr; /* Ensure left-to-right direction */
-    }
-    
-    .review-rating input[type="radio"] {
-        display: none; /* Hide the radio buttons */
-    }
-    
-    .review-rating label {
-        font-size: 30px;
-        color: #ddd; /* Gray color for unselected stars */
-        cursor: pointer;
-    }
-    
-    .review-rating label.gold {
-        color: #ffcc00; /* Gold color for selected stars */
-    }
+   
 </style>
     
 <section class="" id="products_of_category">
@@ -107,7 +59,8 @@ Product Details - {{ product_obj.name }}
                     <h1 class="text-capitalize">{{ product_obj.name }}</h1>
                     
                    </div>
-                   <!-- <div class="product-ratings">
+                   {% comment %}
+                    <div class="product-ratings">
                     {% for i in star_range %}
                         {% if i <= average_rating %}
                             ★
@@ -117,14 +70,14 @@ Product Details - {{ product_obj.name }}
                     {% endfor %}
                    <span> ({{ reviews.count }} Reviews ) </span>
 
-                   </div> -->
+                    </div>
+                    {% endcomment %}
                     <div class="discount-price mt-lg-3">
                         ₹{{ simple_product.product_discount_price }}
                         {% if simple_product.product_max_price %}
                         <span class="original-price"><s>₹{{ simple_product.product_max_price }}</s></span>
                         {% endif %}
                     </div>
-                    <p class="Stock m-0">Stock: {{ simple_product.stock }}</p>
                     <!-- <button class="wishlist-btn {% if product_obj in wishlist_items %}in-wishlist{% endif %}">
     
                         {% if product_obj in wishlist_items %}
@@ -133,9 +86,10 @@ Product Details - {{ product_obj.name }}
                         <i class="fa-regular fa-heart"></i>
                         {% endif %}
                     </button> -->
+                    <br>
                     <div class="description">
                         <h5 class="">Description :</h5>
-                        <p>{{ product_obj.product_short_description |truncatechars:300 }}</p>
+                        <p>{{ product_obj.product_short_description | truncatechars:200 }}</p>
                     </div>
                     <div class="quantity-selector mt-3">
                         <label for="quantity">Quantity:</label>
@@ -147,13 +101,13 @@ Product Details - {{ product_obj.name }}
                         <small id="quantityHelp" class="form-text text-muted">Maximum 6 units per product.</small>
                     </div>
 
-                    <div class="buttons mt-4">
-                        <a href="#" id="addToCartButton" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1 cart-btn">
+                    <div class="buttons mt-4 ">
+                        <a href="#" id="addToCartButton" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1  cart-btn">
                             Add To Cart
                         </a>
-                        <a href="#" class="btn btn-success fs-6 fw-bold mt-2 mx-1 buy-btn">
+                        <!-- <a href="#" class="btn btn-success fs-6 fw-bold mt-2 mx-1 buy-btn">
                             Buy Now
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -193,6 +147,8 @@ Product Details - {{ product_obj.name }}
                 {% endfor %}
             </div>
     </div>
+    {% comment %}
+
     {% comment %}
     <div class="container">
         <div class=" ">
@@ -278,8 +234,7 @@ Product Details - {{ product_obj.name }}
             </div>
     </div>
     </div>
-    {% endcomment %}
-      
+    {% endcomment %} 
     </div>
 </section>
 

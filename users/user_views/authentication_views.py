@@ -99,7 +99,7 @@ class Registration(View):
 class Login(View):
     model = models.User
     template = app + 'authtemp/login.html'
-
+ 
     def get(self, request):
         form = LoginForm()
         forgot_password_form = ForgotPasswordForm()
@@ -113,7 +113,7 @@ class Login(View):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            
+           
             try:
                 user = authenticate(request, username=email, password=password)
                 if user is not None:
@@ -130,7 +130,7 @@ class Login(View):
                     # Redirect to checkout if 'next' is checkout or else redirect to home
                     if 'checkout' in next_url:
                         return redirect(next_url)
-                    
+                   
                     return redirect(reverse('users:home'))  # Redirect to home if not redirected to checkout
                 else:
                     messages.error(request, "Incorrect email or password")

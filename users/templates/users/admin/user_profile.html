@@ -3,30 +3,28 @@
 
 {% block content %}
 
-<main class="p-0">
-  <div class="container">
-    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">User Information</h4>
-    
-    <!-- User Details Card -->
-    <div class="container w-75">
-      <div class="card tablecard mb-4">
-        <div class="card-header text-center">
-          <h5>User Details</h5>
-        </div>
-        <div class="card-body m-lg-4">
-          <div class="row">
-            <div class="col col-6 lh-lg">
-              <div class="fw-medium">Full Name :</div>
-              <div class="fw-medium">E-Mail :</div>
-              <div class="fw-medium">Contact :</div>
-            </div>
-            <div class="col col-6 lh-lg">
-              <div>{{ user_obj.full_name }}</div>
-              <div>{{ user_obj.email }}</div>
-              <div>{{ user_obj.contact }}</div>
+<section class="py-lg-2">
+  <div class="conatiner">
+      <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">User Details</h4>
+      <div class="product-form-container w-50">
+          <div class="card-header text-center">
+            <h5>User Deatils</h5>
+            <hr>
+          </div>
+          <div class="card-body m-lg-4">
+            <div class="row">
+              <div class=" col col-6 lh-lg">
+                <div class="fw-medium "> Full Name :</div>
+                <div class="fw-medium"> E-Mail :</div>
+                <div class="fw-medium"> Contact :</div>
+              </div>
+              <div class=" col col-6 lh-lg ">
+                <div class="">{{ user_obj.full_name }}</div>
+                <div>{{ user_obj.email }}</div>
+                <div>{{ user_obj.contact }}</div>
+              </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
 
