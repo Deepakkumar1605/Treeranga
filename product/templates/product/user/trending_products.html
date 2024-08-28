@@ -1,0 +1,53 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+
+{% block title %}
+Trending Products
+{% endblock title %}
+
+{% block content %}
+
+
+<div class="container py-4 d-flex flex-column align-items-center lh-lg ">
+    <h1 class="text-capitalize">Trending Products</h1>
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+          <li class="breadcrumb-item active text-dark text-capitalize" aria-current="page">Trending Products</li>
+        </ol>
+      </nav>
+</div>
+
+<div class="px-5 text-center py-3 " id="products_of_category">
+    <div class="row row-cols-lg-5 row-cols-2">
+        {% for item in trending_products %}
+      <div class="col product-head my-2">
+        <div class="" id="product-cards">
+            <a href="">
+                {% if item.image %}
+            <img src="{{ MEDIA_URL }}{{ item.image }}" class="card-img-top" alt="{{ item.name }}">
+            {% elif item.simpleproduct_set.first.image_gallery.first.images.0 %}
+            <img src="{{ MEDIA_URL }}{{ item.simpleproduct_set.first.image_gallery.first.images.0 }}" class="card-img-top" alt="{{ item.name }}">
+            {% else %}
+            <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
+            {% endif %}
+            </a>
+            <div class="card-body py-2">
+                <h5 class="card-title">{{ item.name | truncatechars:27 }}</h5>
+                <p class="card-text m-0">{{ item.product.product_short_description | truncatechars:20 }}</p>
+                <p class="card-text m-0">
+                    <span id="discount_price">₹{{ item.simpleproduct_set.first.product_discount_price }}</span> 
+                    <span id="max_price"><s>₹{{ item.simpleproduct_set.first.product_max_price }}</s></span>
+                    <br>
+                    <span class="text-dark fw-light">discount: </span>
+                </p>
+                <div class="d-flex mt-3">
+                    <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button">Add To Cart</a>
+                </div>
+            </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>   
+{% endblock content %}

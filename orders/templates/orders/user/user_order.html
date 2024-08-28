@@ -1,0 +1,77 @@
+{% extends 'app_common/base.html' %} 
+{% load static %} 
+{% block title %} your orders history {% endblock title %} 
+{% block content %}
+<style>
+  .active {
+    color: #ffffff;
+    /* background-color: #00836c; */
+    border-radius: 5px;
+    outline: none;
+  }
+  .card {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border-radius: 0;
+    font-size: 14px;
+  }
+  #thead {
+    font-weight: 400;
+    background-color:var(--discount);
+    color: var(--third);
+    font-family:"Poppins",sans-serif;
+  }
+  .test_table_tbody tr td{
+    font-family: "inter",sans-serif;
+  }
+</style>
+<div class="" style="min-height: 60vh">
+  <div class="row mx-0">
+    {% include 'users/user/index.html' %}
+    <div class="col-sm-9 col-lg-9 pt-5">
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover table-nowrap">
+            <thead class="table-light">
+              <tr>
+                <th id="thead" scope="col">Order ID</th>
+                <th id="thead" scope="col">Amount</th>
+                <th id="thead" scope="col">Status</th>
+                <th id="thead" scope="col">Invoice</th>
+              </tr>
+            </thead>
+            <tbody id="test_table_tbody">
+              {% for order in orders %}
+              <tr>
+                <td>
+                  <a
+                    target="_blank"
+                    href="{% url 'orders:order_detail' order.uid %}">
+                    {{order.uid}}
+                  </a>
+                </td>
+                <td>
+                  <!-- {% if 'final_value' in order.order_meta_data %}
+                            {{ order.order_meta_data.final_value }}
+                        {% else %}
+                            {{ order.order_meta_data.final_cart_value }}
+                        {% endif %} -->
+                  {{order.order_value}}
+                </td>
+                {% comment %} <td>{{order.razorpay_payment_id}}</td> {% endcomment %}
+                <td>{{order.order_status}}</td>
+                <td>
+                  <a
+                    href="{% url 'orders:user_download_invoice' order.uid %}"
+                    >Invoice</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

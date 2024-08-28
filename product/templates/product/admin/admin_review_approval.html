@@ -1,0 +1,108 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<h1>Review Approval</h1>
+
+<div class="mb-3">
+    <form method="get" class="form-inline">
+        <label for="filter_by" class="mr-2">Filter by: </label>
+        <select id="filter_by" name="filter_by" class="form-control" onchange="this.form.submit()">
+            <option value="pending" {% if filter_by == "pending" %}selected{% endif %}>Pending</option>
+            <option value="approved" {% if filter_by == "approved" %}selected{% endif %}>Approved</option>
+            <option value="all" {% if filter_by == "all" %}selected{% endif %}>All</option>
+        </select>
+    </form>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><input type="checkbox" id="select-all"></th>
+                    <th scope="col">Product</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Review</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td><input type="checkbox" name="reviews" value="{{ review.id }}"></td>
+                    <td>{{ review.product.name }}</td>
+                    <td>{{ review.user.full_name }}</td>
+                    <td>
+                        <div class="review-rating">
+                            {% for star in star_range %}
+                                {% if star <= review.rating %}
+                                    <span class="filled-star text-warning">★</span>
+                                {% else %}
+                                    <span class="empty-star text-secondary">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>{{ review.review }}</td>
+                    <td>{{ review.created_at|date:"F d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" name="action" value="approve" class="btn btn-success">Approve Selected Reviews</button>
+        <button type="submit" name="action" value="delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the selected reviews?');">Delete Selected Reviews</button>
+    </div>
+</form>
+
+<div class="mt-3">
+    {% if data_list %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if data_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&filter_by={{ filter_by }}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ data_list.previous_page_number }}&filter_by={{ filter_by }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% for num in data_list.paginator.page_range %}
+                    <li class="page-item {% if data_list.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}&filter_by={{ filter_by }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+                {% if data_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ data_list.next_page_number }}&filter_by={{ filter_by }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ data_list.paginator.num_pages }}&filter_by={{ filter_by }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+<script>
+    // Select All Checkbox functionality
+    document.getElementById('select-all').addEventListener('click', function(event) {
+        let checkboxes = document.querySelectorAll('input[name="reviews"]');
+        checkboxes.forEach(checkbox => checkbox.checked = event.target.checked);
+    });
+</script>
+
+{% endblock content %}

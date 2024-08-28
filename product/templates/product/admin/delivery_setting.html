@@ -1,0 +1,23 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} update category {% endblock title %}
+{% block content %}
+
+<section class="py-lg-2">
+    <div class="conatiner">
+        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Delivery Setting</h4>
+        <div class="product-form-container w-50">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn w-100 my-3" id="save-btn">Save Changes</button>
+            </form>
+            
+        </div>
+    </div>
+  </section>
+  
+
+   
+
+{% endblock content %}

@@ -1,0 +1,370 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+
+{% block title %}
+Product Details - {{ product_obj.name }}
+{% endblock title %}
+
+{% block content %}
+<style>
+   .review-summary h4{
+    font-family:"Poppins",sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    line-height:25px;
+    font-size: 22px;
+    color: var(--para);
+   }
+   .Rating_forms label{
+    font-family:"Inter",sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height:35px;
+    font-size: 16px;
+    color: var(--para);
+   }
+   .Rating_forms input{
+    width: 100%;
+    padding: 5px;
+    font-family:"Inter",sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--para);
+    letter-spacing: 2px;
+    word-spacing: 2px;
+   }
+   .u-button.Review{
+    background-color: var(--third2);
+    color: var(--third);
+   }
+    .review-rating {
+        display: flex;
+        direction: ltr; /* Ensure left-to-right direction */
+    }
+    
+    .review-rating input[type="radio"] {
+        display: none; /* Hide the radio buttons */
+    }
+    
+    .review-rating label {
+        font-size: 30px;
+        color: #ddd; /* Gray color for unselected stars */
+        cursor: pointer;
+    }
+    
+    .review-rating label.gold {
+        color: #ffcc00; /* Gold color for selected stars */
+    }
+</style>
+    
+<section class="" id="products_of_category">
+    <div class="container py-lg-5">
+        <div class="row">
+            <!-- side img  -->
+            <div class="col col-lg-7 d-flex">
+                <div class="gallery-container">
+                    <div class="gallery-wrapper">
+                        <div class="gallery-items">
+                            {% if image_gallery %}
+                                {% for image in image_gallery.images %}
+                                    <div class="gallery-item">
+                                        <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image" class="thumb"  onclick="displayMedia(this)">
+                                    </div>
+                                {% endfor %}
+                                {% for video in image_gallery.video %}
+                                    <div class="gallery-item">
+                                        <video controls class="thumb" onclick="displayMedia(this)">
+                                            <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No media available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-image" id="mediaContainer">
+                    {% if product_obj.image %}
+                        <img src="{{ MEDIA_URL }}{{ product_obj.image }}" alt="{{ product_obj.name }}" id="mainImage">
+                    {% else %}
+                        <p>No main image available.</p>
+                    {% endif %}
+                </div>
+                
+            
+            </div>
+            
+    
+    
+            <!---------------------- product details ----------------- -->
+            <div class="col col-lg-5">
+                <div class="product-details">
+                   <div class="position-relative">
+                    <h1 class="text-capitalize">{{ product_obj.name }}</h1>
+                    
+                   </div>
+                   <!-- <div class="product-ratings">
+                    {% for i in star_range %}
+                        {% if i <= average_rating %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                   <span> ({{ reviews.count }} Reviews ) </span>
+
+                   </div> -->
+                    <div class="discount-price mt-lg-3">
+                        ₹{{ simple_product.product_discount_price }}
+                        {% if simple_product.product_max_price %}
+                        <span class="original-price"><s>₹{{ simple_product.product_max_price }}</s></span>
+                        {% endif %}
+                    </div>
+                    <p class="Stock m-0">Stock: {{ simple_product.stock }}</p>
+                    <!-- <button class="wishlist-btn {% if product_obj in wishlist_items %}in-wishlist{% endif %}">
+    
+                        {% if product_obj in wishlist_items %}
+                        In Wishlist
+                        {% else %}
+                        <i class="fa-regular fa-heart"></i>
+                        {% endif %}
+                    </button> -->
+                    <div class="description">
+                        <h5 class="">Description :</h5>
+                        <p>{{ product_obj.product_short_description |truncatechars:300 }}</p>
+                    </div>
+                    <div class="quantity-selector mt-3">
+                        <label for="quantity">Quantity:</label>
+                        <div class="input-group">
+                            <button type="button" id="decrement" class="w-25 ">-</button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="6" class="form-control text-center" readonly>
+                            <button type="button" id="increment" class="w-25">+</button>
+                        </div>
+                        <small id="quantityHelp" class="form-text text-muted">Maximum 6 units per product.</small>
+                    </div>
+
+                    <div class="buttons mt-4">
+                        <a href="#" id="addToCartButton" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1 cart-btn">
+                            Add To Cart
+                        </a>
+                        <a href="#" class="btn btn-success fs-6 fw-bold mt-2 mx-1 buy-btn">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------------- product long description-------------------- -->
+        <div class="py-lg-4 description">
+            <h5 class="border-bottom text-center p-lg-3">Description</h5>
+            <p>{{ product_obj.product_long_description }}</p>
+        </div>
+    </div>
+    <div class="similar-products container my-lg-3">
+            <h3>Similar Products</h3>
+            <div class="row">
+                {% for item in similar_simple_products %}
+               <div class="col col-lg-2 col-md-4 col-6">
+                <div class="product-card">
+                    <a href="{% url 'product:product_detail' item.product.id %}">
+                        {% if item.product.image %}
+                            <img src="{{ MEDIA_URL }}{{ item.product.image }}"  class="card-img-top" alt="{{ item.product.name }}">
+                        {% else %}
+                            <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Default Image">
+                        {% endif %}
+                    </a>
+                    <div class="card-body p-1">
+                        <h6 class="card-title">{{ item.product.name  | truncatechars:18 }}</h6>
+                        <p class="card-text m-0">{{ item.product.product_short_description | truncatechars:20 }}</p>
+                        <p class="card-text">
+                            <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+                            {% if item.simple_product.product_max_price %}
+                            <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'product:product_detail' item.product.id %}" class="btn btn-success product-btn w-100">Product Details</a>
+                    </div>
+                </div>
+               </div>
+                {% endfor %}
+            </div>
+    </div>
+    {% comment %}
+    <div class="container">
+        <div class=" ">
+            <div class="d-flex justify-content-between">
+                <div class="review-summary">
+                    <h4>Customer Ratings & Reviews</h4>
+                    <span class="product-ratings">
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star'></i>
+                        <i class='bx bxs-star-half' ></i>
+                    </span>
+                    <span>{{ reviews.count }} Reviews</span>
+                    <span>
+
+                    </span>
+                </div>
+                <div>
+                    <div class="btn btn-primary" id="toggleReviewBtn" onclick="toggleReviewForm()">Write a Review</div>
+                </div>
+
+            </div>
+            <div class="">
+                <span>Average Rating: {{ average_rating }}/5</span>
+            </div>
+            
+
+            <div class="py-lg-4" id="Rating_form" style="display: none;">
+                {% if user.is_authenticated %}
+                <form method="post" >
+                    {% csrf_token %}
+                    <div class="form-group Rating_forms">
+                        <label for="full_name" class="">Your Name:</label>
+                        <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" readonly>
+                    </div>
+               
+                    <!-- Display Email -->
+                    <div class="form-group  Rating_forms">
+                        <label for="email" class="">Your Email:</label>
+                        <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+                    </div>
+                    <div class="form-group Rating_forms my-lg-2">
+                        <label for="rating">Rating:</label>
+                        <div class="review-rating">
+                            {% for i in star_range %}
+                                <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
+                                <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="review">Review:</label>
+                        {{ form.review }}
+                    </div>
+                    <button type="submit" class="u-button Review my-lg-3">Submit Review</button>
+                </form>
+                {% else %}
+                <p>Please <a href="{% url 'users:login' %}">login</a> to submit a review.</p>
+                {% endif %}
+            </div>
+
+
+
+        
+            <div class="review-list border-top py-lg-2">
+                {% for review in reviews %}
+                    <div class="review-item border-bottom py-lg-3">
+                        <h6 class="m-0">{{ review.user.full_name }}</h6>
+                        <div class="">
+                            {% for star in star_range %}
+                                {% if star <= review.rating %}
+                                    <span class="filled-star">★</span>
+                                {% else %}
+                                    <span class="empty-star">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                            <label>{{ review.created_at }}</label>
+                        </div>
+                        <p class="m-0 py-lg-2">{{ review.review }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+    </div>
+    </div>
+    {% endcomment %}
+      
+    </div>
+</section>
+
+
+<!---------------------- write a review scripts----------------- -->
+<script>
+    function toggleReviewForm() {
+        const form = document.getElementById('Rating_form');
+        const button = document.getElementById('toggleReviewBtn');
+        
+        // Toggle the display of the form
+        if (form.style.display === 'none' || form.style.display === '') {
+            form.style.display = 'block';  // Show form
+            button.textContent = 'Cancel Review';  // Change button text
+        } else {
+            form.style.display = 'none';  // Hide form
+            button.textContent = 'Write a Review';  // Change button text back
+        }
+    }
+</script>
+<!---------------------end- write a review scripts----------------- -->
+
+
+
+<script>
+    function displayMedia(mediaElement) {
+    const mediaContainer = document.getElementById('mediaContainer');
+    if (mediaElement.tagName === 'IMG') {
+        mediaContainer.innerHTML = `<img src="${mediaElement.src}" alt="Selected Image">`;
+    } else if (mediaElement.tagName === 'VIDEO') {
+        mediaContainer.innerHTML = `<video controls autoplay>
+                                        <source src="${mediaElement.querySelector('source').src}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>`;
+    }
+}
+
+</script>
+
+<script>
+    document.getElementById('increment').addEventListener('click', function() {
+        let quantityInput = document.getElementById('quantity');
+        let currentQuantity = parseInt(quantityInput.value);
+        if (currentQuantity < 6) {
+            quantityInput.value = currentQuantity + 1;
+        }
+    });
+
+    document.getElementById('decrement').addEventListener('click', function() {
+        let quantityInput = document.getElementById('quantity');
+        let currentQuantity = parseInt(quantityInput.value);
+        if (currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        }
+    });
+
+    document.getElementById('addToCartButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        let quantity = document.getElementById('quantity').value;
+        let url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity;
+        window.location.href = url;
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.review-rating label');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-value');
+    
+                stars.forEach(s => {
+                    s.classList.remove('gold');
+                    if (s.getAttribute('data-value') <= rating) {
+                        s.classList.add('gold');
+                    }
+                });
+            });
+        });
+    });
+</script>
+    
+
+
+
+
+{% endblock content %}

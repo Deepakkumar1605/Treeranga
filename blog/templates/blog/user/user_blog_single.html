@@ -1,0 +1,38 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Blog Details | NiwaAgro.com
+{% endblock title %}
+{% block content %}
+
+
+    <section>
+        <div class="container my-lg-4 my-2">
+            <div class="Blog_detail_Title">
+                <h3 class="text-center my-lg-1 my-2 p-lg-4 p-2">{{ blogdetail.title }}</h3>
+            </div>
+            <div class="Main_Image">
+                <img src="{{ blogdetail.image.url }}" class="img-responsive " alt="Image">  
+            </div>
+            <div class=" blog_title">
+                <h5  class="mt-lg-3 mt-3">{{ blogdetail.title }}</h5>
+                <p>{{ blogdetail.date }}</p>
+                <p>{{ blogdetail.content| safe }}</p>
+                
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {% endblock content %}

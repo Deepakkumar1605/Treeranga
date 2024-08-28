@@ -1,0 +1,250 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Order Details {% endblock title %}
+{% block content %}
+
+
+
+
+
+<main class="py-5">
+  <div class="container-fluid">
+      <h4>Order List</h4>
+      <div class="vstack gap-2">
+          <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+            <h6 class="p-lg-2 catagory-btn">Order: {{order.uid}}</h6>
+              <p class="">{% include 'snippets/alert.html' %}</p>
+              <div class="btn-group catagory-btn">
+                  <a target="_blank" href="{% url 'orders:download_invoice' order.uid %}">
+                    <i class="fa-solid fa-download"></i> Invoice
+                </a>
+                  
+              </div>
+            
+          </div>
+
+          <div class="tablecard box_shadow">
+              <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                      <thead class="">
+                          <tr>
+                              <th class="" id="tb-head" scope="col">ID</th>
+                              <th class="" id="tb-head" scope="col">Image</th>
+                              <th class="" id="tb-head" scope="col">Name</th>
+                              <th class="" id="tb-head" scope="col">Quantity</th>
+                          </tr>
+                      </thead>
+                      <tbody id="test_table_tbody">
+                        {% for product, quantity in zipproduct %}
+                            <tr>
+                                <td class="tb-body" scope="row">{{product.uid}}</td>
+                                <td class="tb-body">
+                                    <img src="{{ product.image.url }}" style="height: 50px; width: 50px;" />
+                                </td>
+                                <td class="tb-body">{{product.name}}</td>
+                                <td class="tb-body">{{quantity}}</td>
+                            </tr>
+                        {% endfor %}
+                     
+                    </tbody>
+                    
+                  </table>
+              </div>
+          </div>
+      </div>
+
+
+    <section>
+      <div class="row">
+
+        
+        <div class="col col-5 my-lg-3">
+          <div class="card box_shadow">
+            <div class="card-header text-center">
+              <h5 class="card-title"> User Details</h5> 
+             </div>
+             <div class="d-flex justify-content-between p-2 card-body  User-Details">
+              <p>Name: <br>
+                <span class="value">{{order.user.full_name}}</span>
+              </p>
+              <p>Contact: <br>
+                 <span class="value">{{order.user.contact}}</span>
+              </p>
+              <p>Email: <br>
+                <span class="value">{{order.user.email}}</span>
+              </p>
+          </div>
+
+          </div>
+        </div>
+
+        <div class="col col-7 my-lg-3">
+          <div class="card box_shadow">
+            <div class="card-header text-center">
+              <h5 class="card-title"> Shipping Address</h5> 
+            </div>
+            <div class="d-flex justify-content-between p-2 card-body User-Details">
+              <p>Address1: <br>
+                <span class="value">{{order_address.Address1}}</span>
+              </p>
+              <p>Address2: <br>
+                <span class="value">{{order_address.Address2}}</span>
+              </p>
+              <p>State: <br>
+                 <span class="value">{{order_address.state}}</span>
+                </p>
+           
+              <p>City: <br>
+                 <span class="value">{{order_address.city}}</span>
+                </p>
+              <p>Pincode: <br>
+                <span class="value">{{order_address.pincode}}</span>
+              </p>
+              <p>Country: <br>
+                <span class="value">{{order_address.country}}</span>
+              </p>
+          </div>
+          </div>
+        </div>
+
+
+      </div>
+     <div class="d-flex justify-content-center">
+      <div class="card w-100 box_shadow">
+        <div class="card-header text-center">
+          <h5 class="card-title">Order Update</h5>
+        </div>
+        <div class="card-body">
+          <form id="order_update_form" action="" class="ord_update" method="post">
+            {% csrf_token %}
+            {{form}}
+            <br>
+                <div class="d-flex justify-content-center">
+                  <button class="btn btn-warning w-50" type="submit">Update</button>
+                </div>
+        </form>
+        </div>
+      </div>
+     </div>
+
+
+
+
+
+        
+     </section>
+  </div>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}
+<header>
+    <div class="container-fluid">
+        <div class="border-bottom pt-6">
+            <div class="row align-items-center">
+                <div class="" style="display: flex;justify-content: space-between;">
+                    <h1 class="headinG2 ms-1 ls-tight">Order Details </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="py-6 px-3 bg-surface-secondary">
+    <div class="vstack py-4 bg-white">
+        <div class="mx-2 bg-white" style="display: flex;justify-content: space-between;">
+            <h5 class="ls-tight">Order: {{order.uid}}</h5>
+            <p class="catagory-btn btn-neutral">
+                <a class="text-black" target="_blank" href="{% url 'orders:download_invoice' order.uid %}">
+                    <i class="fa-solid fa-download"></i> Invoice
+                </a>
+            </p>
+        </div>
+        <div class="card tablecard">
+            <div class="row m-0">
+                <div class="col-md-12 col-12 col-sm-12 px-0">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th id="tb-head" scope="col">ID</th>
+                                    <th id="tb-head" scope="col">Image</th>
+                                    <th id="tb-head" scope="col">Name</th>
+                                    <th id="tb-head" scope="col">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product, quantity in zipproduct %}
+                                    <tr>
+                                        <th scope="row">{{product.uid}}</th>
+                                        <td>
+                                            <img src="{{ product.image.url }}" style="height: 50px; width: 50px;" />
+                                        </td>
+                                        <td><b>{{product.name}}</b></td>
+                                        <td>{{quantity}}</td>
+                                    </tr>
+                                {% endfor %}
+                             
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mx-0 mt-3 bg-white vstack">
+        <div class="col-md-12 px-0 col-lg-12 col-12 col-sm-12">
+            <div class="mb-5 mx-0 px-0 py-3">
+                <h5 class="headinG mb-3">User Details</h5>
+                <div class="d-flex justify-content-between px-0 pe-3">
+                    <p>Name: <span class="value">{{order.user.full_name}}</span></p>
+                    <p>Contact Number: <span class="value">{{order.user.contact}}</span></p>
+                    <p>Email: <span class="value">{{order.user.email}}</span></p>
+                </div>
+
+                <hr>
+
+                <h5 class="headinG mb-4">Shipping Address</h5>
+                <div class="d-flex justify-content-between mb-2 pe-3">
+                    <p>Address1: <span class="value">{{order_address.Address1}}</span></p>
+                    <p>Address2: <span class="value">{{order_address.Address2}}</span></p>
+                    <p>State: <span class="value">{{order_address.state}}</span></p>
+                </div>
+                <div class="d-flex justify-content-between pe-3">
+                    <p>City: <span class="value">{{order_address.city}}</span></p>
+                    <p>Pin: <span class="value">{{order_address.pincode}}</span></p>
+                    <p>Country: <span class="value">{{order_address.country}}</span></p>
+                </div>
+                
+                <hr>
+
+                
+                <form id="order_update_form" action="" class="my-4 border ord_update" method="post">
+                    {% csrf_token %}
+                    {{form}}
+                    <br>
+                        <button class="btn btn-success BtM px-5" type="submit">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endcomment %}
+{% endblock content %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static 'orders/admin/js/order.js' %}"></script>
+{% endblock js %}

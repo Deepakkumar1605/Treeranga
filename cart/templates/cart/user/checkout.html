@@ -1,0 +1,387 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Checkout | NiwaAgro.com
+{% endblock title %}
+
+{% block content %}
+
+
+<section class="mt-lg-4">
+<div class=" container" style="min-height: 100vh;">
+    <div class="row">
+
+        <div class="col-md-8 col-lg-8 checkout-container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="text-center text-capitalize" >Billing address</h4>
+                <button type="button" class="btn btn-sm border fw-bold p-lg-2" id="addAddress" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                    <i class="bi bi-plus">&nbsp;Add Address</i>
+                </button>
+            </div>
+            <input type="hidden" name="cartID" value={{cart_id}} />
+            <div class="address-list row my-lg-3 ">
+                {% for i in addresses %}
+                <div class="col-md-6 col-lg-6 d-flex flex-row pb-lg-3">
+                    <div class="card w-100">
+                        
+                        <div class=" d-flex justify-content-around pt-lg-3" >
+                           <div>
+                            <ul class="p-0 address-details ">
+                                <li>Address 1: </li>
+                                <li>Address 2: </li>
+                                <li>Mobile:</li>
+                                <li>City:</li>
+                                <li>State:</li>
+                                <li>Country: </li>
+                                <li>Pincode: </li>
+                            </ul>
+                           </div>
+                           <div>
+                            <ul class="p-0 address-detailss">
+                                <li>{{i.Address1}}</li>
+                                <li>{{i.Address2}}</li>
+                                <li>{{i.mobile_no}}</li>
+                                <li>{{i.city}}</li>
+                                <li>{{i.state}}</li>
+                                <li>{{i.country}}</li>
+                                <li>{{i.pincode}}</li>
+                            </ul>
+                           </div>
+                           
+                            <div>
+                                <input class="form-check-input" type="radio" name="addressNoLabel" id="addressNoLabel" value="{{i.id}}" aria-label="..." {% if forloop.first %}checked{% endif %}   />
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center pb-lg-3 adress_button">
+                            <button type="button" class="u-button pencil " data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-zipcode="{{ i.zipcode }}">
+                                <i class="bi bi-pencil"> Edit </i>
+                            </button>
+                            <a href="{% url 'cart:delete_address' i.id %}">
+                                <button type="button"class="u-button trash ms-lg-3">
+                                    <i class="bi bi-trash"> Delete</i>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Update Address -->
+            <div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="updateAddressModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateAddressModalLabel">Update Address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="updateAddressForm" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <!-- Address form fields -->
+                                <input type="text" id="a_id" name="a_id" hidden>
+
+                                <div class="mb-3">
+                                    <label for="update-Address1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="update-Address1" name="Address1" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-Address2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="update-Address2" name="Address2">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-mobile_no" class="form-label">Mobile No.</label>
+                                    <input type="text" class="form-control" id="update-mobile_no" name="mobile_no" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="update-state" name="state" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="update-country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" id="update-country" name="country" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="update-city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="update-city" name="city" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="update-zipcode" class="form-label">Pincode</label>
+                                    <input type="text" class="form-control" id="update-zipcode" name="zipcode" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success" style="background-color: #00836C;">Update Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Add Address Modal -->
+
+            <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="addAddressForm" method="post" action="{% url 'cart:addaddress' %}">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <!-- Address form fields -->
+                                <div class="">
+                                    <label for="add-Address1" class="form-label">Address 1</label>
+                                    <input type="text" class="form-control" id="add-Address1" name="Address1" required>
+                                </div>
+                                <div class="">
+                                    <label for="add-Address2" class="form-label">Address 2</label>
+                                    <input type="text" class="form-control" id="add-Address2" name="Address2">
+                                </div>
+                                <div class="">
+                                    <label for="add-mobile_no" class="form-label">Mobile No.</label>
+                                    <input type="text" class="form-control" id="add-mobile_no" name="mobile_no" required>
+                                </div>
+                                <div class="">
+                                    <label for="add-city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="add-city" name="city" required>
+                                </div>
+                                <div class="">
+                                    <label for="add-state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="add-state" name="state" required>
+                                </div>
+                                <div class="">
+                                    <label for="add-country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" id="add-country" name="country" required>
+                                </div>
+                                <div class="">
+                                    <label for="add-pincode" class="form-label">Pincode</label>
+                                    <input type="text" class="form-control" id="add-pincode" name="pincode" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="u-button add">Add Address</button>
+                                <button type="button" class="u-button close" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-md-4 col-lg-4">
+            <!-- Cart Summary -->
+
+            <div class="product-price-details">
+                <div class="border" >
+                    <div class="border-bottom p-lg-3 price-details">
+                     <span class=""> PRICE DETAILS</span>
+                    </div>
+        
+                    <div class="p-lg-3 amount-details">
+                         <div class="d-flex justify-content-between mb-2">
+                             <span>MRP </span>
+                             <span><i class="bi bi-currency-rupee"></i>{{ totaloriginalprice }}</span>
+                         </div>
+                         <div class="d-flex justify-content-between mb-2">
+                             <span>Our Price</span>
+                             <span><i class="bi bi-currency-rupee"></i>{{ totalPrice }}</span>
+                         </div>
+                         <div class="d-flex justify-content-between mb-2">
+                             <span  style="color:green!important;">Discount  </span>
+                             <span  style="color:green!important;"> -  <i class="bi bi-currency-rupee"></i>{{ discount_price }}</span>
+                         </div>
+                         
+                         <div class="d-flex justify-content-between mb-2">
+                             <span>Delivery Charges  </span>
+                             <span><i class="bi bi-currency-rupee"></i>{{ Delivery }}</span>
+                         </div>
+                         <div class="checkout-check p-lg-2">
+        
+                         </div>
+                    </div>
+                     <div class="d-flex justify-content-between p-lg-3 total-amount">
+                         <span>Total Amount </span>
+                         <span><i class="bi bi-currency-rupee"></i>{{ final_cart_value }}</span>
+                     </div>
+                     <div class="payment-method p-lg-3">
+                        <h6>Select Payment Method</h6>
+                        <label>
+                            <input type="radio" name="payment_method" value="razorpay" checked>
+                            Online Payment (Razorpay)
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="payment_method" value="cod">
+                            Cash on Delivery (COD)
+                        </label>
+                        </div>
+
+                     <div class="p-lg-3 proceed-to-payment">
+                        <button class="u-button w-100" id="proceed-button">Proceed To Payment</button>
+                    </div>
+                 </div>
+                 <span class="d-flex mt-lg-3 p-lg-2"  id="t-Head">
+                     <i class="bi bi-shield-fill-check"></i>
+                     <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
+                 </span>
+            </div>
+          
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
+    
+    {% block js %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script>
+            $(document).ready(function () {
+                $('#proceed-button').click(function (e) {
+                    e.preventDefault();
+                    
+                    var selectedAddress = $('input[name="addressNoLabel"]:checked').val();
+                    var paymentMethod = $('input[name="payment_method"]:checked').val(); // Get selected payment method
+    
+                    if (!selectedAddress) {
+                        alert("Please select an address before proceeding.");
+                        return;
+                    }
+    
+                    if (paymentMethod === 'cod') {
+                        // Handle Cash on Delivery (COD)
+                        var data = {
+                            "payment_method": "cod",
+                            "address_id": selectedAddress
+                        };
+    
+                        $.ajax({
+                            url: '{% url "payment:paymentsuccess" %}',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(data),
+                            success: function (response) {
+                                console.log(response);
+                                window.location.href = '{% url "payment:success_payment" %}';
+                            },
+                            error: function (xhr, status, error) {
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    } else if (paymentMethod === 'razorpay') {
+                        // Handle Razorpay Payment Integration
+                        var options = {
+                            "key": "{{ api_key }}",
+                            "amount": "{{ amount }}",
+                            "currency": "INR",
+                            "name": "Niwa Agro",
+                            "description": "Payment Transaction",
+                            "image": "",
+                            "order_id": "{{ rz_order_id }}",
+                            "prefill": {
+                                "contact": "{{ request.user.contact }}"
+                            },
+                            "notes": {
+                                "address": "Demo Address"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            },
+                            "handler": function (response) {
+                                console.log(response);
+                                var data = {
+                                    "razorpay_payment_id": response.razorpay_payment_id,
+                                    "razorpay_order_id": response.razorpay_order_id,
+                                    "razorpay_signature": response.razorpay_signature,
+                                    "address_id": selectedAddress,
+                                    "payment_method":"razorpay"
+                                };
+                                $.ajax({
+                                    url: '{% url "payment:paymentsuccess" %}',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(data),
+                                    success: function (response) {
+                                        console.log(response);
+                                        window.location.href = '{% url "payment:success_payment" %}';
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error(xhr.responseText);
+                                    }
+                                });
+                            }
+                        };
+    
+                        var rzp1 = new Razorpay(options);
+                        rzp1.open();
+                    } else {
+                        alert("Please select a valid payment method.");
+                    }
+                });
+            });
+        </script>
+    <script>
+        $(document).ready(function () {
+            // Show update address modal on button click
+            $('.updateAddress').on('click', function() {
+                var addressId = $(this).data('id');
+                var Address1 = $(this).data('Address1');
+                var Address2 = $(this).data('Address2');
+                var country = $(this).data('country');
+                var state = $(this).data('state');
+                var city = $(this).data('city');
+                var mobile_no = $(this).data('mobile_no');
+                var pincode = $(this).data('pincode');
+                console.log(addressId)
+                // Set values in the modal form fields
+                $('#updateAddressForm').attr('action', '{% url "cart:update_address" %}');
+                $('#updateAddressForm #a_id').val(addressId);
+                $('#updateAddressForm #update-Address1').val(Address1);Address1
+                $('#updateAddressForm #update-Address2').val(Address2);
+                $('#updateAddressForm #update-country').val(country);
+                $('#updateAddressForm #update-state').val(state);
+                $('#updateAddressForm #update-city').val(city);
+                $('#updateAddressForm #update-mobile_no').val(mobile_no);
+                $('#updateAddressForm #update-pincode').val(pincode);
+    
+                // Show the modal
+                $('#updateAddressModal').modal('show');
+            });
+            $('#addAddress').on('click', function() {
+                // Show the modal
+                $('#addAddressModal').modal('show');
+            });
+    
+            // Handle form submission for address update
+            $('#updateAddressForm').submit(function(e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+    
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Handle success response, maybe update the UI or close the modal
+                        $('#updateAddressModal').modal('hide');
+                        window.location.reload();
+                        // Reload the address list or update the UI as needed
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        // Handle error, show error message to user
+                    }
+                });
+            });
+        });
+    </script>
+    {% endblock js %}
