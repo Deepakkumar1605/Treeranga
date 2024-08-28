@@ -96,7 +96,7 @@
         outline: none;
     }
 </style>
-<div class="" style="min-height: 60vh;">
+<div class="">
     <div class="row mx-0">
         {% include 'users/user/index.html' %}
         <div class="col-lg-9 d-flex justify-content-center mt-5">
@@ -105,7 +105,7 @@
                     {% csrf_token %}
                     {{form.as_p}}
                     <div class="d-flex justify-content-center">
-                        <button class="btn-success btn w-100 my-3    " type="submit">Add</button>
+                        <button class="btn-success btn w-100 my-3" type="submit">Add</button>
                     </div>
                 </form>
             </div>

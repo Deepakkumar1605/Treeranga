@@ -99,37 +99,43 @@ class Registration(View):
 class Login(View):
     model = models.User
     template = app + 'authtemp/login.html'
-
+ 
     def get(self, request):
         form = LoginForm()
         next_url = request.GET.get('next', reverse('users:home'))
         return render(request, self.template, {'form': form, 'next': next_url})
-    
+   
     def post(self, request):
         form = LoginForm(request.POST)
         next_url = request.POST.get('next', reverse('users:home'))
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            
+           
             try:
                 user = authenticate(request, username=email, password=password)
                 if user is not None:
                     login(request, user)
-                    
-                    transfer_session_cart_to_user(request, user)
-                    
-                    # Redirect to checkout if `next` is checkout or else redirect to `home` if user was unauthenticated
+ 
+                    # Skip cart transfer for superusers
+                    if not user.is_superuser:
+                        transfer_session_cart_to_user(request, user)
+ 
+                    # If user is a superuser, redirect to the admin dashboard
+                    if user.is_superuser:
+                        return redirect('users:admin_dashboard')
+ 
+                    # Redirect to checkout if 'next' is checkout or else redirect to home
                     if 'checkout' in next_url:
                         return redirect(next_url)
-                    
+                   
                     return redirect(reverse('users:home'))  # Redirect to home if not redirected to checkout
                 else:
                     messages.error(request, "Incorrect email or password")
             except Exception as e:
                 print(e)
                 messages.error(request, "There was an issue logging you in. Please try again.")
-        
+       
         return render(request, self.template, {'form': form, 'next': next_url})
 class Logout(View):
     template_name = app +'authtemp/logout_confirmation.html'

@@ -29,23 +29,4 @@
     {% endfor %}
   
 {% endif %}
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Check if the page was refreshed
-      if (localStorage.getItem('snippets_disabled')) {
-        const alertSnippet = document.querySelector('.snippets_alert');
-        if (alertSnippet) {
-          alertSnippet.style.display = 'none';
-        }
-      }
-  
-      // Set localStorage flag after 5 seconds
-      setTimeout(function() {
-        localStorage.setItem('snippets_disabled', true);
-        const alertSnippet = document.querySelector('.snippets_alert');
-        if (alertSnippet) {
-          alertSnippet.style.display = 'none';
-        }
-      }, 5000);
-    });
-  </script>
+

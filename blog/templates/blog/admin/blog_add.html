@@ -7,7 +7,6 @@
         <p class="text-center"> {% include 'snippets/alert.html' %}</p>
         <div class="product-form-container w-50">
             <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
-                {% include 'snippets/alert.html' %}
                     {% csrf_token %}
                     {{ form.media }}
                     <div class="row">
