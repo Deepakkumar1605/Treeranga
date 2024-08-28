@@ -117,6 +117,7 @@
           </a>
           <a href="{% url 'cart:showcart' %}">
             <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
+            <span class="cart-count">{{ cart_count }}</span>
           </a>
         
          
@@ -215,8 +216,9 @@
           </button>
           <button class="btn">
             <a href="{% url 'cart:showcart' %}">
-              <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-            </a>
+            <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
+            <span class="cart-count">{{ cart_count }}</span>
+          </a>
           </button>
           <!-- <button class="btn" type="button" data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasWithBothOption" aria-controls="offcanvasWithBothOptions">

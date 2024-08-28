@@ -102,15 +102,14 @@ class Login(View):
 
     def get(self, request):
         form = LoginForm()
+        forgot_password_form = ForgotPasswordForm()
         next_url = request.GET.get('next', reverse('users:home'))
-        print(f"GET request - next_url: {next_url}")  # Debugging
-        return render(request, self.template, {'form': form, 'next': next_url})
+        return render(request, self.template, {'form': form, 'form2': forgot_password_form,'next': next_url})
     
     def post(self, request):
         form = LoginForm(request.POST)
+        forgot_password_form = ForgotPasswordForm() 
         next_url = request.POST.get('next', reverse('users:home'))
-        print(f"POST request - next_url: {next_url}")  # Debugging
-
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -128,20 +127,18 @@ class Login(View):
                     if user.is_superuser:
                         return redirect('users:admin_dashboard')
 
-                    # Explicitly check if the next_url is for the checkout page
-                    if next_url == reverse('cart:checkout'):
-                        print(f"Redirecting to checkout: {next_url}")  # Debugging
+                    # Redirect to checkout if 'next' is checkout or else redirect to home
+                    if 'checkout' in next_url:
                         return redirect(next_url)
-
-                    # If the next_url is something else or not set, redirect to home
-                    return redirect(reverse('users:home'))
+                    
+                    return redirect(reverse('users:home'))  # Redirect to home if not redirected to checkout
                 else:
                     messages.error(request, "Incorrect email or password")
             except Exception as e:
                 print(e)
                 messages.error(request, "There was an issue logging you in. Please try again.")
         
-        return render(request, self.template, {'form': form, 'next': next_url})
+        return render(request, self.template, {'form': form, 'form2': forgot_password_form,'next': next_url})
 class Logout(View):
     template_name = app +'authtemp/logout_confirmation.html'
     def get(self, request, *args, **kwargs):
@@ -167,7 +164,7 @@ class ForgotPasswordView(View):
     def post(self, request):
         form2 = forms.ForgotPasswordForm(request.POST)
         if form2.is_valid():
-            email = form.cleaned_data['email']
+            email = form2.cleaned_data['email']
             try:
                 user = models.User.objects.get(email=email)
                 token = user.generate_reset_password_token()

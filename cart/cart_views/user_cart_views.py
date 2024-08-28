@@ -83,7 +83,6 @@ class ShowCart(View):
         if user.is_authenticated and cart_items:
             cart_items.total_price = float(total_price)
             cart_items.save()
-        print(products)
         context = {
             'category_obj': category_obj,
             'cartItems': cart_items,

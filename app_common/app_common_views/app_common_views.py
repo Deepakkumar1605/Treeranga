@@ -25,24 +25,28 @@ class HomeView(View):
         categories = Category.objects.all()
         trending_products = Products.objects.filter(trending="yes").order_by('-id')[:6]
         new_products = Products.objects.filter(show_as_new="yes").order_by('-id')[:6]
-        # cart = Cart.objects.filter(user=request.user).first()
-        # if cart:
-        # # Assuming 'products' is stored as a list of dictionaries in JSON
-        #     cart_products = cart.products
-        #     cart_count = sum(item['quantity'] for item in cart_products.values()) if cart_products else 0
-        # else:
-        #     cart_count = 0
+
+        cart_count = 0 
+
+        if request.user.is_authenticated:
+            cart = Cart.objects.filter(user=request.user).first()
+            if cart and cart.products:
+                cart_count = sum(item.get('quantity', 0) for item in cart.products.values() if isinstance(item, dict))
+        else:
+            cart = request.session.get('cart', {})
+            if cart and 'products' in cart:
+                print("Session cart data:", cart)
+                cart_products = cart.get('products', {})
+                cart_count = sum(item.get('quantity', 0) for item in cart_products.values() if isinstance(item, dict))
         
         context = {
             'categories': categories,
             'trending_products': trending_products,
             'new_products': new_products,
-            # 'cart_count': cart_count,
+            'cart_count': cart_count,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template, context)
-
-
 class AboutUs(View):
     template = app + "about_us.html"
 
