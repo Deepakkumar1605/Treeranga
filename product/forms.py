@@ -36,16 +36,16 @@ class ProductForm(forms.ModelForm):
     name = forms.CharField(max_length=255)
     name.widget.attrs.update({'class': 'form-control', 'type': 'text', 'required': 'required'})
 
-    brand = forms.CharField(max_length=255, required=False)
+    brand = forms.CharField(max_length=255, required=True)
     brand.widget.attrs.update({'class': 'form-control', 'type': 'text'})
 
-    image = forms.ImageField(label='Image', required=False)
+    image = forms.ImageField(label='Image', required=True)
     image.widget.attrs.update({'class': 'form-control', 'type': 'file'})
 
-    product_short_description = forms.CharField(widget=forms.Textarea, required=False)
+    product_short_description = forms.CharField(widget=forms.Textarea, required=True)
     product_short_description.widget.attrs.update({'class': 'form-control', 'rows': 5})
 
-    product_long_description = forms.CharField(widget=forms.Textarea, required=False)
+    product_long_description = forms.CharField(widget=forms.Textarea, required=True)
     product_long_description.widget.attrs.update({'class': 'form-control', 'rows': 5})
 
     trending = forms.ChoiceField(choices=Products.YESNO, required=False)
@@ -69,9 +69,10 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            # This is an edit form, disable the sku_no and category fields
             self.fields['sku_no'].widget.attrs['readonly'] = True
             self.fields['category'].widget.attrs['disabled'] = True
+
+
 class SimpleProductForm(forms.ModelForm):
     product_max_price = forms.DecimalField(max_digits=10, decimal_places=2)
     product_max_price.widget.attrs.update({'class': 'form-control', 'type': 'number', 'step': '0.01', 'required': 'required'})

@@ -40,7 +40,9 @@ Product Details - {{ product_obj.name }}
                 </div>
                 
                 <div class="product-image" id="mediaContainer">
-                    {% if product_obj.image %}
+                    {% if image_gallery and image_gallery.images %}
+                        <img src="{{ MEDIA_URL }}{{ image_gallery.images.0 }}" alt="{{ product_obj.name }}" id="mainImage">
+                    {% elif product_obj.image %}
                         <img src="{{ MEDIA_URL }}{{ product_obj.image }}" alt="{{ product_obj.name }}" id="mainImage">
                     {% else %}
                         <p>No main image available.</p>
@@ -294,7 +296,7 @@ Product Details - {{ product_obj.name }}
     document.getElementById('addToCartButton').addEventListener('click', function(event) {
         event.preventDefault();
         let quantity = document.getElementById('quantity').value;
-        let url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity;
+        let url = "{% url 'cart:addtocart' simple_product.id %}?quantity=" + quantity;
         window.location.href = url;
     });
 </script>

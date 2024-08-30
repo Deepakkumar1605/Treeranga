@@ -1,0 +1,88 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<center>
+    {% include 'snippets/alert.html' %}
+</center>
+
+<header>
+    <div class="container-fluid">
+        <div class="border-bottom pt-6">
+            <div class="row align-items-center">
+                <div class="col-sm col-12 d-flex justify-content-between">
+                    <h1 class="h2 headinG ls-tight">Banner List</h1>
+                    <!-- Button to trigger modal -->
+                    <a style="margin-left: 1rem;" data-bs-toggle="modal" data-bs-target="#banner_create_modal" class="btn btn-sm btn-neutral">
+                        <i class="bi bi-plus">Add New Banner</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="py-6 bg-surface-secondary">
+    <div class="container-fluid">
+        <div class="vstack gap-4">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Banner ID</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test_table_tbody">
+                            {% for banner in banner_list %}
+                            <tr>
+                                <td>{{ banner.id }}</td>
+                                <td>
+                                    {% if banner.image %}
+                                    <img src="{{ banner.image.url }}" style="height: 150px; width: 150px;" />
+                                    {% else %}
+                                    No Image
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'app_common:web_banner_delete' banner.id %}">
+                                        <button type="button" class="btn btn-sm btn-square btn-neutral text-danger-hover">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Banner Create Modal -->
+<div class="modal fade" id="banner_create_modal" tabindex="-1" aria-labelledby="bannerCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bannerCreateModalLabel">Create Banner</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'app_common:web_banner_list' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br>
+                    <center>
+                        <button class="btn btn-primary" type="submit">Add Banner</button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

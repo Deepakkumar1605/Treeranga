@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from app_common import forms
 from app_common.models import ContactMessage
 from users.forms import LoginForm
 from app_common.models import ContactMessage
@@ -23,27 +22,25 @@ class HomeView(View):
 
     def get(self, request):
         categories = Category.objects.all()
-        trending_products = Products.objects.filter(trending="yes").order_by('-id')[:6]
-        new_products = Products.objects.filter(show_as_new="yes").order_by('-id')[:6]
-
-        cart_count = 0 
-
-        if request.user.is_authenticated:
-            cart = Cart.objects.filter(user=request.user).first()
-            if cart and cart.products:
-                cart_count = sum(item.get('quantity', 0) for item in cart.products.values() if isinstance(item, dict))
-        else:
-            cart = request.session.get('cart', {})
-            if cart and 'products' in cart:
-                print("Session cart data:", cart)
-                cart_products = cart.get('products', {})
-                cart_count = sum(item.get('quantity', 0) for item in cart_products.values() if isinstance(item, dict))
         
+        trending_products = []
+        for product in Products.objects.filter(trending="yes").order_by('-id')[:6]:
+            simple_product = SimpleProduct.objects.filter(
+                product=product, is_visible=True
+            ).first()
+            if simple_product:
+                trending_products.append({'product': product,'simple_product': simple_product})
+        
+        new_products = []
+        for product in Products.objects.filter(show_as_new="yes").order_by('-id')[:6]:
+            simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
+            if simple_product:
+                new_products.append({'product': product,'simple_product': simple_product})
+
         context = {
             'categories': categories,
             'trending_products': trending_products,
             'new_products': new_products,
-            'cart_count': cart_count,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template, context)

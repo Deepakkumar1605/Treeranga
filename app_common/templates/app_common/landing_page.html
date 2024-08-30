@@ -88,19 +88,16 @@
     <div class="row" id="new-arrivals">
       {% for item in new_products %}
       <div class="col col-lg-2 col-md-3 col-6 new-head">
-       
-          <div class="" id="new-products">
-              {% if item.image %}
-              <a href="{% url 'product:product_detail' item.id %}">
-                <img src="{{ MEDIA_URL }}{{ item.image }}" class="card-img-top"alt="{{ item.name }}">
-                  {% elif item.simpleproduct_set.first.image_gallery.first.images.0 %}
-                  <img src="{{ MEDIA_URL }}{{ item.simpleproduct_set.first.image_gallery.first.images.0 }}"class="card-img-top" alt="{{ item.name }}">
-                {% else %}
-                      <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
-                  {% endif %}
-              </a>
+        <div class="" id="new-products">
+          <a href="{% url 'product:product_detail' item.product.id %}">
+            {% if item.product.image %}
+              <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
+            {% else %}
+              <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
+            {% endif %}
+          </a>
           <div class="card-body">
-            <h5>{{ item.name | truncatechars:25 }}</h5>
+            <h5>{{ item.product.name|truncatechars:25 }}</h5>
             <span class="rating">
               <i class="fa-solid fa-star"></i>
               <i class="fa-solid fa-star"></i>
@@ -108,26 +105,24 @@
               <i class="fa-solid fa-star"></i>
               <i class="fa-solid fa-star-half-stroke"></i>
               <span>20 reviews</span>
-          </span>
-          <p class="card-text">
-            <span class="price" id="discount_price">₹{{ item.simpleproduct_set.first.product_discount_price }}</span>
-            {% if item.simpleproduct_set.first.product_max_price %}
-            <span class="original-price" id="max_price"><s>₹{{ item.simpleproduct_set.first.product_max_price }}</s></span>
-            {% endif %}
-          </p>
-        <div class="d-flex mt-3">
-          <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button">Add To Cart</a>
-      </div>
-        </div>
+            </span>
+            <p class="card-text">
+              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+              {% if item.simple_product.product_max_price %}
+              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% endif %}
+            </p>
+            <div class="d-flex mt-3">
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button">Add To Cart</a>
+            </div>
           </div>
-        </a>
+        </div>
       </div>
       {% endfor %}
-
     </div>
- 
+
     <div class="d-flex justify-content-center viewmoreButton">
-      <a href="{% url 'product:all_new_products' %}" class=" u-button">View More Products</a>
+      <a href="{% url 'product:all_trending_products' %}" class="u-button">View More Products</a>
     </div>
   </div>
 </section>
@@ -145,19 +140,16 @@
     <div class="row" id="new-arrivals">
       {% for item in trending_products %}
       <div class="col col-lg-2 col-md-3 col-6 new-head">
-       
-          <div class="" id="new-products">
-              {% if item.image %}
-              <a href="{% url 'product:product_detail' item.id %}">
-                <img src="{{ MEDIA_URL }}{{ item.image }}" class="card-img-top"alt="{{ item.name }}">
-                  {% elif item.simpleproduct_set.first.image_gallery.first.images.0 %}
-                  <img src="{{ MEDIA_URL }}{{ item.simpleproduct_set.first.image_gallery.first.images.0 }}"class="card-img-top" alt="{{ item.name }}">
-                {% else %}
-                      <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
-                  {% endif %}
-              </a>
+        <div class="" id="new-products">
+          <a href="{% url 'product:product_detail' item.product.id %}">
+            {% if item.product.image %}
+              <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
+            {% else %}
+              <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
+            {% endif %}
+          </a>
           <div class="card-body">
-            <h5>{{ item.name | truncatechars:25 }}</h5>
+            <h5>{{ item.product.name|truncatechars:25 }}</h5>
             <span class="rating">
               <i class="fa-solid fa-star"></i>
               <i class="fa-solid fa-star"></i>
@@ -165,29 +157,29 @@
               <i class="fa-solid fa-star"></i>
               <i class="fa-solid fa-star-half-stroke"></i>
               <span>20 reviews</span>
-          </span>
-          <p class="card-text">
-            <span class="price" id="discount_price">₹{{ item.simpleproduct_set.first.product_discount_price }}</span>
-            {% if item.simpleproduct_set.first.product_max_price %}
-            <span class="original-price" id="max_price"><s>₹{{ item.simpleproduct_set.first.product_max_price }}</s></span>
-            {% endif %}
-          </p>
-        <div class="d-flex mt-3">
-          <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button">Add To Cart</a>
-      </div>
-        </div>
+            </span>
+            <p class="card-text">
+              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+              {% if item.simple_product.product_max_price %}
+              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% endif %}
+            </p>
+            <div class="d-flex mt-3">
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button">Add To Cart</a>
+            </div>
           </div>
-        </a>
+        </div>
       </div>
       {% endfor %}
-
     </div>
- 
+
     <div class="d-flex justify-content-center viewmoreButton">
-      <a href="{% url 'product:all_trending_products' %}" class=" u-button">View More Products</a>
+      <a href="{% url 'product:all_trending_products' %}" class="u-button">View More Products</a>
     </div>
   </div>
 </section>
+
+
 
 
 

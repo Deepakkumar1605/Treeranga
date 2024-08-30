@@ -233,6 +233,19 @@ def RemoveFromCart(request, cp_uid):
     return redirect("cart:showcart")
 
 
+def cart_count_processor(request):
+    cart_count = 0
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart and cart.products:
+            cart_count = len(cart.products)  # Count the number of distinct products
+    else:
+        cart = request.session.get('cart', {})
+        if cart and 'products' in cart:
+            cart_products = cart.get('products', {})
+            cart_count = len(cart_products)  # Count the number of distinct products
+    
+    return {'cart_count': cart_count}
 
 
 @method_decorator(login_required(login_url='users:login'), name='dispatch')

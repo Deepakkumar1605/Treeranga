@@ -24,14 +24,14 @@ urlpatterns = [
     path("", include("users.urls.urls")),
     path("", include("users.urls.api_urls")),
 
-    path("common", include("app_common.urls.urls")),
-    path("product", include("product.urls.urls")),
+    path("common/", include("app_common.urls.urls")),
+    path("product/", include("product.urls.urls")),
     path("product_api", include("product.urls.api_urls")),
-    path("cart", include("cart.urls.urls")),
+    path("cart/", include("cart.urls.urls")),
     path("cart_api", include("cart.urls.api_urls")),
-    path("orders", include("orders.urls.urls")), 
-    path("payment", include("payment.urls.urls")),
-    path("blog", include("blog.urls.urls")),
+    path("orders/", include("orders.urls.urls")), 
+    path("payment/", include("payment.urls.urls")),
+    path("blog/", include("blog.urls.urls")),
     path("product_variations", include("product_variations.urls.product_variation_user_urls")),
 
 

@@ -15,18 +15,11 @@ class ShowProductsView(View):
 
     def get(self, request, category_name):
         user = request.user
-
-        # Get the category object for the given category_name
         category_obj = get_object_or_404(Category, title=category_name)
-
-        # Get products for this category
-        products_for_this_category = Products.objects.filter(
-            category=category_obj
-        )
-
+        products_for_this_category = Products.objects.filter(category=category_obj)
         simple_products = []
         for product in products_for_this_category:
-            simple_products_for_product = SimpleProduct.objects.filter(product=product)
+            simple_products_for_product = SimpleProduct.objects.filter(product=product, is_visible=True)
             for simple_product in simple_products_for_product:
                 image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
                 images = image_gallery.images if image_gallery else []
@@ -54,18 +47,16 @@ class ProductDetailsSmipleView(View):
         product_obj = get_object_or_404(Products, id=p_id)
         similar_product_list = Products.objects.filter(category=product_obj.category).exclude(id=product_obj.id)[:5]
 
-        # Fetch the SimpleProduct instances for similar products
         similar_simple_products = []
         for product in similar_product_list:
-            simple_product = SimpleProduct.objects.filter(product=product).first()
+            simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
             if simple_product:
                 similar_simple_products.append({
                     'product': product,
                     'simple_product': simple_product
                 })
 
-        # Get the first SimpleProduct for the current product
-        simple_product = SimpleProduct.objects.filter(product=product_obj).first()
+        simple_product = SimpleProduct.objects.filter(product=product_obj, is_visible=True).first()
         image_gallery = None
         if simple_product:
             image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
@@ -86,7 +77,7 @@ class ProductDetailsSmipleView(View):
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
-        return render(request, self.template_name, context) 
+        return render(request, self.template_name, context)
 
 
 class AllTrendingProductsView(View):
@@ -94,9 +85,13 @@ class AllTrendingProductsView(View):
 
     def get(self, request):
         trending_products = Products.objects.filter(trending="yes")
+        updated_trending_products = []
+        for product in trending_products:
+            if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
+                updated_new_products.append(product)
         
         context = {
-            'trending_products': trending_products,
+            'trending_products': updated_trending_products,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
@@ -108,10 +103,14 @@ class AllNewProductsView(View):
 
     def get(self, request):
         new_products = Products.objects.filter(show_as_new="yes")
-        
+        updated_new_products = []
+        for product in new_products:
+            if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
+                updated_new_products.append(product)
         context = {
-            'new_products': new_products,
+            'new_products': updated_new_products,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
+
 
