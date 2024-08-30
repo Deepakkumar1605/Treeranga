@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #import requests
 from django.http import JsonResponse
 import json
@@ -33,17 +34,22 @@ class BlogList(View):
 
     def get(self, request):
         blog_list = self.model.objects.all().order_by('-id')
-        print(blog_list)
         
-        paginated_data = utils.paginate(
-            request, blog_list, 50  
-        )
+        # Pagination
+        paginator = Paginator(blog_list, 10)  # Show 10 blogs per page
+        page = request.GET.get('page')
+        try:
+            paginated_data = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_data = paginator.page(1)
+        except EmptyPage:
+            paginated_data = paginator.page(paginator.num_pages)
+        
         context = {
-            "blog_list": blog_list,
-            "data_list": paginated_data
+            "blog_list": paginated_data,
+            "paginator": paginator
         }
         return render(request, self.template, context)
-
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class BlogSearch(View):

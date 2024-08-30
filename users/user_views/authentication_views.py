@@ -41,12 +41,12 @@ class Registration(View):
 
     def get(self, request):
         form = SignUpForm()
-        next_url = request.GET.get('next', reverse('users:home'))
+        next_url = request.GET.get('next', reverse('app_common:home'))
         return render(request, self.template, {'form': form, 'next': next_url})
 
     def post(self, request):
         form = SignUpForm(request.POST)
-        next_url = request.POST.get('next', reverse('users:home'))
+        next_url = request.POST.get('next', reverse('app_common:home'))
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -103,13 +103,13 @@ class Login(View):
     def get(self, request):
         form = LoginForm()
         forgot_password_form = ForgotPasswordForm()
-        next_url = request.GET.get('next', reverse('users:home'))
+        next_url = request.GET.get('next', reverse('app_common:home'))
         return render(request, self.template, {'form': form, 'form2': forgot_password_form,'next': next_url})
     
     def post(self, request):
         form = LoginForm(request.POST)
         forgot_password_form = ForgotPasswordForm() 
-        next_url = request.POST.get('next', reverse('users:home'))
+        next_url = request.POST.get('next', reverse('app_common:home'))
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -131,7 +131,7 @@ class Login(View):
                     if 'checkout' in next_url:
                         return redirect(next_url)
                    
-                    return redirect(reverse('users:home'))  # Redirect to home if not redirected to checkout
+                    return redirect(reverse('app_common:home'))  # Redirect to home if not redirected to checkout
                 else:
                     messages.error(request, "Incorrect email or password")
             except Exception as e:
@@ -140,20 +140,18 @@ class Login(View):
         
         return render(request, self.template, {'form': form, 'form2': forgot_password_form,'next': next_url})
 class Logout(View):
-    template_name = app +'authtemp/logout_confirmation.html'
     def get(self, request, *args, **kwargs):
         if 'confirm' in request.GET:
             logout(request)
-            return redirect('users:home')
+            return redirect('app_common:home')  # Redirect to home or appropriate page
         
         if 'cancel' in request.GET:
             if request.user.is_superuser:
-                return redirect('users:admin_dashboard')
-            return redirect('users:home')
+                return redirect('users:admin_dashboard')  # Redirect to the admin dashboard
+            return redirect(request.META.get('HTTP_REFERER', 'app_common:home'))
 
-        return render(request, self.template_name)
-
-
+        # Default redirect if neither confirm nor cancel
+        return redirect('app_common:home') 
 class ForgotPasswordView(View):
     template_name = app + 'authtemp/forgot_password.html'
 

@@ -6,98 +6,63 @@
     <div class="container">
         <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Simple Products</h4>
         <div class="vstack">
-            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
-                <form class="my-3 mx-2" action="{% url 'product:simple_product_search' %}" method="post">
-                    {% csrf_token %}
-                    <div class="hstack gap-2">
-                        <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
-                            <option selected value="pk">All</option>
-                            <option value="id">ID</option>
-                            <option value="name">Name</option>
-                        </select>
-                        <span  class="input-group ">
-                            <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
-                            <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
-                        </span>
-                    </div>
-                </form>
-                <p class="snippets">{% include 'snippets/alert.html' %}</p>
-                {% comment %}
-                <div class="btn-group catagory-btn">
-                    <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
-                        <i class='bx bx-filter-alt' ></i>
-                    </button> -->
-                  
-                    <a href="{% url 'product:category_add' %}">
-                        <i class='bx bxs-plus-square'></i> Create New Product
-                    </a>
-                    
-                </div>
-                {% endcomment %}
-            </div>
-  
+            <!-- Search form and other UI elements here -->
+
             <div class="tablecard">
                 <div class="table-responsive">
                     <table class="table table-hover table-nowrap">
                         <thead class="table-light">
                             <tr>
-                                <th  id="tb-head" scope="col">Name</th>
-                                <th  id="tb-head" scope="col">Product ID</th>
-                                <th  id="tb-head" scope="col">Image</th>
-                                <th  id="tb-head" scope="col">Brand</th>
-                                <th  id="tb-head" scope="col">Max Price</th>
-                                <th  id="tb-head" scope="col">Discounted Price</th>
-                                <th  id="tb-head" scope="col">Stock</th>
-                                <th  id="tb-head" scope="col">Action</th>
-                                
+                                <th id="tb-head" scope="col">Name</th>
+                                <th id="tb-head" scope="col">Product ID</th>
+                                <th id="tb-head" scope="col">Image</th>
+                                <th id="tb-head" scope="col">Brand</th>
+                                <th id="tb-head" scope="col">Max Price</th>
+                                <th id="tb-head" scope="col">Discounted Price</th>
+                                <th id="tb-head" scope="col">Stock</th>
+                                <th id="tb-head" scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody id="test_table_tbody">
-                            {% for product in products %}
+                            {% for product in page_obj %}
                             <tr {% if product.simple_products.first.stock <= 10 %} style="background: #f6a4a4;" {% endif %}>
                                 <td class="tb-body">
-                                   
-                                       <div class="tb-body_sub"> {{ product.pk }}</div>
+                                    <div class="tb-body_sub">{{ product.pk }}</div>
                                 </td>
                                 <td class="tb-body">
                                     <div class="tb-body_sub">{{ product.product.name|truncatewords:5 }}</div>
                                 </td>
                                 <td class="tb-body">
-                                   <div>
-                                    {% if product.product.image %}
-                                    <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
-                                {% endif %}
-                                   </div>
-                                </td>
-                                <td class="tb-body">
-                                    <div class="tb-body_sub">
-                                        {{ product.product.brand }}
+                                    <div>
+                                        {% if product.product.image %}
+                                        <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
+                                        {% endif %}
                                     </div>
                                 </td>
                                 <td class="tb-body">
-                                   <div class="tb-body_sub"> {{ product.product_max_price }}</div>
+                                    <div class="tb-body_sub">{{ product.product.brand }}</div>
                                 </td>
                                 <td class="tb-body">
-                                       <div class="tb-body_sub">
-                                        {{ product.product_discount_price }}
-                                       </div>
+                                    <div class="tb-body_sub">{{ product.product_max_price }}</div>
                                 </td>
                                 <td class="tb-body">
-                                        <div class="tb-body_sub">{{ product.stock }}</div>
+                                    <div class="tb-body_sub">{{ product.product_discount_price }}</div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.stock }}</div>
                                 </td>
                                 <td class="d-flex justify-content-around p-3">
-                                    <div class="">
-                                        <a href="{% url 'product:simple_product_update' product.pk %}"
-                                        class="">
-                                        <i class='bx bx-edit text-primary' ></i>    
-                                    </a>
+                                    <div>
+                                        <a href="{% url 'product:simple_product_update' product.pk %}">
+                                            <i class='bx bx-edit text-primary'></i>
+                                        </a>
                                     </div>
                                     <div>
-                                    <a href="{% url 'product:simple_product_delete' product.pk %}" >
-                                        <button  type="button" class="border-0 bg-transparent">
-                                        <i class='bx bx-trash text-danger'></i>
-                                      </button> 
-                                    </a>
+                                        <a href="{% url 'product:simple_product_delete' product.pk %}">
+                                            <button type="button" class="border-0 bg-transparent">
+                                                <i class='bx bx-trash text-danger'></i>
+                                            </button>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -105,46 +70,29 @@
                         </tbody>
                     </table>
                 </div>
-                
             </div>
         </div>
         <div class="py-lg-2">
             <div class="pagination">
-              <a href="#">&laquo;</a>
-              <a href="#">1</a>
-              <a href="#" class="active">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">...</a>
-              <a href="#">&raquo;</a>
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">&lsaquo; Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a href="#" class="active">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next &rsaquo;</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
             </div>
-          </div>
+        </div>
     </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% endblock content %}
-
-
-
-

@@ -157,7 +157,7 @@ class AddToCartView(View):
                 request.session.modified = True
 
             messages.success(request, f"{product_obj.product.name} added to cart.")
-            return redirect("users:home")
+            return redirect("app_common:home")
         except Exception as e:
             print(f"Add to cart error: {e}")
             return HttpResponse(f"An error occurred: {e}", status=500)
@@ -417,7 +417,7 @@ class AddAddress(View):
 
             return redirect('cart:checkout')
         else:
-            return redirect('users:home')
+            return redirect('app_common:home')
 
 
 
@@ -462,7 +462,7 @@ def update_address_view(request):
 
         except Exception as e:
             messages.error(request, f'Failed to update address: {str(e)}')
-            return redirect('app_commo:home')
+            return redirect('app_common:home')
     else:
         return redirect('app_common:home')
 

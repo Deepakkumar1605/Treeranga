@@ -21,10 +21,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     
     
-    path("", include("users.urls.urls")),
-    path("", include("users.urls.api_urls")),
+    path("users/", include("users.urls.urls")),
+    path("users/", include("users.urls.api_urls")),
 
-    path("common/", include("app_common.urls.urls")),
+    path("", include("app_common.urls.urls")),
     path("product/", include("product.urls.urls")),
     path("product_api", include("product.urls.api_urls")),
     path("cart/", include("cart.urls.urls")),

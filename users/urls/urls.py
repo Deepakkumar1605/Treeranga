@@ -9,27 +9,27 @@ app_name = 'users'
 
 urlpatterns = [
     #Authentication urls
-    path('', app_common_views.HomeView.as_view(), name='home'),
     path('admin/', admin_views.AdminDashboard.as_view(), name='admin_dashboard'),
     path('signup', authentication_views.Registration.as_view(), name = "signup"),
     path('login', authentication_views.Login.as_view(), name = "login"),
-    path('forgot_password/', authentication_views.ForgotPasswordView.as_view(), name = "forgot_password"),
-    path('reset-password/<uuid:token>/', authentication_views.ResetPasswordView.as_view(), name='reset_password'),  # Ensure this matches
-    path('logout/', authentication_views.Logout.as_view(), name = "logout"),
-    path('account-deletion/', authentication_views.AccountDeletionView.as_view(), name='account_deletion'),
+    path('ForgotPassword/', authentication_views.ForgotPasswordView.as_view(), name = "forgot_password"),
+    path('Reset-Password/<uuid:token>/', authentication_views.ResetPasswordView.as_view(), name='reset_password'),  # Ensure this matches
+    path('Logout/', authentication_views.Logout.as_view(), name = "logout"),
+    path('AccountDeletion/', authentication_views.AccountDeletionView.as_view(), name='account_deletion'),
 
 
     #user
-    path('profile',user_views.ProfileView.as_view(),name="profile"),
-    path('updateprofile/',user_views.UpdateProfileView.as_view(),name="updateprofile"),
-    path('account-details',user_views.AccountDetails.as_view(),name='account_details'),
-    path('profile/alladdress',user_views.AllAddress.as_view(),name="alladdress"),
-    path('profile/addaddress',user_views.ProfileAddAddress.as_view(),name="profile_addaddress"),
-    path('profile/update-address/<str:address_id>/', user_views.ProfileUpdateAddress.as_view(), name='profile_update_address'),
-    path('profile/delete-address/<str:address_id>/', user_views.ProfileDeleteAddress.as_view(), name='profile_delete_address'),
+    path('Profile',user_views.ProfileView.as_view(),name="profile"),
+    path('Updateprofile/',user_views.UpdateProfileView.as_view(),name="updateprofile"),
+    path('Account-details',user_views.AccountDetails.as_view(),name='account_details'),
+    path('Profile/alladdress',user_views.AllAddress.as_view(),name="alladdress"),
+    path('Profile/addaddress',user_views.ProfileAddAddress.as_view(),name="profile_addaddress"),
+    path('Profile/update-address/<str:address_id>/', user_views.ProfileUpdateAddress.as_view(), name='profile_update_address'),
+    path('Profile/delete-address/<str:address_id>/', user_views.ProfileDeleteAddress.as_view(), name='profile_delete_address'),
 
     # admin 
-    path("user/userslist", admin_views.UserList.as_view(), name="userslist"),
-    path('user/user_detail/<int:user_id>', admin_views.UserDetailView.as_view(), name='user_detail'),
+    path("UsersList", admin_views.UserList.as_view(), name="userslist"),
+    path('UserDetail/<int:user_id>', admin_views.UserDetailView.as_view(), name='user_detail'),
+    path('DeleteUser/<int:user_id>/', admin_views.DeleteUser.as_view(), name='delete_user'),
     
 ]

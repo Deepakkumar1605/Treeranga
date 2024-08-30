@@ -91,7 +91,7 @@ class PaymentSuccess(View):
 
                 messages.success(request, "Order Successful!")
                 cart.delete()
-                return redirect("users:home")
+                return redirect("app_common:home")
 
             elif payment_method == 'cod':
                 # Create and save the order for COD
@@ -125,7 +125,7 @@ class PaymentSuccess(View):
 
                 messages.success(request, "Order placed successfully. Cash on Delivery selected.")
                 cart.delete()
-                return redirect("users:home")
+                return redirect("app_common:home")
 
             else:
                 messages.error(request, "Invalid payment method.")

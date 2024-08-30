@@ -117,7 +117,7 @@
 		</ul>
 		<ul class="side-menu">
 			<li>
-				<a  href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="logout">
+				<a  data-bs-toggle="modal" data-bs-target="#logoutModal" class="logout">
 					<i class="lni  lni-exit"></i>
 					<span class="text">Logout</span>
 				</a>
@@ -165,16 +165,25 @@
 
 
 
-    <script>
-      function myFunction() {
-          if (confirm("Are you sure you want to logout?")) {
-              return true;  // Proceed with the link's href
-          } else {
-              console.log("Logout canceled");
-              return false;  // Prevent the default action
-          }
-      }
-  </script>
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="logoutModalLabel">Logout Confirmation</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to logout?
+			</div>
+			<div class="modal-footer">
+				<a href="{% url 'users:logout' %}?confirm=true" class="btn btn-primary">Yes, Logout</a>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
     $(document).ready(function() {

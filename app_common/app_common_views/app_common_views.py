@@ -4,6 +4,7 @@ from django.contrib import messages
 from app_common.models import ContactMessage
 from users.forms import LoginForm
 from app_common.models import ContactMessage
+from users.user_views.emails import send_template_email
 from app_common.forms import ContactMessageForm
 from product.models import Category,Products,SimpleProduct,ImageGallery
 from cart.models import Cart
@@ -72,11 +73,11 @@ class ContactSupport(View):
             }
             template = self.contact_template
 
-        form = forms.ContactMessageForm(initial=initial_data)
+        form = ContactMessageForm(initial=initial_data)
         return render(request, template, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = forms.ContactMessageForm(request.POST)
+        form = ContactMessageForm(request.POST)
         if form.is_valid():
             # Create a new ContactMessage instance
             contact_message = ContactMessage(
@@ -86,22 +87,32 @@ class ContactSupport(View):
                 message=form.cleaned_data['message']
             )
             
-            # Associate the message with the authenticated user if available
             if request.user.is_authenticated:
                 contact_message.user = request.user
             
             contact_message.save()
 
-            if request.user.is_authenticated:
-                messages.success(request, 'Your support request has been sent successfully.')
-                return redirect('app_common:contact_support')
-            else:
-                messages.success(request, 'Your message has been sent successfully.')
-                return redirect('app_common:contact_support')
+            # Prepare email context for the confirmation email
+            context = {
+                'user_name': contact_message.name,
+                'message_content': contact_message.message,
+            }
+
+            # Send confirmation email to the user
+            send_template_email(
+                subject='Thank You for Contacting Us',
+                template_name='users/email/contact_message_confirmation.html',
+                context=context,
+                recipient_list=[contact_message.email]
+            )
+
+            # Set success message and redirect based on authentication
+            success_message = 'Your support request has been sent successfully.' if request.user.is_authenticated else 'Your message has been sent successfully.'
+            messages.success(request, success_message)
+            return redirect('app_common:contact_support')
 
         template = self.support_template if request.user.is_authenticated else self.contact_template
         return render(request, template, {'form': form})
-
 class TermsConditions(View):
     template = app + "terms_conditions.html"
 
