@@ -1,5 +1,6 @@
 from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from helpers import utils
@@ -11,12 +12,16 @@ from users.user_views.emails import send_template_email
 app = 'app_common/'
 
 class AdminMessageListView(View):
-    template = app +'admin/message_list.html'
+    template = app + 'admin/message_list.html'
 
     def get(self, request, *args, **kwargs):
-        messages = ContactMessage.objects.all().order_by('-created_at')
-        return render(request, self.template, {'messages': messages})
+        messages_list = ContactMessage.objects.all().order_by('-created_at')
+        paginator = Paginator(messages_list, 10)  # Show 10 messages per page
 
+        page_number = request.GET.get('page')
+        messages = paginator.get_page(page_number)
+
+        return render(request, self.template, {'messages': messages})
 class AdminMessageDetailView(View):
     template = app +'admin/message_detail.html'
 

@@ -10,7 +10,7 @@ Products Of {{ category_obj.title }} Category
     <h2 class="text-uppercase">{{category_obj.title }}</h2>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'users:home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'app_common:home' %}">Home</a></li>
           <li class="breadcrumb-item active text-dark text-capitalize" aria-current="page">{{category_obj.title }}</li>
         </ol>
       </nav>

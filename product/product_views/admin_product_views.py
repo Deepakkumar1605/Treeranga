@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
@@ -192,13 +193,23 @@ class ProductList(View):
     template_name = app + "admin/product_list.html"
 
     def get(self, request):
-        products = Products.objects.all()
+        products = Products.objects.all().order_by('pk')
+        
+        # Pagination logic
+        page = request.GET.get('page', 1)
+        paginator = Paginator(products, 20)  # Show 20 products per page
 
+        try:
+            paginated_products = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_products = paginator.page(1)
+        except EmptyPage:
+            paginated_products = paginator.page(paginator.num_pages)
+        
         context = {
-            'products': products,
+            'products': paginated_products,  # Paginated products
         }
         return render(request, self.template_name, context)
-
 @method_decorator(utils.super_admin_only, name='dispatch')
 class SimpleProductUpdate(View):
     form_class = forms.SimpleProductForm
@@ -313,8 +324,12 @@ class SimpleProductList(View):
     def get(self, request):
         products = SimpleProduct.objects.all()
 
+        paginator = Paginator(products, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'products': products,
+            'page_obj': page_obj
         }
         return render(request, self.template_name, context)
 

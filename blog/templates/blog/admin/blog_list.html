@@ -22,9 +22,6 @@
                 </form>
                 <p class="snippets">{% include 'snippets/alert.html' %}</p>
                 <div class="btn-group catagory-btn">
-                    <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
-                        <i class='bx bx-filter-alt' ></i>
-                    </button> -->
                     <a href="{% url 'blog:blog_add' %}">
                         <i class='bx bxs-plus-square'></i>
                          Create a New Blog
@@ -86,92 +83,25 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Pagination -->
         <div class="py-lg-2">
             <div class="pagination">
-              <a href="#">&laquo;</a>
-              <a href="#">1</a>
-              <a href="#" class="active">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">...</a>
-              <a href="#">&raquo;</a>
+                {% if blog_list.has_previous %}
+                    <a href="?page={{ blog_list.previous_page_number }}">&laquo;</a>
+                {% endif %}
+                {% for i in blog_list.paginator.page_range %}
+                    {% if blog_list.number == i %}
+                        <a href="?page={{ i }}" class="active">{{ i }}</a>
+                    {% elif i > blog_list.number|add:'-3' and i < blog_list.number|add:'3' %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if blog_list.has_next %}
+                    <a href="?page={{ blog_list.next_page_number }}">&raquo;</a>
+                {% endif %}
             </div>
-          </div>
+        </div>
     </div>
 </section>
-
-
-
-<!-- ---------------------------Blog Delete Modal--------- -->
-{% comment %} 
-
-<div class="modal fade" id="blog_delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="blog_delete_title">
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="confirm_delete_btn" href="">
-                    <button type="button" class="btn btn-primary">Confirm Delete</button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Filter modal -->
-
-
-
-<div class="modal fade" id="select_filter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Filter blog</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div style="display:flex;" class="blog_filter">
-                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=trending">Trending</a>
-                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=show_as_new">New Rooms</a>
-                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=display_as_bestseller">Best-Seller</a>
-                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=hide">Hidden</a>
-                    <a href="{% url 'admin_dashboard:blog_filter' %}?filter_by=all">All</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
-
-
-{% endcomment %}
-
 {% endblock content %}
-{% block js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-   function delete_blog(element) {
-    var blog_title = element.getAttribute('p_title');
-    var blog_id = element.getAttribute('p_id');
-
-    var target = document.getElementById('blog_delete_title');
-    target.innerHTML = "<p>Blog Title: <b>" + blog_title + "</b> (" + blog_id + ")</p>";
-
-    var delete_url = '/blog_delete/' + blog_id;  // Update the URL to match your routing
-    document.getElementById('confirm_delete_btn').setAttribute('href', delete_url);
-
-    var myModal = new bootstrap.Modal(document.getElementById('blog_delete'));
-    myModal.show();
-}
-</script>
-{% endblock js %}

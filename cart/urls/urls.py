@@ -9,18 +9,18 @@ app_name = 'cart'
 
 urlpatterns = [
     #cart&checkout
-    path('show-cart/', user_cart_views.ShowCart.as_view(), name='showcart'),
-    path('add-to-cart/<int:product_id>/', user_cart_views.AddToCartView.as_view(), name='addtocart'),
-    path('manage-cart/<str:c_p_uid>/', user_cart_views.ManageCart.as_view(), name='managecart'),
-    path('remove-from-cart/<str:cp_uid>/', user_cart_views.RemoveFromCart, name='removefromcart'),
-    path('checkout/',user_cart_views.Checkout.as_view(),name='checkout'),
-    path('directbuychecout/<int:p_id>',user_cart_views.DirectBuyCheckout.as_view(),name='directbuycheckout'),
+    path('Cart/', user_cart_views.ShowCart.as_view(), name='showcart'),
+    path('AddToCart/<int:product_id>/', user_cart_views.AddToCartView.as_view(), name='addtocart'),
+    path('ManageCart/<str:c_p_uid>/', user_cart_views.ManageCart.as_view(), name='managecart'),
+    path('RemoveFromCart/<str:cp_uid>/', user_cart_views.RemoveFromCart, name='removefromcart'),
+    path('Checkout/',user_cart_views.Checkout.as_view(),name='checkout'),
+    path('Directbuychecout/<int:p_id>',user_cart_views.DirectBuyCheckout.as_view(),name='directbuycheckout'),
 
 
      # checkout address
-    path('addaddress',user_cart_views.AddAddress.as_view(),name="addaddress"),
-    path('update_address/', user_cart_views.update_address_view, name='update_address'),
-    path('delete-address/<str:address_id>/', user_cart_views.DeleteAddress.as_view(), name='delete_address'),
+    path('Addaddress',user_cart_views.AddAddress.as_view(),name="addaddress"),
+    path('UpdateAddress/', user_cart_views.update_address_view, name='update_address'),
+    path('DeleteAddress/<str:address_id>/', user_cart_views.DeleteAddress.as_view(), name='delete_address'),
 
 ]
 

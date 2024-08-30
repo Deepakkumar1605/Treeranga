@@ -8,6 +8,7 @@ from helpers import utils, api_permission
 from django.forms.models import model_to_dict
 import json
 from helpers import utils
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from orders.models import Order
 from decimal import Decimal
 from product.models import Products
@@ -25,18 +26,26 @@ class OrderList(View):
     model = Order
     template = app + "order_list.html"
 
-    def get(self,request):
-
+    def get(self, request):
         order_list = self.model.objects.all().order_by('-id')
-        paginated_data = utils.paginate(request, order_list, 50)
         order_status_options = Order.ORDER_STATUS
-        print(paginated_data)
-        context = {
-            "order_list":order_list,
-            "order_status_options":order_status_options,
-        }
-        return render(request, self.template,context)
+        
+        # Pagination logic
+        page = request.GET.get('page', 1)
+        paginator = Paginator(order_list, 50)  # Show 50 orders per page
 
+        try:
+            orders = paginator.page(page)
+        except PageNotAnInteger:
+            orders = paginator.page(1)
+        except EmptyPage:
+            orders = paginator.page(paginator.num_pages)
+        
+        context = {
+            "order_list": orders,  # Paginated order list
+            "order_status_options": order_status_options,
+        }
+        return render(request, self.template, context)
 @method_decorator(utils.super_admin_only, name='dispatch')
 class OrderStatusSearch(View):
     model = Order

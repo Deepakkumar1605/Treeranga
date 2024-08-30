@@ -24,9 +24,6 @@
                 </form>
                 <p class="snippets">{% include 'snippets/alert.html' %}</p>
                 <div class="btn-group catagory-btn">
-                    <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
-                        <i class='bx bx-filter-alt' ></i>
-                    </button> -->
                     <a href="{% url 'product:product_add' %}">
                         <i class='bx bxs-plus-square'></i> Create New Product
                     </a>
@@ -83,21 +80,36 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Pagination Controls -->
         <div class="py-lg-2">
             <div class="pagination">
-              <a href="#">&laquo;</a>
-              <a href="#">1</a>
-              <a href="#" class="active">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">...</a>
-              <a href="#">&raquo;</a>
+                {% if products.has_previous %}
+                    <a href="?page=1">&laquo;&laquo;</a>
+                    <a href="?page={{ products.previous_page_number }}">&laquo;</a>
+                {% else %}
+                    <span class="disabled">&laquo;&laquo;</span>
+                    <span class="disabled">&laquo;</span>
+                {% endif %}
+
+                {% for num in products.paginator.page_range %}
+                    {% if products.number == num %}
+                        <span class="active">{{ num }}</span>
+                    {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}">&raquo;</a>
+                    <a href="?page={{ products.paginator.num_pages }}">&raquo;&raquo;</a>
+                {% else %}
+                    <span class="disabled">&raquo;</span>
+                    <span class="disabled">&raquo;&raquo;</span>
+                {% endif %}
             </div>
-          </div>
+        </div>
     </div>
 </section>
-
 
 {% endblock content %}
