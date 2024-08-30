@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
@@ -6,8 +7,9 @@ from django.conf import settings
 from helpers import utils
 from os.path import join
 import json
+from product_variations.models import Attribute, Variant, VariantProduct
 from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery,ProductReview
-
+from itertools import product
 from product import forms
 import os
 from django.core.files.storage import default_storage
@@ -98,8 +100,6 @@ class ProductAdd(View):
 
     def get(self, request):
         form = self.form_class()
-        
-
         context = {
             "form": form,
         }
@@ -115,11 +115,22 @@ class ProductAdd(View):
                 if not product.uid:
                     product.uid = utils.get_rand_number(5)
                 product.save()
-                simple_product_obj = SimpleProduct(product = product, is_visible=False)
-                simple_product_obj.save()  # Make sure to save the SimpleProduct object
+                print("Hii")
+                if product.product_type == "simple":
+                    simple_product_obj = SimpleProduct(product=product, is_visible=False)
+                    simple_product_obj.save()
+                    messages.success(request, "Product added successfully.")
+                    return redirect("product:product_list")
+                
+                elif product.product_type == "variant":
+                    # Fetch variant types
+                    variant_types = Variant.objects.all().values('id', 'name')
 
-                messages.success(request, "Product added successfully.")
-                return redirect("product:product_list")
+                    # Return JSON response with variant types
+                    return JsonResponse({
+                        'variant_types': list(variant_types),
+                        'product_id':product.id,
+                    })
 
             except Exception as e:
                 print("Error saving product:", e)
@@ -129,13 +140,101 @@ class ProductAdd(View):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
-            
-
+        
         context = {
             "form": form,
         }
-
         return render(request, self.template_name, context)
+
+def get_attributes(request, variant_type_id):
+    attributes = Attribute.objects.filter(variant_type=variant_type_id)
+    attributes_map = {}
+
+    for attribute in attributes:
+        attr_name = attribute.name.lower()  # Adjust if needed
+        attr_value = attribute.code
+        variant_name = attribute.variant_type.name
+
+        if attr_name not in attributes_map:
+            attributes_map[attr_name] = {
+                'values': [],
+                'variant_name': variant_name
+            }
+
+        if attr_value not in attributes_map[attr_name]['values']:
+            attributes_map[attr_name]['values'].append(attr_value)
+        print(attributes)
+    # Ensure attributes are returned in the correct format
+    return JsonResponse({'attributes': attributes_map})
+
+def generate_combinations(request):
+    if request.method == 'POST':
+        try:
+            # Load the data directly from the request body
+            data = json.loads(request.body)
+            print("Received Data:", data)
+            
+            # Ensure data is in the correct format
+            if not isinstance(data, dict):
+                return JsonResponse({'error': 'Invalid data format'}, status=400)
+            
+            # Extract attribute names and values
+            attribute_names = list(data.keys())
+            attribute_values = [data[name] for name in attribute_names]
+
+            # Print extracted attributes for debugging
+            print("Attribute Names:", attribute_names)
+            print("Attribute Values:", attribute_values)
+            
+            # Generate combinations using Cartesian product
+            combinations = []
+            for combination in product(*attribute_values):
+                combination_str = ', '.join(f'{attribute_names[i]}: {combination[i]}' for i in range(len(attribute_names)))
+                combinations.append(combination_str)
+            
+            # Print generated combinations for debugging
+            print("Generated Combinations:", combinations)
+            
+            return JsonResponse({'combinations': combinations})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def save_combination(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            variant_details = data  # List of dictionaries with combination details
+            print(f"Received data: {data}")
+            product_id = data.get('product_id')
+            combination = data.get('combination')
+            product_max_price = data.get('product_max_price')
+            product_discount_price = data.get('product_discount_price')
+            stock = data.get('stock')
+            main_product_obj = get_object_or_404(Products,id = int(product_id))
+            combination_dict = dict(item.split(": ") for item in combination.split(", "))
+            print(combination,product_max_price,product_discount_price,stock,product_id,combination_dict)
+            # Create or update VariantProduct
+            variant_product, created = VariantProduct.objects.get_or_create(
+                product = main_product_obj,
+                variant_combination=combination_dict,
+                defaults={'product_max_price': product_max_price, 'product_discount_price':product_discount_price ,'stock': stock}
+            )
+
+            if not created:
+                variant_product.product_max_price = product_max_price
+                variant_product.product_discount_price = product_discount_price
+                variant_product.stock = stock
+                variant_product.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+        
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductEdit(View):

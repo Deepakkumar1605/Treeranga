@@ -2,11 +2,16 @@
 {% load static %}
 {% block title %} Add Product {% endblock title %}
 {% block content %}
+<style>
+    #variant-options {
+        display: block !important;
+    }
+</style>
 <section class="py-lg-2">
-    <div class="conatiner">
+    <div class="container">
         <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Add Product</h4>
         <div class="product-form-container">
-            <form method="POST" enctype="multipart/form-data">
+            <form id="product-form" method="POST" enctype="multipart/form-data" action="{% url 'product:product_add' %}">
                 {% csrf_token %}
                 <div class="row mb-2">
                     <div class="col-md-6">
@@ -91,14 +96,278 @@
                         </div>
                     </div>
                 </div>
-    
-                <button type="submit" class="btn w-100 mt-2" id="save-btn">Submit</button>
             </form>
-    </div>
+            
+            <!-- Submit Button Outside Form -->
+            <button type="button" class="btn w-100 mt-2" id="submit-btn">Submit</button>
+
+            <!-- Variant Options -->
+            <div id="variant-options" hidden>
+                <h5>Select Variants:</h5>
+                <div id="variants-list">
+                    <!-- Variants will be dynamically added here -->
+                </div>
+
+                <!-- Attributes Container -->
+                <div id="attributes-container" style="display: none;">
+                    <!-- Attributes will be dynamically added here -->
+                </div>
+
+                <!-- Generate Combinations -->
+                <button type="button" id="generate-combinations-btn" class="btn btn-primary mt-2" style="display: none;">Generate Combinations</button>
+
+                <!-- Combinations Container -->
+                <div id="combinations-container" style="display: none;">
+                    <h5>Combinations:</h5>
+                    <ul id="combinations-list"></ul>
+
+                    <!-- Variant Details List -->
+                    <div id="variant-details-container" style="display: none;">
+                        <h5>Variant Details:</h5>
+                        <div id="variant-details-list">
+                            <!-- Variant detail forms will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="product_id" id="product_id" value="">
+
+            </div>
+        </div>
     </div>
 </section>
 
-
-
-
 {% endblock content %}
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#submit-btn').on('click', function() {
+            $.ajax({
+                url: $('#product-form').attr('action'),
+                type: 'POST',
+                data: new FormData($('#product-form')[0]),
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Variant Types Response:', response);
+                    if (response.variant_types) {
+                        var variantsList = $('#variants-list');
+                        variantsList.empty();
+                        response.variant_types.forEach(function(variant) {
+                            variantsList.append(
+                                '<div class="form-check form-check-inline">' +
+                                '<input type="checkbox" class="form-check-input" id="variant-' + variant.id + '" data-variant-id="' + variant.id + '">' +
+                                '<label class="form-check-label" for="variant-' + variant.id + '">' + variant.name + '</label>' +
+                                '</div>'
+                            );
+                        });
+                        $('#variant-options').show();
+                    }
+                    // Set the product_id in the hidden input field
+                    $('#product_id').val(response.product_id);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    
+        $(document).on('change', '#variants-list input[type="checkbox"]', function() {
+            var selectedVariantIds = $('#variants-list input[type="checkbox"]:checked').map(function() {
+                return $(this).data('variant-id');
+            }).get();
+    
+            $('#attributes-container').empty().hide();
+            $('#generate-combinations-btn').hide();
+    
+            if (selectedVariantIds.length > 0) {
+                var requests = selectedVariantIds.map(function(variantId) {
+                    return $.ajax({
+                        url: '{% url "product:get_attributes" 0 %}'.replace('0', variantId),
+                        type: 'GET'
+                    });
+                });
+    
+                Promise.all(requests)
+                    .then(function(responses) {
+                        console.log('Attributes Responses:', responses);
+                        var attributesMap = {};
+    
+                        responses.forEach(function(response) {
+                            if (response.attributes && typeof response.attributes === 'object') {
+                                for (var attrName in response.attributes) {
+                                    if (response.attributes.hasOwnProperty(attrName)) {
+                                        var attrData = response.attributes[attrName];
+                                        if (!attributesMap[attrName]) {
+                                            attributesMap[attrName] = {
+                                                'values': [],
+                                                'variant_name': attrData.variant_name
+                                            };
+                                        }
+                                        attrData.values.forEach(function(value) {
+                                            if (!attributesMap[attrName]['values'].includes(value)) {
+                                                attributesMap[attrName]['values'].push(value);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+    
+                        for (var attrName in attributesMap) {
+                            if (attributesMap.hasOwnProperty(attrName)) {
+                                var attributeGroup = '<div class="form-check">';
+                                attributesMap[attrName]['values'].forEach(function(attrValue) {
+                                    attributeGroup += '<div class="form-check">' +
+                                    '<input type="checkbox" class="form-check-input" data-variant-name="' + attributesMap[attrName].variant_name + '" data-attribute-name="' + attrName + '" value="' + attrName + '">' ;
+                                    '</div>';
+                                });
+                                attributeGroup += '<span>'+'<h6>' + attrName + ' (' + attributesMap[attrName].variant_name + ')</h6>'+ '</span>';
+                                attributeGroup += '</div>';
+                                $('#attributes-container').append(attributeGroup);
+                            }
+                        }
+    
+                        $('#attributes-container').show();
+                        $('#generate-combinations-btn').show();
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                    });
+            } else {
+                $('#attributes-container').hide();
+                $('#generate-combinations-btn').hide();
+            }
+        });
+    
+        $('#generate-combinations-btn').on('click', function() {
+            var attributes = {};
+
+            $('#attributes-container').find('.form-check').each(function() {
+                var variantName = $(this).find('input[type="checkbox"]').data('variant-name');
+                var attributeName = $(this).find('input[type="checkbox"]').data('attribute-name');
+                var selectedValues = [];
+
+                $(this).find('input[type="checkbox"]:checked').each(function() {
+                    if (!selectedValues.includes(attributeName)) {
+                        selectedValues.push(attributeName);
+                    }
+                });
+
+                if (selectedValues.length > 0) {
+                    if (!attributes[variantName]) {
+                        attributes[variantName] = [];
+                    }
+                    // Add unique attribute names to the array
+                    selectedValues.forEach(function(value) {
+                        if (!attributes[variantName].includes(value)) {
+                            attributes[variantName].push(value);
+                        }
+                    });
+                }
+            });
+
+            // RequestData is directly set to attributes, which is already in the correct format.
+            var requestData = attributes;
+            console.log(requestData, "Request Data");
+
+            $.ajax({
+                url: '{% url "product:generate_combinations" %}',
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: JSON.stringify(requestData),
+                success: function(response) {
+                    $('#combinations-container').show();
+                    $('#combinations-list').empty();
+
+                    response.combinations.forEach(function(combination) {
+                        $('#combinations-list').append(
+                            '<li><a href="#" class="combination-link" data-combination="' + combination + '">' + combination + '</a></li>'
+                        );
+                    });
+                    $('#variant-details-container').show();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        $(document).on('click', '.combination-link', function(event) {
+            event.preventDefault();
+            var combination = $(this).data('combination');
+
+            // Simulate fetching details
+            // Replace with actual logic to retrieve details if needed
+            var details = {
+                'example combination': {
+                    product_max_price: 100,
+                    product_discount_price: 80,
+                    stock: 10
+                }
+            };
+
+            var detail = details[combination] || {
+                product_max_price: '',
+                product_discount_price: '',
+                stock: ''
+            };
+
+            $('#variant-details-list').empty();
+            $('#variant-details-list').append(
+                '<div class="variant-details-form">' +
+                '<input type="hidden" name="combination" value="' + combination + '">' +
+                '<label>Price:</label>' +
+                '<input type="number" class="form-control" name="product_max_price" value="' + detail.product_max_price + '" required>' +
+                '<label>Discount Price:</label>' +
+                '<input type="number" class="form-control" name="product_discount_price" value="' + detail.product_discount_price + '" required>' +
+                '<label>Stock:</label>' +
+                '<input type="number" class="form-control" name="stock" value="' + detail.stock + '" required>' +
+                '<button type="button" class="btn btn-primary save-combination-btn mt-2" data-combination="' + combination + '">Save</button>' +
+                '</div>'
+            );
+            $('#variant-details-container').show();
+        });
+
+        $(document).on('click', '.save-combination-btn', function() {
+            var combinationBtn = $(this);
+            var combination = $(this).data('combination');
+            console.log(combination)
+            var formData = {
+                product_id: $('#product_id').val(),  // Include product ID here
+                combination: combination,
+                product_max_price: $(this).closest('.variant-details-form').find('input[name="product_max_price"]').val(),
+                product_discount_price: $(this).closest('.variant-details-form').find('input[name="product_discount_price"]').val(),
+                stock: $(this).closest('.variant-details-form').find('input[name="stock"]').val()
+            };
+            console.log(formData)
+            $.ajax({
+                url: '{% url "product:save_combination" %}',
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    if (response.success) {
+                        // Show green tick icon next to the combination
+                        var combinationLink = $('.combination-link[data-combination="' + combination + '"]');
+                        combinationLink.after('<span class="text-success mx-3">Updated</span>');
+                        $('#variant-details-container').hide();
+                    } else {
+                        alert('Failed to save combination details.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+{% endblock js %}

@@ -38,6 +38,10 @@ urlpatterns = [
 
     path('update-delivery-settings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),
 
+    # path('get-variant-types/', admin_product_views.get_variant_types, name='get_variant_types'),
+    path('get-attributes/<int:variant_type_id>', admin_product_views.get_attributes, name='get_attributes'),
+    path('generate-combinations/', admin_product_views.generate_combinations, name='generate_combinations'),
+    path('save-combination/', admin_product_views.save_combination, name='save_combination'),
 
 ]   
 
