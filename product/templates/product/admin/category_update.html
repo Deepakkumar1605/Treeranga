@@ -3,19 +3,20 @@
 {% block title %} update category {% endblock title %}
 {% block content %}
 
-
-    <section class="py-2">
-        <div class="container">
-            <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Update Product</h4>
-            <div class="container  card w-50 p-lg-4 lh-lg tablecard" >
-                    <form method="post">
-                        {% include 'snippets/alert.html' %}
-                        {% csrf_token %}
-                        {{form.as_p}}
-                        <button type="submit" class="btn btn-primary w-100">Update</button>
-                    </form>
-            </div>
+<section class="py-lg-2">
+    <div class="conatiner">
+        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Update Category</h4>
+        <div class="d-flex justify-content-center m-0 p-0">
+            <p class="m-0 p-0">{% include 'snippets/alert.html' %}</p>
         </div>
-       </section>
+        <div class="product-form-container w-50" >
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-warning w-100">Update</button>
+            </form>
+    </div>
+    </div>
+</section>
 
 {% endblock content %}

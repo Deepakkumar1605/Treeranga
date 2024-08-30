@@ -2,104 +2,81 @@
 {% load static %}
 {% block title %} update product {% endblock title %}
 {% block content %}
-<style>
-      #vstack {
-        border: none  ;
-        font-family: 'Poppins', sans-serif; 
-        border-radius: 0;
-    }
-
-    .BtM {
-        box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-    .form-control::placeholder{
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-    }
-    /* .form-group label{
-        margin-bottom: 30px;
-        font-size: 14px;
-        font-weight: bold;
-        font-family: 'Poppins', sans-serif;
-    }  */
-    .form-control{
-        margin-bottom: 20px;
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-    }
-  
-    .update-form {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        background-color: rgb(255, 255, 255)    ;
-    }
-    p{
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-</style>
-<main class="py-6 bg-surface-secondary">
-    <div class="container-fluid">
-        <div class="vstack gap-4">
-            <div class="card bg-surface-secondary create_test" id="vstack">
-                <form action="" class="update-form p-5" method="post" enctype="multipart/form-data" style="width: 80%;" id="productForm">
-                    {% include 'snippets/alert.html' %}
-                    {% csrf_token %}
-                    <div class="row">
-                        {% for field in form %}
-                            <div class="col-md-6 col-6 col-sm-6">
-                                <p class="mb-2 ">{{ field.label_tag }}</p>
-                                {{ field }}
+<section class="py-lg-2">
+    <div class="conatiner">
+        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Update Simple Product</h4>
+        <div class="product-form-container">
+            <form action="" class="update-form" method="post" enctype="multipart/form-data"  id="productForm">
+                {% include 'snippets/alert.html' %}
+                {% csrf_token %}
+                
+                <div class="row">
+                    {% for field in form %}
+                        <div class="col-md-6 col-6 col-sm-6 mb-3">
+                            <label class="lh-lg">{{ field.label_tag }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Existing Images Section -->
+                <div id="fileInputs" class="row mt-3">
+                    {% for image in product.images %}
+                        <div class="col-md-6 col-6 col-sm-6 mb-3">
+                            <label class="lh-lg" for="existingImage{{ forloop.counter }}">Existing Image {{ forloop.counter }}:</label>
+                            <div>
+                                <img src="{{ MEDIA_URL }}{{ image }}" alt="Image {{ forloop.counter }}" class="img-thumbnail" style="max-width: 200px; height: 200px;">
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div id="fileInputs" class="row mt-3">
-                        {% for image in product.images %}
-                            <div class="col-md-4 mb-3 col-6 col-sm-3">
-                                <label class="fw-bold text-sm mb-2" for="existingImage{{ forloop.counter }}">Existing Image {{ forloop.counter }}:</label>
-                                <div>
-                                    <img src="{{ MEDIA_URL }}{{ image }}" alt="Image {{ forloop.counter }}" class="img-thumbnail" style="max-width: 200px; height: 200px;">
-                                </div>
-                                <div class="form-check mt-2">
-                                    <input type="checkbox" class="form-check-input" id="removeImage{{ forloop.counter }}" name="remove_images" value="{{ image }}">
-                                    <label class="form-check-label" for="removeImage{{ forloop.counter }}">Remove Image</label>
-                                </div>
-                                <input type="hidden" name="existing_images" value="{{ image }}">
+                            <div class="form-check mt-2">
+                                <input type="checkbox" class="form-check-input" id="removeImage{{ forloop.counter }}" name="remove_images" value="{{ image }}">
+                                <label class="form-check-label" for="removeImage{{ forloop.counter }}">Remove Image</label>
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div class="col-md-6 col-6 col-sm-6 form-group" id="field_images">
-                        <label class="fw-bold text-sm mb-2"  for="id_images">Images:</label>
+                            <input type="hidden" name="existing_images" value="{{ image }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- New Image Upload -->
+                <div class="row mt-3">
+                    <div class="col-md-6 col-6 col-sm-6 form-group mb-3">
+                        <label class="lh-lg" for="id_images">Upload New Images:</label>
                         <input type="file" name="new_images" id="id_images" class="form-control" multiple>
                     </div>
-                    
-
-                    <div id="videofileInputs" class="row mt-3">
-                        {% for video in product.videos %}
-                            <div class="col-md-4 col-6 col-sm-4 mb-3">
-                                <label class="fw-bold text-sm mb-2"      for="existingVideo{{ forloop.counter }}">Existing Video {{ forloop.counter }}:</label>
-                                <div>
-                                    <video src="{{ MEDIA_URL }}{{ video }}" controls class="img-thumbnail" style="max-width: 200px; height: 200px;"></video>
-                                </div>
-                                <div class="form-check mt-2">
-                                    <input type="checkbox" class="form-check-input" id="removeVideo{{ forloop.counter }}" name="remove_videos" value="{{ video }}">
-                                    <label class="form-check-label" for="removeVideo{{ forloop.counter }}">Remove Video</label>
-                                </div>
-                                <input type="hidden" name="existing_videos" value="{{ video }}">
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="col-md-6 col-6 col-sm-6 form-group" id="field_videos">
-                        <label  class="fw-bold text-sm mb-2" for="id_videos">Videos:</label>
+                    <div class="col-md-6 col-6 col-sm-6 form-group mb-3">
+                        <label class="lh-lg" for="id_videos">Upload New Videos:</label>
                         <input type="file" name="new_videos" id="id_videos" class="form-control" multiple>
                     </div>
-                    <br>
-                    <center><button type="submit" class="btn px-12 BtM btn-success">Update Product</button></center>
-                </form>
-            </div>
-        </div>
+                </div>
+               
+                <!-- Existing Videos Section -->
+                <div id="videofileInputs" class="row mt-3">
+                    {% for video in product.videos %}
+                        <div class="col-md-6 col-6 col-sm-6 mb-3">
+                            <label class="fw-bold text-sm mb-2" for="existingVideo{{ forloop.counter }}">Existing Video {{ forloop.counter }}:</label>
+                            <div>
+                                <video src="{{ MEDIA_URL }}{{ video }}" controls class="img-thumbnail" style="max-width: 200px; height: 200px;"></video>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input type="checkbox" class="form-check-input" id="removeVideo{{ forloop.counter }}" name="remove_videos" value="{{ video }}">
+                                <label class="form-check-label" for="removeVideo{{ forloop.counter }}">Remove Video</label>
+                            </div>
+                            <input type="hidden" name="existing_videos" value="{{ video }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                
+             
+                
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn w-100 btn-warning">Update Product</button>
+            </form>
+            
     </div>
-</main>
+    </div>
+</section>
+
+
+
 {% endblock content %}
 

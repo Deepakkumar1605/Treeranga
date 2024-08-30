@@ -80,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.cart_views.user_cart_views.cart_count_processor',
             ],
         },
     },
@@ -198,5 +199,9 @@ RAZORPAY_API_KEY = 'rzp_test_kugvSxFkbuJKAI'
 RAZORPAY_API_SECRET = 'kI8OEz5kKfMRBcnTmQ14GDHy'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
+
+
+LOGIN_REDIRECT_URL = 'cart:checkout'  # Redirect to checkout after login
+LOGIN_URL = 'users:login'  # Ensure login URL is set
 
 

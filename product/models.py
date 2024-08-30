@@ -88,6 +88,7 @@ class SimpleProduct(models.Model):
     taxable_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
     flat_delivery_fee = models.BooleanField(default=False)
     virtual_product = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # Ensure the related product exists and has a gst_rate
@@ -97,6 +98,7 @@ class SimpleProduct(models.Model):
             total_gst = discount_price * (self.product.gst_rate / 100)
             self.taxable_value = discount_price - total_gst
 
+        
         # Call the parent class's save method
         super(SimpleProduct, self).save(*args, **kwargs)
 

@@ -2,61 +2,73 @@
 {% load static %}
 {% block content %}
 
-
-<main class="p-0">
-    <div class="container">
-      <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Users</h4>
-        <div class="vstack ">
-            <div class="d-flex justify-content-center ">
-                <p class="snippets">{% include 'snippets/alert.html' %}</p>
-            </div>
-  
-            <div class="tablecard">
-                <div class="table-responsive">
-                    <table class="table table-hover table-nowrap">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="" id="tb-head" scope="col">User ID</th>
-                                <th class="" id="tb-head" scope="col">User Name</th>
-                                <th class="" id="tb-head" scope="col">Contact</th>
-                                <th class="" id="tb-head" scope="col">E-mail</th>
-                                <th class="" id="tb-head" scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="test_table_tbody">
-                            {% for user in user_obj %}
-                          <tr>
-                            <td class="tb-body">{{user.id}} </td>
-                            <td class="tb-body">{{user.full_name}}</td>
-                            <td class="tb-body">{{user.contact}}</td>
-                            <td class="tb-body">{{user.email}}</td>
-                            <td class="tb-body"> 
-                                <a href="{% url 'users:user_detail' user.id %}" class="btn btn-info">View</a>
-                            </td>
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-            </div>
-        </div>
-        <div class="py-lg-2">
-            <div class="pagination">
-              <a href="#">&laquo;</a>
-              <a href="#">1</a>
-              <a href="#" class="active">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">...</a>
-              <a href="#">&raquo;</a>
-            </div>
+<section class="py-2">
+  <div class="container">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Users List</h4>
+      <div class="vstack gap-4">
+          <div class="tablecard">
+              <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                    <thead class="table-light">
+                      <tr>
+                          <th class="" id="tb-head" scope="col">User ID</th>
+                          <th class="" id="tb-head" scope="col">User Name</th>
+                          <th class="" id="tb-head" scope="col">Contact</th>
+                          <th class="" id="tb-head" scope="col">E-mail</th>
+                          <th class="" id="tb-head" scope="col">Action</th>
+                      </tr>
+                  </thead>
+                      <tbody id="test_table_tbody">
+                        {% for user in user_obj %}                        
+                        <tr>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{user.id}}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{user.full_name}}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{user.contact}}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{user.email}}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              <a href="{% url 'users:user_detail' user.id %}" class="text-info">View</a>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+              
           </div>
-    </div>
-  </main>
-
+      </div>
+      <div class="py-lg-2">
+        <div class="pagination">
+          <a href="#">&laquo;</a>
+          <a href="#">1</a>
+          <a href="#" class="active">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#">6</a>
+          <a href="#">...</a>
+          <a href="#">&raquo;</a>
+        </div>
+      </div>
+  </div>
+</section>
 
 
 {% endblock content %}

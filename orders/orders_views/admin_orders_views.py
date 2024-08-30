@@ -9,6 +9,7 @@ from django.forms.models import model_to_dict
 import json
 from helpers import utils
 from orders.models import Order
+from decimal import Decimal
 from product.models import Products
 from orders.serializer import OrderSerializer
 from orders.forms import OrderUpdateForm
@@ -135,41 +136,53 @@ class AdminOrderDetail(View):
 @method_decorator(utils.super_admin_only, name='dispatch')
 class DownloadInvoice(View):
     model = Order
-    form_class = OrderUpdateForm
-    template = app + 'invoice.html'
-
+    template = 'orders/admin/invoice.html'
+ 
     def get(self, request, order_uid):
         order = self.model.objects.get(uid=order_uid)
         data = OrderSerializer(order).data
+        
+        
         products = []
         quantities = []
         price_per_unit = []
         total_prices = []
 
-        # Iterate over products in order_meta_data
-        for product, p_overview in data['order_meta_data'].get('products', {}).items():
-            products.append(product)
-            quantities.append(p_overview.get('quantity', 0))  # Use .get() with a default value
-            price_per_unit.append(p_overview.get('product_discount_price', 0))
-            total_prices.append(p_overview.get('total_price', 0))
+        total_cgst = Decimal('0.00')
+        total_sgst = Decimal('0.00')
 
-        # Zipping products and quantities together
+        # Loop through each product to extract and calculate required information
+        for product_id, p_overview in data['order_meta_data']['products'].items():
+            products.append(p_overview['name'])
+            quantities.append(p_overview['quantity'])
+            price_per_unit.append(p_overview['product_discount_price'])
+            total_prices.append(p_overview['total_price'])
+ 
+            # Calculate the total CGST and SGST
+            total_cgst += Decimal(p_overview.get('cgst_amount', '0.00'))
+            total_sgst += Decimal(p_overview.get('sgst_amount', '0.00'))
+
         prod_quant = zip(products, quantities, price_per_unit, total_prices)
-
-        # Handling missing keys for final_total
-        final_total = data['order_meta_data'].get('final_cart_value') or data['order_meta_data'].get('final_value', 0)
-
-        # Constructing the context
+ 
+        try:
+            final_total = data['order_meta_data']['final_cart_value']
+        except KeyError:
+        
+            final_total = data['order_meta_data']['final_value']
+ 
+        # Prepare context data for rendering the invoice
         context = {
             'order': data,
-            'address': data.get('address', {}),
+            'address': data['address'],
             'user': order.user,
             'productandquantity': prod_quant,
-            'GST': data['order_meta_data']['charges'].get('GST', 0),
-            'delivery_charge': data['order_meta_data']['charges'].get('Delivery', 0),
-            'gross_amt': data['order_meta_data'].get('our_price', 0),
-            'discount': data['order_meta_data'].get('coupon_validation_result', {}).get('discount', 0),
+            'delivery_charge': data['order_meta_data']['charges']['Delivery'],
+            'cgst_amount': "{:.2f}".format(total_cgst),
+            'sgst_amount': "{:.2f}".format(total_sgst),
+            'gross_amt': data['order_meta_data']['our_price'],
+            'discount': data['order_meta_data'].get('discount_amount', '0.00'),
             'final_total': final_total
         }
-
+ 
+        # Render the template with the provided context
         return render(request, self.template, context)

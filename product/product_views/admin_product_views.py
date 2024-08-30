@@ -22,28 +22,12 @@ app = "product/"
 class CategoryList(View):
     model = Category
     template = app + "admin/category_list.html"
-    form_class = forms.CategoryEntryForm
     def get(self, request):
         catagory_list = self.model.objects.all().order_by('-id')
         context = {
-            "form": self.form_class,
             "catagory_list":catagory_list,
         }
         return render(request, self.template, context)
-
-    def post(self, request):
-        form = self.form_class(request.POST, request.FILES)
-        
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            messages.success(request, f"{request.POST['title']} is added to the list.")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
-
-        return redirect("product:category_list")
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CatagoryAdd(View):
@@ -131,7 +115,7 @@ class ProductAdd(View):
                 if not product.uid:
                     product.uid = utils.get_rand_number(5)
                 product.save()
-                simple_product_obj = SimpleProduct(product = product)
+                simple_product_obj = SimpleProduct(product = product, is_visible=False)
                 simple_product_obj.save()  # Make sure to save the SimpleProduct object
 
                 messages.success(request, "Product added successfully.")
@@ -225,7 +209,6 @@ class SimpleProductUpdate(View):
         form = self.form_class(instance=product)
         product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
 
-        # Provide empty lists if product_images_videos is None
         images = product_images_videos.images if product_images_videos.images else []
         videos = product_images_videos.video if product_images_videos.video else []
 
@@ -246,7 +229,6 @@ class SimpleProductUpdate(View):
             try:
                 product = form.save(commit=False)
 
-                # Handle images
                 remove_images = request.POST.getlist('remove_images')
                 new_uploaded_images = request.FILES.getlist('new_images')
 
@@ -257,9 +239,18 @@ class SimpleProductUpdate(View):
                     file_path = default_storage.save(os.path.join('product_images', file.name), file)
                     updated_images.append(file_path.replace("\\", "/"))
 
-                product_images_videos.images = updated_images  # Update the images field
+                if not updated_images:
+                    messages.error(request, "At least one image is required.")
+                    context = {
+                        "form": form,
+                        "product": product,
+                        "images": updated_images,
+                        "videos": product_images_videos.video if product_images_videos.video else []
+                    }
+                    return render(request, self.template, context)
 
-                # Handle videos
+                product_images_videos.images = updated_images
+
                 remove_videos = request.POST.getlist('remove_videos')
                 new_uploaded_videos = request.FILES.getlist('new_videos')
 
@@ -270,11 +261,12 @@ class SimpleProductUpdate(View):
                     file_path = default_storage.save(os.path.join('product_videos', file.name), file)
                     updated_videos.append(file_path.replace("\\", "/"))
 
-                product_images_videos.video = updated_videos  # Update the videos field
+                product_images_videos.video = updated_videos
 
-                # Save the product
+                product.is_visible = True
                 product.save()
                 product_images_videos.save()
+
                 messages.success(request, "Product updated successfully.")
                 return redirect("product:simple_product_list")
 
@@ -284,7 +276,9 @@ class SimpleProductUpdate(View):
 
         context = {
             "form": form,
-            "product": product
+            "product": product,
+            "images": product_images_videos.images if product_images_videos.images else [],
+            "videos": product_images_videos.video if product_images_videos.video else []
         }
         return render(request, self.template, context)
 

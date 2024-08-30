@@ -21,4 +21,9 @@ urlpatterns = [
     path('admin/messages/', admin_views.AdminMessageListView.as_view(), name='admin_message_list'),
     path('admin/messages/<int:message_id>/', admin_views.AdminMessageDetailView.as_view(), name='admin_message_detail'),
 
+
+    #admin banner management
+    path('banners/', admin_views.BannerList.as_view(), name='web_banner_list'),
+    path('banners/delete/<int:banner_id>/', admin_views.BannerDelete.as_view(), name='web_banner_delete'),
+
 ]

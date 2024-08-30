@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from helpers import utils
 from users import models,forms
-
+from orders.models import Order
 app = "users/admin/"
 
 # admin dashboard and manage users list
@@ -30,7 +30,13 @@ class UserList(View):
 class UserDetailView(View):
     model = models.User
     template = app + "user_profile.html"
-    def get(self,request,user_id):
-        user_obj = self.model.objects.get(id=user_id)
-        return render(request, self.template, {"user_obj": user_obj})
+    def get(self, request, user_id):
+        user_obj = get_object_or_404(self.model, id=user_id)
+        orders = Order.objects.filter(user=user_obj).order_by('-date')  # Adjust the field name and ordering as needed
+
+        context = {
+            "user_obj": user_obj,
+            "orders": orders
+        }
+        return render(request, self.template, context)
 

@@ -150,7 +150,7 @@ a.sidebar-links{
 }
 
 .chevron-icon.rotate {
-  transform: rotate(-90deg);
+  transform: rotate(-180deg);
 }
 .sidebar-item{
   position: relative;
@@ -428,8 +428,9 @@ nav .sidebar-button{
 /* -----------------------------Adim All Products CSS-------------------- */
 
 .tablecard {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    border-radius: 8px;
+  
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border-radius: 5px;
     overflow: hidden;
 }
 
@@ -472,13 +473,16 @@ nav .sidebar-button{
 }
 
 .tb-body{
-    margin-top: 15px;
-    text-align: center;
+  padding: 0 !important;
     font-family: var(--rubik);
     font-size: 13px;
     font-weight: 400;
     font-style: normal;
-    line-height: 23px;
+  
+}
+.tb-body_sub{
+padding: 18px 10px;
+  text-align: center;
 }
 .text-heading{
    padding-top: 10px;
@@ -494,6 +498,12 @@ nav .sidebar-button{
 
 
 /* ---------------------Admin Add Category CSS----------------------- */
+.all_category_snippets p{
+  background-color: transparent;
+  border: none;
+  margin: 0 !important;
+  padding:0 !important;
+}
 .create_test{
     width: 50%;
     align-self: center;
@@ -525,50 +535,12 @@ nav .sidebar-button{
   transform: translateY(-2px);
 }
 
-/* ---------------------Admin Category List CSS----------------------- */
-
-    .BtM i{ 
-     font-size: 20px;
-    }
-    
-    .BtM1{ 
-        outline: none;
-        border: none;
-        background-color: transparent;
-        font-size: 20px;
-        margin-top: 10px;
-    }
 
 /* ---------------------Admin Simple Product List CSS----------------------- */
 
-.tablecard {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  border-radius: 5px;
-  overflow: hidden;
-}
 
 
 
-
-
-
-
-
-.headinG {
-    color: navy;
-    font-weight: 500;
-    font-size: 30px;
-    margin-left: 13px;
-    font-family: 'Poppins', sans-serif;
-}
-
-#test_table_tbody {
-    font-family: 'Poppins', sans-serif;
-}
-
-.px-5 {
-    text-align: center;
-}
 /*---------------------------- Admin Order List CSS------------------------------- */
 #Filetr_button{
     width: 120px;
@@ -660,10 +632,10 @@ nav .sidebar-button{
 .product-form-container {
   margin: 20px auto;
   max-width: 800px;
-  padding: 20px;
+  padding: 35px;
   background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .form-header {

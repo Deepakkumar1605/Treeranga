@@ -86,7 +86,7 @@
                     {% for key, product in order_details.products.items %}
                     <tr>
                         <td class="ps-4">
-                            <img src="{{ MEDIA_URL }}{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
+                            <img src="{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
                         </td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.quantity }}</td>

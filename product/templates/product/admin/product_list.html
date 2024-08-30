@@ -3,7 +3,7 @@
 {% block title %} All Products {% endblock title %}
 {% block content %}
 
-<main class="py-2">
+<section class="py-2">
     <div class="container">
         <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Products</h4>
         <div class="vstack">
@@ -49,23 +49,33 @@
                             {% for product in products %}
                             <tr>
                                 <td class="tb-body">
-                                    
-                                        {{ product.pk }}
+                                   <div class="tb-body_sub">
+                                    {{ product.pk }}
+                                   </div>
                                 </td>
-                                <td class="tb-body">{{ product.name|truncatewords:5 }}</td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">
+                                        {{ product.name|truncatewords:5 }}                                   
+                                    </div>
+                                </td>
+                              
                                 <td class=" tb-body">
                                     {% if product.image %}
                                         <img class="cat-img2" src="{{ product.image.url }}" alt="Image">
                                     {% endif %}
                                 </td>
-                                <td class="tb-body">{{ product.brand }}</td>
                                 <td class="tb-body">
-                                    <a href="{% url 'product:product_edit' product.pk %}"
-                                        class="BtM">
-                                        <i class='bx bx-edit text-primary' ></i>    
-                                    </a>
+                                    <div class="tb-body_sub">
+                                        {{ product.brand }}                                  
+                                    </div>
                                 </td>
-                        
+                                <td class="d-flex justify-content-around p-3">
+                                    <div class="">
+                                        <a href="{% url 'product:product_edit' product.pk %}">
+                                        <i class='bx bx-edit text-primary'></i>    
+                                    </a>
+                                    </div>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -87,7 +97,7 @@
             </div>
           </div>
     </div>
-</main>
+</section>
 
 
 {% endblock content %}

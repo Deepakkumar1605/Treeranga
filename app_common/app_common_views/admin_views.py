@@ -1,8 +1,10 @@
 from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from app_common.models import ContactMessage
-from app_common.forms import ReplyForm
+from django.utils.decorators import method_decorator
+from helpers import utils
+from app_common.models import ContactMessage,Banner
+from app_common.forms import ReplyForm,BannerForm
 from users.user_views.emails import send_template_email
 
 
@@ -46,3 +48,50 @@ class AdminMessageDetailView(View):
             return redirect('app_common:admin_message_list')
 
         return render(request, self.template, {'message': message, 'form': form})
+
+
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class BannerList(View):
+    template = app +"admin/banner.html"  # Adjust the path as necessary
+    model = Banner
+    form_class = BannerForm
+
+    def get(self, request):
+        banner_list = self.model.objects.all().order_by('order')  # Order by 'order' field
+        form = self.form_class()
+        context = {
+            "banner_list": banner_list,
+            "form": form,
+        }
+        return render(request, self.template, context)
+
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Banner added successfully.")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+        
+        return redirect('app_common:web_banner_list')
+
+
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class BannerDelete(View):
+    model = Banner
+
+    def get(self, request, banner_id):
+        banner = get_object_or_404(self.model, id=banner_id)
+        if banner.image:
+            image_path = banner.image.path
+            default_storage.delete(image_path)  # Delete the image from storage
+            banner.image = None
+        
+        banner.delete()
+        messages.success(request, 'Banner deleted successfully.')
+
+        return redirect('app_common:web_banner_list')

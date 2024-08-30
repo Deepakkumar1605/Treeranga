@@ -6,17 +6,94 @@
     <div class="conatiner">
         <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Add Product</h4>
         <div class="product-form-container">
-      
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <!-- Main product form always visible -->
-            <div class="form-group">
-                {{ form.as_p }}
-            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.product_type.id_for_label }}">Product Type</label>
+                            {{ form.product_type }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.category.id_for_label }}">Category</label>
+                            {{ form.category }}
+                        </div>
+                    </div>
+                </div>
     
-            <button type="submit" class="submit-button">Save Product</button>
-        </form>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.sku_no.id_for_label }}">SKU Number</label>
+                            {{ form.sku_no }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.name.id_for_label }}">Name</label>
+                            {{ form.name }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.brand.id_for_label }}">Brand</label>
+                            {{ form.brand }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.image.id_for_label }}">Image</label>
+                            {{ form.image }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.trending.id_for_label }}">Trending</label>
+                            {{ form.trending }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.show_as_new.id_for_label }}">Show as New</label>
+                            {{ form.show_as_new }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.gst_rate.id_for_label }}">GST Rate</label>
+                            {{ form.gst_rate }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.product_short_description.id_for_label }}">Short Description</label>
+                            {{ form.product_short_description }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.product_long_description.id_for_label }}">Long Description</label>
+                            {{ form.product_long_description }}
+                        </div>
+                    </div>
+                </div>
+    
+                <button type="submit" class="btn w-100 mt-2" id="save-btn">Submit</button>
+            </form>
     </div>
     </div>
 </section>

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from app_common import forms
 from app_common.models import ContactMessage
 from users.forms import LoginForm
 from app_common.models import ContactMessage
@@ -23,26 +22,28 @@ class HomeView(View):
 
     def get(self, request):
         categories = Category.objects.all()
-        trending_products = Products.objects.filter(trending="yes").order_by('-id')[:6]
-        new_products = Products.objects.filter(show_as_new="yes").order_by('-id')[:6]
-        cart = Cart.objects.filter(user=request.user).first()
-        if cart:
-        # Assuming 'products' is stored as a list of dictionaries in JSON
-            cart_products = cart.products
-            cart_count = sum(item['quantity'] for item in cart_products.values()) if cart_products else 0
-        else:
-            cart_count = 0
         
+        trending_products = []
+        for product in Products.objects.filter(trending="yes").order_by('-id')[:6]:
+            simple_product = SimpleProduct.objects.filter(
+                product=product, is_visible=True
+            ).first()
+            if simple_product:
+                trending_products.append({'product': product,'simple_product': simple_product})
+        
+        new_products = []
+        for product in Products.objects.filter(show_as_new="yes").order_by('-id')[:6]:
+            simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
+            if simple_product:
+                new_products.append({'product': product,'simple_product': simple_product})
+
         context = {
             'categories': categories,
             'trending_products': trending_products,
             'new_products': new_products,
-            'cart_count': cart_count,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template, context)
-
-
 class AboutUs(View):
     template = app + "about_us.html"
 

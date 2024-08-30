@@ -40,19 +40,25 @@ class OrderDetail(View):
         total_cart_items = int(order_meta_data.get('total_cart_items', 0))
         delivery_charge = float(order_meta_data.get('charges', {}).get('Delivery', '0.00'))
 
+        products = []
+        quantities = []
+        price_per_unit = []
+        total_prices = []
+
         # Calculate total CGST and SGST
         for product_id, details in order_meta_data.get('products', {}).items():
-            total_cgst += float(details.get('cgst_amount', 0))
-            total_sgst += float(details.get('sgst_amount', 0))
-        
-        # Fetch products and quantities
-        for product_id, details in order_meta_data.get('products', {}).items():
+            total_cgst += float(details.get('cgst_amount', '0.00'))
+            total_sgst += float(details.get('sgst_amount', '0.00'))
+            
+            # Fetch product and calculate price details
             product = get_object_or_404(Products, id=details['id'])
-            product_list.append(product)
-            product_quantity.append(details['quantity'])
+            products.append(product)
+            quantities.append(details['quantity'])
+            price_per_unit.append(details['product_discount_price'])
+            total_prices.append(float(details['total_price']))
             total_quantity += int(details['quantity'])
 
-        zipproduct = zip(product_list, product_quantity)
+        zipproduct = zip(products, quantities, price_per_unit, total_prices)
 
         context = {
             'order': order,
@@ -65,6 +71,7 @@ class OrderDetail(View):
             'cgst_amount': total_cgst,
             'sgst_amount': total_sgst,
             'delivery_charge': delivery_charge,
+            'payment_method': order.payment_method,
             "MEDIA_URL": settings.MEDIA_URL
         }
         return render(request, self.template, context)

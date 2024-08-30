@@ -1,5 +1,5 @@
 from django import forms
-from app_common.models import ContactMessage
+from app_common.models import ContactMessage,Banner
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
@@ -35,3 +35,9 @@ class ReplyForm(forms.ModelForm):
         widgets = {
             'reply': forms.Textarea(attrs={'rows': 8,'class':'form-control', 'placeholder': 'Type your Reply here...'}),
         }
+
+
+class BannerForm(forms.ModelForm):
+    class Meta:
+        model = Banner
+        fields = ['image', 'order', 'active']

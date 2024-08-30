@@ -10,9 +10,7 @@ def create_order_in_razPay(amount,receipt="order_rcptid_12"):
             "receipt": receipt,
             "partial_payment":False,
         }
-        print(client)
         order = client.order.create(data=data)
-        print(order)
         print("Order created successfully:", order)
         return (True, order['id'])
  

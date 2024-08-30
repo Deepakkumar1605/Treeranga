@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %} All Products {% endblock title %}
 {% block content %}
-<main class="py-2">
+<section class="py-2">
     <div class="container">
         <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Simple Products</h4>
         <div class="vstack">
@@ -57,34 +57,48 @@
                             <tr {% if product.simple_products.first.stock <= 10 %} style="background: #f6a4a4;" {% endif %}>
                                 <td class="tb-body">
                                    
-                                        {{ product.pk }}
+                                       <div class="tb-body_sub"> {{ product.pk }}</div>
                                 </td>
-                                <td class="tb-body">{{ product.product.name|truncatewords:5 }}</td>
                                 <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.product.name|truncatewords:5 }}</div>
+                                </td>
+                                <td class="tb-body">
+                                   <div>
                                     {% if product.product.image %}
-                                        <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
-                                    {% endif %}
+                                    <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
+                                {% endif %}
+                                   </div>
                                 </td>
-                                <td class="tb-body">{{ product.product.brand }}</td>
                                 <td class="tb-body">
-                                    {{ product.product_max_price }}
-                            </td>
+                                    <div class="tb-body_sub">
+                                        {{ product.product.brand }}
+                                    </div>
+                                </td>
                                 <td class="tb-body">
+                                   <div class="tb-body_sub"> {{ product.product_max_price }}</div>
+                                </td>
+                                <td class="tb-body">
+                                       <div class="tb-body_sub">
                                         {{ product.product_discount_price }}
+                                       </div>
                                 </td>
                                 <td class="tb-body">
-                                        {{ product.stock }}
+                                        <div class="tb-body_sub">{{ product.stock }}</div>
                                 </td>
-                                <td class="tb-body">
-                                    <a href="{% url 'product:simple_product_update' product.pk %}"
-                                        class="BtM">
+                                <td class="d-flex justify-content-around p-3">
+                                    <div class="">
+                                        <a href="{% url 'product:simple_product_update' product.pk %}"
+                                        class="">
                                         <i class='bx bx-edit text-primary' ></i>    
                                     </a>
-                                    <a href="{% url 'product:simple_product_delete' product.pk %}" class="BtM">
-                                        <button  type="button" class="BtM1">
+                                    </div>
+                                    <div>
+                                    <a href="{% url 'product:simple_product_delete' product.pk %}" >
+                                        <button  type="button" class="border-0 bg-transparent">
                                         <i class='bx bx-trash text-danger'></i>
                                       </button> 
                                     </a>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -108,7 +122,7 @@
             </div>
           </div>
     </div>
-  </main>
+</section>
 
 
 

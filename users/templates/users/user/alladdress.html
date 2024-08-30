@@ -3,17 +3,10 @@
 {% block title %} AllAddress {% endblock title %} 
 {% block content %}
 <style>
-  .active {
-      color: #ffffff;
-      /* background-color: #00836C; */
-      border-radius: 5px;
-      outline: none;
-    }
-    #card-text {
-      font-size: 14px ;
-    }
+ 
+ 
 </style>
-<div class="" style="min-height: 60vh;">
+<div class="">
  
   <div class="row mx-0">
     {% include 'users/user/index.html' %}
@@ -24,7 +17,7 @@
       <div class="row px-0 mx-0 mt-3">
         {% for i in addresses %}
         <div class="col-md-6">
-          <div class="card w-75 my-3">
+          <div class="card  my-lg-3 my-2 Address-Page">
                         
             <div class=" d-flex justify-content-around pt-lg-3" >
                <div>
@@ -51,14 +44,13 @@
                </div>
                
             </div>
-            <div class="d-flex justify-content-center pb-lg-3 adress_button">
-                <button type="button" class="u-button pencil " data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-zipcode="{{ i.zipcode }}">
-                    <i class="bi bi-pencil"> Edit </i>
-                </button>
-                <a href="{% url 'cart:delete_address' i.id %}">
-                    <button type="button"class="u-button trash ms-lg-3">
-                        <i class="bi bi-trash"> Delete</i>
-                    </button>
+            <div class="d-flex justify-content-center p-lg-4">
+              <a
+              href="{% url 'users:profile_update_address' i.id %}"class="u-button pencil w-50 me-lg-4 ">
+              <i class="fas fa-pencil">Edit</i>
+              </a>
+                <a href="{% url 'cart:delete_address' i.id %}" class="u-button trash w-50 ">
+                    <i class="bi bi-trash"> Delete</i>
                 </a>
             </div>
         </div>

@@ -3,17 +3,30 @@
     {
         background:none;
         border: none;
+        color: rgb(77, 224, 77);
     }
+    .alert-info{
+        background:none;
+        border: none;
+        color: rgb(255, 0, 0);
+    }
+    .alert-danger{
+        background:none;
+        border: none;
+        color: rgb(255, 0, 0);
+    }
+
 </style>
 {% if messages %}
     
     {% for message in messages %}
-        <div style="text-align:justify;" class="alert {{message.tags}}" role="alert">
+        <div style="" class="alert {{message.tags}} m-0 p-0 text-capitalize" role="alert">
             
-            <p>{{message}}.</p>
+            <p class="p-0 m-0 snippets_alert">{{message}}.</p>
             
         </div>
                 
     {% endfor %}
   
 {% endif %}
+

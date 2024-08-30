@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
 import threading
@@ -30,3 +31,9 @@ def delete_user_after_delay(user_pk):
     # Check if deletion is still requested
     if user.deletion_requested:
         user.delete()
+
+
+
+
+
+

@@ -2,49 +2,66 @@
 {% load static %}
 {% block content %}
 
-<main class="py-2">
-  <div class=container>
-  <h4 class="headings_h5 text-center my-lg-4 p-lg-3">Contact Message</h4>
-      <div class="vstack">
+<section class="py-2">
+  <div class="container">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Contact Message</h4>
+      <div class="vstack gap-4">
           <div class="tablecard">
               <div class="table-responsive">
                   <table class="table table-hover table-nowrap">
                       <thead class="table-light">
-                          <tr>
-                              <th class="" id="tb-head" scope="col">Name</th>
-                              <th class="" id="tb-head" scope="col">E-Mail</th>
-                              <th class="" id="tb-head" scope="col">Contact</th>
-                              <th class="" id="tb-head" scope="col">Date & Time</th>
-                              <th class="" id="tb-head" scope="col">User Type</th>
-                              <th class="" id="tb-head" scope="col">Action</th>
-                          </tr>
+                        <tr>
+                            <th class="" id="tb-head" scope="col">Name</th>
+                            <th class="" id="tb-head" scope="col">E-Mail</th>
+                            <th class="" id="tb-head" scope="col">Contact</th>
+                            <th class="" id="tb-head" scope="col">Date & Time</th>
+                            <th class="" id="tb-head" scope="col">User Type</th>
+                            <th class="" id="tb-head" scope="col">Action</th>
+                        </tr>
                       </thead>
-                   
                       <tbody id="test_table_tbody">
-                        {% for message in messages %}
-                          <tr>
-                              <td class="tb-body">{{ message.name }}</td>
-                              <td class="tb-body">{{ message.email }}</td>
-                              <td class="tb-body">{{ message.contact }}</td>
-                              <td class="tb-body">{{ message.created_at }}</td>
-                              <td class="tb-body">
-                                {% if message.user %}
+                        {% for message in messages %}                  
+                        <tr>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{ message.name }}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{ message.email }}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{ message.contact }}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {{ message.created_at }}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              {% if message.user %}
                                 Authenticated
                               {% else %}
                                 Unauthenticated
                               {% endif %}
-                              </td>
-                              <td class="tb-body">
-                                <a href="{% url 'app_common:admin_message_detail' message.id %}">View Details</a>
-                              </td>
-                          </tr>
-                          {% endfor %}
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              <a href="{% url 'app_common:admin_message_detail' message.id %}" class="text-info">View Details</a>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
                       </tbody>
                   </table>
               </div>
-              <div class="card-footer">
-                  {% comment %} {% include 'snippets/pagination.html' %} {% endcomment %}
-              </div>
+              
           </div>
       </div>
       <div class="py-lg-2">
@@ -61,6 +78,12 @@
         </div>
       </div>
   </div>
-</main>
+</section>
+
+
+
+
+
 
 {% endblock content %}
+ 

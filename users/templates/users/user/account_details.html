@@ -2,167 +2,51 @@
 {% load static %}
 {% block title %}My Profile | NiwaAgro.com{% endblock title %}
 {% block content %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" />
 
-<style>
-  .profile-card {
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    height: 100%;
-    border-radius: 5px;
-    
-  }
-  .profile-card-1 {
-    border-radius: 5px;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start; /* Align items at the top */
-    flex-direction: column; /* Ensure column direction */
-    align-items: center;
-  }
-  p {
-    font-size: 15px;
-  }
-  .profile-img {
-    border-radius: 50%;
-    
-  }
-  .right-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Align content at the top */
-    padding: 2rem;
-  }
-  .buttons {
-    display: flex;
-    margin-top: 10px;
-  }
-  .edit-button {
-    color: #f37021;
-    border: 1.5px solid #f37021;
-    padding: 3px 10px;
-  }
-  .edit-button:hover {
-    background-color: #f37021;
-    color: white;
-  }
-  .update-btn {
-    color: #00836c;
-    border: 1.5px solid #00836c;
-  }
-  .update-btn:hover {
-    background-color: #00836c;
-    color: white;
-  }
-  .profile-detailsPara {
-    background-color: rgb(229, 232, 234);
-    padding-left: 10px;
-    color: grey;
-  }
-  .profile-detailspara {
-    color: gray;
-    font-weight: bold;
-  }
-  .prof-clm {
-    border-radius: 5px 30px 30px 5px;
-    background-color: #ffffff;
-  }
-  .prof-row {
-    border-radius: 5px;
-  }
-  .details p{
-    font-size: 14px !important;
-  }
-
-  @media (max-width: 768px) {
-    .profile-card {
-      padding: 1rem;
-    }
-    .right-content {
-      padding: 1rem;
-    }
-    .profile-card-1 {
-      padding-bottom: 1rem;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .col-sm-3 {
-      width: 100%;
-      border-right: none;
-    }
-    .col-sm-9 {
-      width: 100%;
-    }
-    .prof-clm,
-    .right-content {
-      width: 100%;
-    }
-  }
-</style>
-
-<div class=" " style="min-height: 60vh">
-  <div class="row mx-0 ">
-    {% include 'users/user/index.html' %}
-    <div class="col-sm-9 col-lg-9  pt-5">
-      <div
-        class="row d-flex justify-content-center align-items-center ">
-        <div class="col col-lg-8 col-xl-8 mx-0 mt-3 px-0 profile-card">
-          <div class="row prof-row bg-white  mx-0 px-0" style="height: 100%">
-            <div class="col-lg-5 prof-clm mx-0 px-0">
-              <div
-                class="d-flex my-5 profile-card-1 pb-5 flex-column align-items-center">
-                <div class="prf_img_div">
-                  {% if userobj.profile_pic %}
-                  <img
-                    src="{{ userobj.profile_pic.url }}"
-                    alt="Generic placeholder image"
-                    class="img-fluid profile-img img-thumbnail"
-                    style="width: 140px; height: 140px" />
+<section>
+  <div class="row mx-0">
+      {% include 'users/user/index.html' %}
+      <div class="col-sm-12 col-lg-9 d-flex justify-content-center my-lg-5 ">
+          <div class="update-form">
+            <div class="row form_body ">
+              <div class="col-lg-5 prof-clm mx-0 px-0 d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center">
+                  <div>
+                    {% if userobj.profile_pic %}
+                    <img src="{{ userobj.profile_pic.url }}"alt="Generic placeholder image"class="img-fluid profile-img img-thumbnail" />
+                    {% else %}
+                    <img src="{% static 'users/images/user!.webp' %}"alt="Generic placeholder image"class="img-fluid profile-img img-thumbnail" />
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-7 right-content">
+                <div class="details mb-3">
+                  <h4 class="my-lg-2 text-center">My Profile</h4>
+                  <p class="text-muted m-0 profile-detailspara">Name</p>
+                  <p class="profile-detailsPara mt-1 mb-4 p-1 px-2">
+                    {{ userobj.full_name }}
+                  </p>
                   
-                  {% else %}
-                  <img
-                    src="{% static 'users/images/user!.webp' %}"
-                    alt="Generic placeholder image"
-                    class="img-fluid profile-img img-thumbnail"
-                    style="width: 140px; height: 140px; " />
-                  {% endif %}
+                  <p class="text-muted m-0 profile-detailspara">E-mail</p>
+                  <p class="profile-detailsPara mt-1 mb-4 p-1 px-2">
+                    {{ userobj.email }}
+                  </p>
+                  
+                  <p class="text-muted m-0 profile-detailspara">Contact</p>
+                  <p class="profile-detailsPara mt-1 p-1 px-2">
+                    {{ userobj.contact }}
+                  </p>
                 </div>
-                <div>
-                  <a
-                    href="{% url 'users:updateprofile' %}"
-                    class="btn edit-button mt-3"
-                    data-mdb-ripple-color="dark">
-                    Update Profile
-                  </a>
+                <div class="w-100">
+                  <a href="{% url 'users:updateprofile' %}"class="btn btn-warning w-100 mt-lg-4" data-mdb-ripple-color="dark"> Update Profile</a>
                 </div>
               </div>
             </div>
-            <div class="col-lg-7 right-content">
-              <div class="details mb-3">
-                <h4 class="mb-4">My Profile</h4>
-                <p class="text-muted m-0 profile-detailspara">Name</p>
-                <p class="profile-detailsPara mt-1 mb-4 p-1 px-2">
-                  {{ userobj.full_name }}
-                </p>
-                
-                <p class="text-muted m-0 profile-detailspara">E-mail</p>
-                <p class="profile-detailsPara mt-1 mb-4 p-1 px-2">
-                  {{ userobj.email }}
-                </p>
-                
-                <p class="text-muted m-0 profile-detailspara">Contact</p>
-                <p class="profile-detailsPara mt-1 p-1 px-2">
-                  {{ userobj.contact }}
-                </p>
-              </div>
-
-            </div>
+              
           </div>
-        </div>
       </div>
-    </div>
   </div>
-</div>
+</section>
+
 {% endblock content %}

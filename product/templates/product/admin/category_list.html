@@ -4,14 +4,16 @@
 {% block content%}
 
 
-<main class="py-2">
+<section class="py-2">
   <div class="container">
-    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Category</h4>
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Category List</h4>
       <div class="vstack gap-4">
           <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
               <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
                   {% csrf_token %}
                   <div class="hstack gap-2">
+
+
                     {% comment%}
                       <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
                           <option selected value="pk">All</option>
@@ -23,15 +25,17 @@
                           <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
                       </span>
                       {% endcomment%}
+
+
                   </div>
               </form>
-              <p class="snippets">{% include 'snippets/alert.html' %}</p>
+              <p class="all_category_snippets">{% include 'snippets/alert.html' %}</p>
               <div class="btn-group catagory-btn">
                   <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
                       <i class='bx bx-filter-alt' ></i>
                   </button> -->
                   <a href="{% url 'product:category_add' %}">
-                      <i class='bx bxs-plus-square'></i> Create New Product
+                      <i class='bx bxs-plus-square'></i> Create New Category
                   </a>
               </div>
           </div>
@@ -41,6 +45,7 @@
                   <table class="table table-hover table-nowrap">
                       <thead class="table-light">
                           <tr>
+                              <th class="" id="tb-head" scope="col">Product ID</th>
                               <th class="" id="tb-head" scope="col">Product Name</th>
                               <th class="" id="tb-head" scope="col">Product Images</th>
                               <th class="" id="tb-head" scope="col">Action</th>
@@ -50,22 +55,32 @@
                         {% for catagory in catagory_list %}
                         <tr>
                           <td class="tb-body">
-                            <a class="text-heading text-black font-semibold">{{catagory.title}}</a>
+                            <div class="tb-body_sub">
+                              <a class="text-heading text-black font-semibold">{{catagory.pk}}</a>
+                            </div>
+                          </td>
+                          <td class="tb-body">
+                            <div class="tb-body_sub">
+                              <a class="text-heading text-black font-semibold text-uppercase">{{catagory.title}}</a>
+                            </div>
                           </td>
                           <td class="tb-body">
                             <img class="cat-img2"src="{{ catagory.image.url }}"alt="Passbook Image"/>
                           </td>
-                          <td class="tb-body">
-                            <a href="{% url 'product:category_update' catagory.id %} " class="BtM">
-                              <i class='bx bx-edit text-primary' ></i>
-                            </a> &nbsp;
-                            <a href="{% url 'product:catagory_delete' catagory.id %}">
-                              <button
-                                type="button"
-                                class="BtM1">
-                                <i class='bx bx-trash text-danger'></i>
-                              </button>
-                            </a>
+                      
+                            <td class="d-flex justify-content-evenly p-3">
+                              <div class="">
+                                  <a href="{% url 'product:category_update' catagory.id %}">
+                                    <i class='bx bx-edit text-primary fs-5' ></i>    
+                                  </a>
+                              </div>
+                              <div>
+                              <a href="{% url 'product:catagory_delete' catagory.id %}" >
+                                  <button  type="button" class="border-0 bg-transparent">
+                                  <i class='bx bx-trash text-danger fs-5'></i>
+                                  </button> 
+                              </a>
+                              </div>
                           </td>
                         </tr>
                         {% endfor %}
@@ -89,7 +104,7 @@
         </div>
       </div>
   </div>
-</main>
+</section>
 
 
   

@@ -19,3 +19,18 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.user if self.user else self.email}"
+
+
+
+
+
+class Banner(models.Model):
+    image = models.ImageField(upload_to='banners/')
+    order = models.PositiveIntegerField(default=0, help_text="Order of the banner")
+    active = models.BooleanField(default=True, help_text="Only active banners will be displayed")
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.title or 'Banner'} ({self.order})"

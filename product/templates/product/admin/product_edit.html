@@ -3,86 +3,103 @@
 {% block title %} Edit Product {% endblock title %}
 {% block content %}
 
+<section class="py-lg-2">
+    <div class="conatiner">
+        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Edit Product</h4>
+        <div class="product-form-container">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.product_type.id_for_label }}">Product Type</label>
+                            {{ form.product_type }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.category.id_for_label }}">Category</label>
+                            {{ form.category }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg" >
+                            <label for="{{ form.sku_no.id_for_label }}">SKU Number</label>
+                            {{ form.sku_no }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.name.id_for_label }}">Name</label>
+                            {{ form.name }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.brand.id_for_label }}">Brand</label>
+                            {{ form.brand }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.gst_rate.id_for_label }}">GST Rate</label>
+                            {{ form.gst_rate }}
+                        </div>
+                        
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.trending.id_for_label }}">Trending</label>
+                            {{ form.trending }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.show_as_new.id_for_label }}">Show as New</label>
+                            {{ form.show_as_new }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.product_short_description.id_for_label }}">Short Description</label>
+                            {{ form.product_short_description }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.product_long_description.id_for_label }}">Long Description</label>
+                            {{ form.product_long_description }}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="lh-lg">
+                            <label for="{{ form.image.id_for_label }}">Image</label>
+                            {{ form.image }}
+                        </div>
+                    </div>
+                </div>
+    
+              
+    
+                <button type="submit" class="btn btn-warning w-100 mt-2">Update</button>
+            </form>
+    </div>
+    </div>
+</section>
 
-<style>
-    .product-form-container {
-        margin: 20px auto;
-        max-width: 800px;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-header {
-        font-size: 24px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        color: #333;
-        text-align: center;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-label {
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #ddd;
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    #simple-product-formset {
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #e9ecef;
-        border-radius: 6px;
-    }
-
-    #image-gallery-formset {
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 6px;
-    }
-
-    .submit-button {
-        display: block;
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        color: #fff;
-        background-color: #28a745;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    .submit-button:hover {
-        background-color: #218838;
-    }
-</style>
-
-<div class="product-form-container">
-    <h1 class="form-header">Edit Product</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Main product form always visible -->
-        <div class="form-group">
-            {{ form.as_p }}
-        </div>
-
-        <button type="submit" class="submit-button">Save Product</button>
-    </form>
-</div>
 
 {% endblock content %}

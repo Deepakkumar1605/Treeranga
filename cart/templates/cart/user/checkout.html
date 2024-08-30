@@ -233,43 +233,13 @@ Checkout | NiwaAgro.com
                      <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
                  </span>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           
         </div>
 
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    {% endblock content %}
+{% endblock content %}
     
     {% block js %}
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -313,7 +283,7 @@ Checkout | NiwaAgro.com
                             "key": "{{ api_key }}",
                             "amount": "{{ amount }}",
                             "currency": "INR",
-                            "name": "Treeranga",
+                            "name": "Niwa Agro",
                             "description": "Payment Transaction",
                             "image": "",
                             "order_id": "{{ rz_order_id }}",

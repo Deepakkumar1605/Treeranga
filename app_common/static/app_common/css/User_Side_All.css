@@ -50,6 +50,33 @@
   opacity: 0.6;
 }
 
+#save-btn{
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+#save-btn:hover {
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  transform: translateY(-2px);
+}
+
 @keyframes shine {
   0% {
     left: -100px;
@@ -82,8 +109,13 @@
 
 
 /* ======================================================================= */
+/* ===================Root Shadows========================================== */
+:root{
+  --box1-box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
 /* ===================Root Fonts========================================== */
  :root{
+  --rubik: 'Rubik', sans-serif;
   --p-fontfamily:"Nunito", sans-serif;
   --headings-fontfamily:"Poppins", sans-serif;
  }
@@ -92,6 +124,7 @@
 :root {
     --primary:rgb(6, 151, 83);
     --primary2:rgb(54, 139, 104);
+    --tb-head:#00836c;
     --secondary:rgb(245, 191, 18);;
     --secondary2:rgb(255, 212, 46);
     --third: rgb(255, 255, 255);
@@ -99,7 +132,9 @@
     --third3:#f1f1f1;
     --pagebg:rgb(245, 245, 245);
     --h6:rgb(135, 135, 135);
+    --dark-grey: #cacaca;
     --discount:rgb(19, 146, 83);
+    --dark: #211f22;
     --para: rgb(15, 15, 15);
     --para2:rgb(33,33,33);
     --footer:rgb(33, 33, 33);
@@ -172,7 +207,9 @@
 
   .HeaderIcons {
     font-size: 1.2rem;
+    
   }
+ 
 #menu_button{
     display:none;
     color: black !important;
@@ -936,14 +973,15 @@ color: #fff;
   color: var(--third);
   background-color:var(--danger) ;
   font-size: 12px;
-  padding: 7px;
+  padding:10px;
   
 }
 .u-button.pencil{
   color: var(--third);
   background-color:var(--info) ;
   font-size: 12px;
-  padding: 7px;
+  padding: 10px;
+  text-transform: capitalize;
 }
 
 
@@ -1226,7 +1264,7 @@ color: #fff;
   padding: 5px 0;
 }
 .description {
-
+  min-height: 140px;
   font-family:"inter",sans-serif;
   font-style: normal;
   font-weight: 300;
@@ -1280,13 +1318,141 @@ object-fit: cover;
   font-size: 22px;
   line-height: 10px;
 }
+.review-summary h4{
+  font-family:"Poppins",sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height:25px;
+  font-size: 22px;
+  color: var(--para);
+ }
+ .Rating_forms label{
+  font-family:"Inter",sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height:35px;
+  font-size: 16px;
+  color: var(--para);
+ }
+ .Rating_forms input{
+  width: 100%;
+  padding: 5px;
+  font-family:"Inter",sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--para);
+  letter-spacing: 2px;
+  word-spacing: 2px;
+ }
+ .u-button.Review{
+  background-color: var(--third2);
+  color: var(--third);
+ }
+  .review-rating {
+      display: flex;
+      direction: ltr; /* Ensure left-to-right direction */
+  }
+  
+  .review-rating input[type="radio"] {
+      display: none; /* Hide the radio buttons */
+  }
+  
+  .review-rating label {
+      font-size: 30px;
+      color: #ddd; /* Gray color for unselected stars */
+      cursor: pointer;
+  }
+  
+  .review-rating label.gold {
+      color: #ffcc00; /* Gold color for selected stars */
+  }
 
 
 /*---------------------------- new products------------------------------- */
                       /* nocss */
 /*---------------------------- new products------------------------------- */
                    /* nocss */
+/*----------------------------Add Address Page------------------------------ */
+.form_body {
+  box-shadow:var(  --box1-box-shadow);
+  width: 100%;
+  padding: 25px;
+  background-color:var(--pagebg);
+}
 
+.update-form {
+      width: 80%;
+  }
+
+.form-group.group-form input:focus,
+.form-group.group-form textarea:focus {
+  border-color: #807e7e;
+  box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
+  outline: none;
+}
+
+/*----------------------------All Address Page------------------------------ */
+.card.Address-Page{
+  width: 90%;
+}
+
+
+/*---------------------------Account_deatils  Page------------------------------ */
+.profile-img.img-thumbnail {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+}
+.right-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+}
+
+
+.profile-detailsPara {
+  background-color: rgb(229, 232, 234);
+  padding-left: 10px;
+  color: grey;
+}
+.profile-detailspara {
+  color: gray;
+  font-weight: bold;
+}
+.prof-clm {
+  border-radius: 5px 30px 30px 5px;
+  background-color: var(--third);
+}
+
+
+/*---------------------------User_order  Page------------------------------ */
+
+.card.table-responsive {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius: 0;
+}
+
+#tb-head {
+  background-color:var(--tb-head);
+  color:var(--third);
+  font-family: var(--headings-fontfamilyik);
+  font-size: 14px;
+  padding: 18px 10px;
+  text-align: center;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 23px;
+}
+.tb-body{
+padding: 0 !important;
+  font-family: var(--rubik);
+  font-size: 13px;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+  line-height: 35px;
+}
 
 
 

@@ -83,7 +83,6 @@ class ShowCart(View):
         if user.is_authenticated and cart_items:
             cart_items.total_price = float(total_price)
             cart_items.save()
-        print(products)
         context = {
             'category_obj': category_obj,
             'cartItems': cart_items,
@@ -234,6 +233,19 @@ def RemoveFromCart(request, cp_uid):
     return redirect("cart:showcart")
 
 
+def cart_count_processor(request):
+    cart_count = 0
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart and cart.products:
+            cart_count = len(cart.products)  # Count the number of distinct products
+    else:
+        cart = request.session.get('cart', {})
+        if cart and 'products' in cart:
+            cart_products = cart.get('products', {})
+            cart_count = len(cart_products)  # Count the number of distinct products
+    
+    return {'cart_count': cart_count}
 
 
 @method_decorator(login_required(login_url='users:login'), name='dispatch')
@@ -242,11 +254,14 @@ class Checkout(View):
     model = Order
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('users:login')}?next={request.path}")
+
         user = request.user
 
         try:
             # Merge session cart with user cart if available
-            session_cart = request.session.get('cart', {})
+            session_cart = request.session.get('cart', {}).get('products', {})
             if session_cart:
                 user_cart, created = Cart.objects.get_or_create(user=user)
                 user_cart_products = user_cart.products or {}
@@ -257,14 +272,22 @@ class Checkout(View):
                     else:
                         user_cart_products[key] = value
 
+                # Update the total price in the user cart
                 user_cart.products = user_cart_products
+                user_cart.total_price = sum(item['total_price'] for item in user_cart_products.values())
                 user_cart.save()
-                del request.session['cart']  # Clear session cart after merging
+
+                # Clear session cart after merging
+                request.session.pop('cart', None)
 
             cart = Cart.objects.get(user=user)
         except Cart.DoesNotExist:
             return redirect("cart:showcart")
+        except Exception as e:
+            print(f"Error in checkout process: {e}")
+            return redirect("cart:showcart")
 
+        # Serialize cart details
         order_details = CartSerializer(cart).data
         totaloriginalprice = 0
         totalPrice = 0
@@ -460,3 +483,27 @@ class DeleteAddress(View):
 
         # Redirect to the checkout page
         return redirect('cart:checkout')
+
+
+
+def transfer_session_cart_to_user(request, user):
+    session_cart = request.session.get('cart', {}).get('products', {})
+    if session_cart:
+        try:
+            user_cart, created = Cart.objects.get_or_create(user=user)
+            user_cart_products = user_cart.products or {}
+
+            for product_key, product_info in session_cart.items():
+                if product_key in user_cart_products:
+                    user_cart_products[product_key]['quantity'] += product_info['quantity']
+                else:
+                    user_cart_products[product_key] = product_info
+
+            user_cart.products = user_cart_products
+            user_cart.total_price = sum(item['total_price'] for item in user_cart_products.values())
+            user_cart.save()
+            request.session.pop('cart', None)
+            request.session.modified = True
+        except Exception as e:
+            print(f"Error transferring session cart: {e}")
+            messages.error(request, "There was an issue transferring your cart items.")

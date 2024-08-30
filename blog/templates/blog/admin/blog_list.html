@@ -1,10 +1,9 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
 {% block content %}
-
-<main class="py-2">
-    <div class=container>
-    <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Blogs</h4>
+<section class="py-2">
+    <div class="container">
+        <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Blogs</h4>
         <div class="vstack">
             <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
                 <form class="my-3 mx-2" action="{% url 'blog:blog_search' %}" method="post">
@@ -21,13 +20,14 @@
                         </span>
                     </div>
                 </form>
-                <p class="snippets"> {% include 'snippets/alert.html' %}</p>
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
                 <div class="btn-group catagory-btn">
                     <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
                         <i class='bx bx-filter-alt' ></i>
                     </button> -->
                     <a href="{% url 'blog:blog_add' %}">
-                        <i class='bx bxs-plus-square'></i> Create a New Blog
+                        <i class='bx bxs-plus-square'></i>
+                         Create a New Blog
                     </a>
                 </div>
             </div>
@@ -49,30 +49,40 @@
                             {% for blog in blog_list %}
                             <tr>
                                 <td class="tb-body">
-                                    <a class="text-heading text-primary-hover font-semibold"
+                                    <div class="tb-body_sub">
+                                        <a class="text-heading text-primary-hover fw-bold"
                                             href="{% url 'blog:blog_update' blog.id %}">
                                             {{ blog.id }}
                                         </a>
+                                    </div>
                                 </td>
-                                <td class="tb-body">{{ blog.title |truncatewords:8 }}</td>
-                                <td class="tb-body">{{ blog.author }}</td>
                                 <td class="tb-body">
-                                    <a href="{% url 'blog:blog_update' blog.id %}"
-                                        class="btn btn-sm btn-square btn-neutral text-info">
-                                        <i class="fa-solid fa-pen-to-square"></i>                                        
+                                    <div class="tb-body_sub text-capitalize">
+                                        {{ blog.title |truncatewords:8 }}                                  
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub text-uppercase">
+                                        {{ blog.author }}                                 
+                                    </div>
+                                </td>
+                                <td class="d-flex justify-content-evenly p-3">
+                                    <div class="">
+                                        <a href="{% url 'blog:blog_update' blog.id %}">
+                                        <i class='bx bx-edit text-primary'></i>    
                                     </a>
-                                    <a href="{% url 'blog:blog_delete' blog.id %}"
-                                        class="btn btn-sm btn-square btn-neutral text-danger">
-                                        <i class="fa-solid fa-trash"></i>                                           
+                                    </div>
+                                    <div class="">
+                                        <a href="{% url 'blog:blog_delete' blog.id %}">
+                                        <i class='bx bx-trash text-danger'></i>    
                                     </a>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
+                        </form>
                     </table>
-                </div>
-                <div class="card-footer">
-                    {% comment %} {% include 'snippets/pagination.html' %} {% endcomment %}
                 </div>
             </div>
         </div>
@@ -90,14 +100,7 @@
             </div>
           </div>
     </div>
-</main>
-
-
-
-
-
-
-
+</section>
 
 
 
