@@ -39,9 +39,9 @@
 
 <!-- --------------------android app--------------- -->
 <section class="AppDownload">
-  <div class="d-flex justify-content-center align-items-center p-lg-3 p-2 bg-warning fs-4">
+  <div class="d-flex justify-content-center align-items-center p-lg-3 p-md-2 p-2">
     Download App! &nbsp; 
-    <a href="#" class="text-decoration-none u-button ">FOR ANDROID</a>
+    <a href="#" class="text-decoration-none u-button ms-lg-3 m-md-2 ms-1">FOR ANDROID</a>
   </div>
 </section>
 <!-- --------------------end android app--------------- -->
@@ -50,19 +50,19 @@
 
 <!-- --------------------Shop by collection--------------- -->
 
-<section class="px-lg-5 py-lg-4 Shop_by_Collection">
+<section class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3 Shop_by_Collection">
   <div class="">
-      <div class="pb-lg-5">
-        <h3 class="text-success text-center">Shop By Collection</h3>
+      <div class="pb-lg-5 pb-md-5 pb-4">
+        <h3 class="text-center">Shop By Collection</h3>
       </div> 
    
     <div class="row">
        {% for category in categories %}
     
-        <div class="col content-wrapper col-lg-2 col-md-3 col-6">
+        <div class="col col-lg-2 col-md-3 col-6 content-wrapper">
           <div class="image-wrapper align-self-center">
             <a href="{% url 'product:products_of_category' category.title %}">
-                <img src="{{ category.image.url }}" alt="{{ category.title }}" width="200" height="200">
+                <img src="{{ category.image.url }}" alt="{{ category.title }}">
               </a>
           </div>
           <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
@@ -79,16 +79,15 @@
 
 <!-- --------------------New Arrival Collection--------------- -->
 
-<section class="px-lg-5 py-lg-4">
+<section class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3">
   <div class="">
-    <div class="pb-lg-5">
-      <h3 class="text-success text-center">New Arrivals</h3>
+    <div class="pb-lg-5 pb-md-5 pb-4">
+      <h3 class=" text-center">New Arrivals</h3>
     </div>
 
     <div class="row" id="new-arrivals">
       {% for item in new_products %}
       <div class="col col-lg-2 col-md-3 col-6 new-head">
-       
           <div class="" id="new-products">
               {% if item.image %}
               <a href="{% url 'product:product_detail' item.id %}">
@@ -100,7 +99,7 @@
                   {% endif %}
               </a>
           <div class="card-body">
-            <h5>{{ item.name | truncatechars:25 }}</h5>
+            <h5>{{ item.name | truncatechars:40 }}</h5>
             <span class="rating">
               <i class="fa-solid fa-star"></i>
               <i class="fa-solid fa-star"></i>
@@ -110,13 +109,13 @@
               <span>20 reviews</span>
           </span>
           <p class="card-text">
-            <span class="price" id="discount_price">₹{{ item.simpleproduct_set.first.product_discount_price }}</span>
+            <span class="price me-lg-2 ms-md-2 ms-1" id="discount_price">₹{{ item.simpleproduct_set.first.product_discount_price }}</span>
             {% if item.simpleproduct_set.first.product_max_price %}
             <span class="original-price" id="max_price"><s>₹{{ item.simpleproduct_set.first.product_max_price }}</s></span>
             {% endif %}
           </p>
         <div class="d-flex mt-3">
-          <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button">Add To Cart</a>
+          <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button addto-cart">Add To Cart</a>
       </div>
         </div>
           </div>
@@ -127,7 +126,7 @@
     </div>
  
     <div class="d-flex justify-content-center viewmoreButton">
-      <a href="{% url 'product:all_new_products' %}" class=" u-button">View More Products</a>
+      <a href="{% url 'product:all_new_products' %}" class=" u-button ">View More Products</a>
     </div>
   </div>
 </section>
@@ -136,10 +135,10 @@
 <!-- --------------------End New Arrival Collection--------------- -->
 
 <!-- --------------------Trending Arrival Collection--------------- -->
-<section class="px-lg-5 py-lg-4">
+<section class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3 Shop_by_Collection">
   <div class="">
-    <div class="pb-lg-5">
-      <h3 class="text-success text-center">Trending Products</h3>
+    <div class="pb-lg-5 pb-md-5 pb-4">
+      <h3 class=" text-center">Trending Products</h3>
     </div>
 
     <div class="row" id="new-arrivals">
@@ -173,7 +172,7 @@
             {% endif %}
           </p>
         <div class="d-flex mt-3">
-          <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button">Add To Cart</a>
+          <a href="{% url 'cart:addtocart' item.simpleproduct_set.first.id %}" class="btn vd_button addto-cart">Add To Cart</a>
       </div>
         </div>
           </div>
@@ -189,62 +188,59 @@
   </div>
 </section>
 
-
-
-
 <!-- --------------------End Trending Arrival Collection--------------- -->
 
 
 
 
 <!-- ------------------------- why  choose  niwa---------------------- -->
-<section class="whychoose p-lg-5 p-3 " >
-  <h4 class="text-center text-success">Why Choose Niwa Agro</h4>
-  <div class="row text-center container p-lg-4 p-3 chooseniwa_logo">
-    <div class="col-6 col-md-3 mb-2">
+
+<section class="whychoose px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3" >
+  <h3 class="text-center pb-lg-5 pb-md-5 pb-4">Why Choose Niwa Agro</h3>
+  <div class="row text-center  p-lg-4 p-md-4 p-3 chooseniwa_logo">
+    <div class="col-3 col-md-3 col-lg-3 mb-2">
       <img src="{% static 'app_common/images/bg2.avif' %}" alt="" class="img-fluid">
-      <h5 class="p-1">Free Replacements if Damaged</h5>
+      <h5 class="">Free Replacement if Damaged</h5>
     </div>
-    <div class="col-6 col-md-3 mb-2">
-      <img src="{% static 'app_common/images/bg3.svg' %}" alt="" class="img-fluid">
-      <h5 class="p-1">Quality Assured</h5>
+    <div class="col-3 col-md-3 col-lg-3 mb-2">
+      <img src="{% static 'app_common/images/bg3.png' %}" alt="" class="img-fluid">
+      <h5 class="">Quality Assured</h5>
     </div>
-    <div class="col-6 col-md-3 mb-2">
+    <div class="col-3 col-md-3 col-lg-3 mb-2">
       <img src="{% static 'app_common/images/bg4.avif' %}" alt="" class="img-fluid">
-      <h5 class="p-1">Secure and Recyclable Packaging</h5>
+      <h5 class="">Secure & Recyclable Packaging</h5>
     </div>
-    <div class="col-6 col-md-3 mb-2">
+    <div class="col-3 col-md-3 col-lg-3 mb-2">
       <img src="{% static 'app_common/images/bg5.avif' %}" alt="" class="img-fluid">
-      <h5 class="p-1">Handpicked Plant Care Tips</h5>
+      <h5 class="">Handpicked Plant Care Tips</h5>
     </div>
   </div>
 </section>
-
-
 
 <!-- --------------------------about niwa agro-------------------------------- -->
 
 <section class="aboutniwa_bg">
  <div class="p-lg-5 p-3 ">
-<div class="aboutniwa1 w-50 ">
-  <h2 class="text-success text-center pb-lg-5">ABOUT US</h2>
-    <p>Niwa Agro is dedicated to revolutionizing agriculture through sustainable and innovative farming practices. Our mission is to empower farmers with the latest technology and knowledge, ensuring high-quality produce and environmentally friendly methods. At Niwa Agro, we believe in a future where agriculture thrives in harmony with nature, fostering growth and prosperity for communities worldwide.</p>
-    <p>At Niwa Agro, we are dedicated to revolutionizing the agricultural landscape. Our mission is to empower farmers with innovative solutions and sustainable practices that enhance productivity and foster environmental stewardship. With a focus on cutting-edge technology and community support, we strive to create a thriving agricultural ecosystem that benefits both people and the planet. Join us in our journey to cultivate a brighter, greener future.</p>
+  <h3 class=" text-center pb-lg-5 ">About Us</h3>
+<div class="aboutniwa1">
+    <p ALIGN=CENTER >Niwa Agro is dedicated to revolutionizing agriculture through sustainable and innovative farming practices. Our mission is to empower farmers with the latest technology and knowledge, ensuring high-quality produce and environmentally friendly methods. At Niwa Agro, we believe in a future where agriculture thrives in harmony with nature, fostering growth and prosperity for communities worldwide.</p>
+    <p ALIGN=CENTER>At Niwa Agro, we are dedicated to revolutionizing the agricultural landscape. Our mission is to empower farmers with innovative solutions and sustainable practices that enhance productivity and foster environmental stewardship. With a focus on cutting-edge technology and community support, we strive to create a thriving agricultural ecosystem that benefits both people and the planet. Join us in our journey to cultivate a brighter, greener future.</p>
     <div>
-        <a href="{% url 'app_common:about_us' %}" class="text-white text-decoration-none u-button">Know More</a>
+        <a href="{% url 'app_common:about_us' %}" class=" text-decoration-none u-button">Know More</a>
     </div>
 </div>
  </div>
 </section>
+
 <!-- --------------------------End about niwa agro-------------------------------- -->
 
 
 <!-- --------------------------Testimonial------------------------------- -->
 
-<section class= "  section mx-5 pt-5 pb-5 testimonial-section">
+<section class= "section mx-5 pt-5 pb-5 testimonial-section">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-start flex-column">
-        <h2 class="section-heading border-bottom p-lg-3 p-2">From Happy Customers</h2>
+        <h3 class="text-center p-lg-3 p-2">From Happy Customers</h3>
      </div>
  </div>
   <div class=" ">
@@ -335,74 +331,68 @@
                   
               </div>
           </div>
-          <div class="testimonial-slide">
-              <div class="testimonial-box">
-                  <div class="testimonial-icon">
-                      <i class="bi bi-quote"></i>
-                  </div>
-                  <div class="testimonial-text">
-                      <p>Perfect getaway! Spacious rooms, exceptional service, and easy booking. Highly satisfied!</p>
-                  </div>
-                  <div class="testimonial-img d-flex justify-content-center">
-                      <img src="https://img.freepik.com/free-photo/smiling-businessman-face-portrait-wearing-suit_53876-148138.jpg?w=740&t=st=1723114258~exp=1723114858~hmac=8bd75b9a333f28e5fd8b9e3e667ccb5e29893b0022a88deefb0e66ccc5c3daa5" alt="profile">
-                  </div>
-                  <div class="testimonial-name">
-                      <h4>Suraj Sen</h4>
-                  </div>
-                  
-              </div>
-          </div>
+         
       </div>
   </div>
 </section>
 
 <!-- --------------------------End Testimonial------------------------------- -->
   
+
+
 <!-- --------------------------Start Accordian------------------------------------- -->
 
-<section class="Shop_by_Collection p-lg-5 p-3  Accordian">
+
+<section class="Shop_by_Collection  px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3 Accordian">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-center flex-column">
-        <h2 class="section-heading border-bottom p-lg-3 p-2">Frequently Asked Questions:</h2>
+        <h3 class="text-center  p-lg-3 p-2  pb-lg-5 pb-md-5 pb-4">Frequently Asked Questions</h3>
      </div>
  </div>
-  <div class="container">
+  <div class="">
     <div class="accordion accordion-flush" id="accordionFlushExample">
-      <div class="accordion-item ">
+      <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingOne">
-          <button class="accordion-button collapsed border-bottom " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-            What is Niwa Agro?
+          <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+            <i class="fas fa-plus me-2"></i> What is Niwa Agro?
           </button>
         </h2>
         <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">Niwa Agro is an agricultural company specializing in [specific services/products, e.g., sustainable farming solutions, organic produce, etc.].
-            You can reach us via email at [email address], call us at [phone number], or fill out the contact form on our website.We offer a range of products including [list of products such as organic vegetables, fruits, grains, etc.].Our services include [list of services such as agricultural consulting, farm management, sustainable farming practices, etc.].All our products are certified organic and meet [specific standards, e.g., USDA Organic, EU Organic Certification].
+          <div class="accordion-body">
+            Niwa Agro is an agricultural company specializing in sustainable farming solutions. You can reach us via email at info@niwaagro.com, call us at +123456789, or fill out the contact form on our website. We offer a range of products including organic vegetables, fruits, grains, etc. Our services include agricultural consulting, farm management, and sustainable farming practices. All our products are certified organic and meet USDA Organic standards.
           </div>
+        </div>
       </div>
-      <div class="accordion-item">
+      <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingTwo">
-          <button class="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-            What farming practices does Niwa Agro use?
+          <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+            <i class="fas fa-plus me-2"></i> What farming practices does Niwa Agro use?
           </button>
         </h2>
         <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">We use sustainable and environmentally friendly farming practices, including [specific practices such as crop rotation, no-till farming, integrated pest management, etc.].We implement rigorous quality control measures at every stage of production, from planting to harvest, to ensure our products meet the highest standards.</div>
+          <div class="accordion-body">
+            We use sustainable and environmentally friendly farming practices, including crop rotation, no-till farming, and integrated pest management. We implement rigorous quality control measures at every stage of production to ensure our products meet the highest standards.
+          </div>
         </div>
       </div>
-      <div class="accordion-item">
+      <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingThree">
-          <button class="accordion-button collapsed border-bottom " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-            How can I place an order with Niwa Agro?
+          <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+            <i class="fas fa-plus me-2"></i> How can I place an order with Niwa Agro?
           </button>
         </h2>
         <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">You can place an order through our website, by phone, or by visiting one of our partner retailers.
-
-            12. Does Niwa Agro offer home delivery?
-            Yes, we offer home delivery services in [specific areas/regions]. Delivery times and fees vary based on location.
-            
-            13. What payment methods does Niwa Agro accept?
-            We accept various payment methods including credit/debit cards, PayPal, and bank transfers.</div>
+          <div class="accordion-body">
+            You can place an order through our website, by phone, or by visiting one of our partner retailers.
+            <br><br>
+            <strong>Does Niwa Agro offer home delivery?</strong>
+            <br>
+            Yes, we offer home delivery services in select areas. Delivery times and fees vary based on location.
+            <br><br>
+            <strong>What payment methods does Niwa Agro accept?</strong>
+            <br>
+            We accept various payment methods including credit/debit cards, PayPal, and bank transfers.
+          </div>
         </div>
       </div>
     </div>

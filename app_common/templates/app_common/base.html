@@ -27,7 +27,6 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
 
    
@@ -48,12 +47,13 @@
 </head>
 
 <body>
+     <!-- ---=========--======-----===========Authenticated========== --========----------->
   {% if user.is_authenticated %}
 
-  <header class="p-lg-3">
+  <header class="p-xxl-4 p-xl-4 p-lg-4 p-md-3 p-sm-2 p-2">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
-        <div class="col-lg-2 col-6" id="menu-bar">
+        <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6" id="menu-bar">
           <!-- logo -->
           <button class="btn" type="button" data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button"><i
@@ -67,9 +67,11 @@
             </div>
             <div class="offcanvas-body">
               <ul class="list-unstyled">
-                <li><a class="nav-link" href="#">Home</a></li>
-                <li><a class="nav-link" href="#">About us</a></li>
-                <li><a class="nav-link" href="#">Blogs</a></li>
+                <li><a class="nav-link" href="{% url 'users:home' %}">Home</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:about_us' %}">About us</a></li>
+                <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
+                <li><a class="nav-link" href="#">Services</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a></li>
               </ul>
             </div>
           </div>
@@ -78,36 +80,35 @@
           </a>
         </div>
 
-        <!-- full screen header -->
+        <!-- ==================Auth full screen header================== -->
+
         <div class="col-lg-6 d-none mt-lg-3 d-lg-block" id="nav_buttons">
           <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
-            </li>
-              
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Services</a>
-            </li>
-              
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
-            </li>
-            
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
+              </li>
           </ul>
         </div>
-        <!-- close full screen header -->
 
-        <!-- ----------Side buttons ------------->
-        <div class="col-lg-3 col-6 d-flex justify-content-around align-items-center">
+     
+
+        <!-- ----------===========Auth Nav buttons========== ------------->
+
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
           <button type="button" class="btn" id="search-icon">
-            <i class="fa fa-search  text-success" aria-hidden="true"></i>
+            <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
           </button>
           <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
             <i class="fa-regular fa-user HeaderIcons text-success"></i> 
@@ -115,67 +116,64 @@
           <a href="" class="btn">
             <i class="fa-regular fa-heart HeaderIcons text-success"></i>
           </a>
-          <a href="{% url 'cart:showcart' %}">
-            <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-            <span class="cart-count">{{ cart_count }}</span>
+          <a href="{% url 'cart:showcart' %}" class="btn">
+            <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cart_count }}
+            </span>
+          </i>
           </a>
-        
-         
         </div>
           
          
         
-        <form action="" method="post" class="input-group" role="search" id="search-form" style="display: none;">
+        <form action="" method="post" class="input-group mt-xxl-1 mt-xl-1 mt-lg-1 mt-sm-1 m-1" role="search" id="search-form" style="display: none;">
           {% csrf_token %}
           <div class="input-group">
             <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
           </div>
         </form>
-        
-        <!-- end ------- Side buttons --->
-
-       
+      <!-- ---=========--======-----===========end Auth Nav buttons========== --========----------->
       </div>
     </div>
   </header>
+
+   <!-- ---=========--======-----===========UnAuthenticated========== --========----------->
   {% elif not user.is_authenticated %}
 
   <header class="p-lg-3">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
         <div class="col-lg-1 col-6" id="menu-bar">
-      
           <button class="btn" type="button" data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button">
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <div class="offcanvas offcanvas-start w-50" data-bs-scroll="true" tabindex="-1"
+        <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
           id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
           <div class="offcanvas-header">
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="offcanvas-body">
             <ul class="list-unstyled">
-              <li><a class="nav-link" href="#">Home</a></li>
-              <li><a class="nav-link" href="#">about us</a></li>
+              <li><a class="nav-link" href="{% url 'users:home' %}">Home</a></li>
+              <li><a class="nav-link" href="{% url 'app_common:about_us' %}">About</a></li>
+              <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
               <li><a class="nav-link" href="#">Services</a></li>
-              <li><a class="nav-link" href="#">Blogs</a></li>
-              <li><a class="nav-link" href="#">Contact</a></li>
-            
+              <li><a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a></li>
             </ul>
           </div>
         </div>
-    
           <a class="navbar-brand" href="{% url 'users:home' %}">
             <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
           </a>
         </div>
 
-        <!-- full screen header -->
 
+     <!-- ==================Unauth full screen header================== -->
 
-        <div class="col-lg-7 col-xl-6  d-none mt-lg-3 d-lg-block" id="nav_buttons">
+        <div class="col-lg-6 col-xl-6  d-none mt-lg-3 d-lg-block" id="nav_buttons">
           <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
             <li class="nav-item" id="Navbarlinks">
               <a class="nav-link active" aria-current="page" href="{% url 'users:home' %}">Home</a>
@@ -197,39 +195,28 @@
             </li>
            
           </ul>
-        </div>
-        <!-- close full screen header -->
+        </div>  
 
-        <!-- ----------Side buttons ------------->
+              <!-- ==============Unauth Nav buttons============== -->
+
         <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-around align-items-center">
-          <button type="button" class="btn" id="search-icon">
-            <i class="fa fa-search  text-success" aria-hidden="true"></i>
-          </button>
-          <!-- <button type="button" class="btn">
-            <a href="{% url 'users:login' %}"><i class="fa-regular fa-circle-user HeaderIcons text-success"></i></a> 
-          </button> -->
-          <button type="button" class="btn" id="form_open">
-            <a href="{% url 'users:login' %}"><i class="fa-regular fa-user HeaderIcons text-success"></i></a>
-          </button>
-          <button type="button" class="btn">
-            <a href=""> <i class="fa-regular fa-heart HeaderIcons text-success"></i></a>
-          </button>
-          <button class="btn">
+            <button type="button" class="btn" id="search-icon">
+              <i class="fa fa-search  text-success" aria-hidden="true"></i>
+            </button>
+            <a href="{% url 'users:login' %}" class="text-decoration-none btn">
+              <i class="fa-regular fa-user HeaderIcons text-success"></i> 
+            </a>
+            <a href="" class="btn">
+              <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+            </a>
             <a href="{% url 'cart:showcart' %}">
-            <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-            <span class="cart-count">{{ cart_count }}</span>
-          </a>
-          </button>
-          <!-- <button class="btn" type="button" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasWithBothOption" aria-controls="offcanvasWithBothOptions">
-          <i class="fa-solid fa-cart-shopping HeaderIcons text-success"></i>
-        </button> -->
+                <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ cart_count }}
+                  </span>
+                </i>
+            </a>
         </div>
-          
-
-
-    
-         
 
         <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
           {% csrf_token %}
@@ -238,9 +225,7 @@
           </div>
         </form>
         
-        <!-- end ------- Side buttons --->
-
-       
+          <!-- ---=========--======-----===========end Unauth Nav buttons========== --========----------->
       </div>
     </div>
   </header>
@@ -288,13 +273,14 @@
 
 
   <!-- -------------------------Footer------------------------- -->
+
   <footer class=" ">
     <div class="container  border-bottom border-secondary ">
       <div class="row mb-lg-4 ">
   
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
           <div class="row row-cols-2 row-cols-sm-2 footer_div_ul ">
-            <div >
+            <div class="m-auto">
               <ul class="p-0">
                 <h6>About Us</h6>
                 <li><a href="{% url 'app_common:our_services' %}">Our Services</a></li>
@@ -304,10 +290,11 @@
                 <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
                 {% endif %}
                 <li><a href="{% url 'app_common:locate_us' %}">Locate Us</a></li>
+                <li class="text-dark">.</li>
               </ul>
             </div>
-            <div class="">
-              <ul>
+            <div class="m-auto">
+              <ul class="p-0">
               <h6>Consumer Policy</h6>
                 <li><a href="">Security</a></li>
                 <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
@@ -319,7 +306,7 @@
           </div>
         </div>
   
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
           <div class="row row-cols-2 row-cols-sm-2 footer_div_ul">
             <div class="d-none d-md-block d-lg-block">
               <ul>
@@ -339,15 +326,15 @@
           </div>
         </div>
   
-        <div class="col-12 col-md-4">
-          <div class="row row-cols-2 row-cols-sm-2 border-start border-secondary ms-lg-2  footer_div_ul">
-            <div>
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+          <div class="row row-cols-2 row-cols-sm-2   ms-lg-2  footer_div_ul mb-2">
+            <div class="border-end border-white m-auto">
               <h6>Get in Touch</h6>
               <p><i class="fa-solid fa-phone"></i> +91 -7735955569</p>
               <p><i class="fa-solid fa-envelope"></i> niwacare@outlook.com</p>
               
               <h6>Socials:</h6>
-              <p class="fs-5">
+              <p class="fs-5 mt-3">
                 <i class="fa-brands fa-facebook"></i>
                 <i class="fa-brands fa-instagram"></i>
                 <i class="fa-brands fa-whatsapp"></i>
@@ -355,7 +342,7 @@
                 <i class="fa-brands fa-youtube"></i>
               </p>
             </div>
-            <div>
+            <div class="m-auto">
               <h6>Registered Office Address</h6>
               <p>Plot No: 3298/5536,<br>
                 C-8, Lane-5A,<br>
@@ -485,7 +472,7 @@ $(document).ready(function () {
     $('.testimonial-slider').slick({
         autoplay: true,
         autoplaySpeed: 0,  // Set to 0 for continuous autoplay
-        speed: 3000,  // Adjust speed to control how fast the slide scrolls
+        speed: 5000,  // Adjust speed to control how fast the slide scrolls
         cssEase: 'linear',  // Use linear easing for a uniform scrolling speed
         draggable: false,  // Disable dragging for a smoother experience
         infinite: true,
@@ -493,7 +480,7 @@ $(document).ready(function () {
         slidesToScroll: 1,
         arrows: false,
         dots: false,
-        pauseOnHover: false,  // Prevents pause on hover
+        pauseOnHover: true,  // Prevents pause on hover
         responsive: [
             {
                 breakpoint: 991,
@@ -512,16 +499,13 @@ $(document).ready(function () {
         ]
     });
 });
-
-
 </script>
  
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></scrip>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+
+
 </body>
 
 </html>
