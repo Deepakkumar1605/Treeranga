@@ -115,13 +115,15 @@ class ProductAdd(View):
                 if not product.uid:
                     product.uid = utils.get_rand_number(5)
                 product.save()
-                print("Hii")
                 if product.product_type == "simple":
                     simple_product_obj = SimpleProduct(product=product, is_visible=False)
                     simple_product_obj.save()
                     messages.success(request, "Product added successfully.")
-                    return redirect("product:product_list")
-                
+                    # Return JSON response with variant types
+                    return JsonResponse({
+                        'variant_types': None,
+                        'product_id':product.id,
+                    })                
                 elif product.product_type == "variant":
                     # Fetch variant types
                     variant_types = Variant.objects.all().values('id', 'name')
