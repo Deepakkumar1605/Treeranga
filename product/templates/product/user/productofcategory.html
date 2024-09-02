@@ -6,6 +6,7 @@ Products Of {{ category_obj.title }} Category
 {% endblock title %}
 
 {% block content %}
+
 <div class="container py-4 d-flex flex-column align-items-center lh-lg ">
     <h2 class="text-uppercase">{{category_obj.title }}</h2>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -15,7 +16,7 @@ Products Of {{ category_obj.title }} Category
         </ol>
       </nav>
 </div>
-<div class="px-5 text-center py-3 " id="products_of_category">
+<div class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3" id="products_of_category">
     {% if simple_products %}
     <div class="row row-cols-lg-5 row-cols-2">
         {% for item in simple_products %}
@@ -34,8 +35,9 @@ Products Of {{ category_obj.title }} Category
                     <span class="text-dark fw-light">Stock: {{ item.simple_product.stock }}</span>
                 </p>
                 <div class="d-flex mt-3">
-                    <a href="{% url 'cart:addtocart' item.product.pk %}" class="btn vd_button">Add To Cart</a>
+                  <a href="{% url 'cart:addtocart' item.product.pk %}" class="btn vd_button addto-cart">Add To Cart</a>
                 </div>
+               
             </div>
         </div>
       </div>

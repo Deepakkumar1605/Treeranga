@@ -32,7 +32,7 @@
    
     
   <!------------ ADDITIONAL FILES------ -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -467,20 +467,20 @@ $(document).ready(function () {
   });
     
   </script>
-  <script>
-  $(document).ready(function() {
+  <script>   
+   $(document).ready(function() {
     $('.testimonial-slider').slick({
         autoplay: true,
         autoplaySpeed: 0,  // Set to 0 for continuous autoplay
-        speed: 5000,  // Adjust speed to control how fast the slide scrolls
+        speed: 3000,  // Adjust speed to control how fast the slide scrolls
         cssEase: 'linear',  // Use linear easing for a uniform scrolling speed
         draggable: false,  // Disable dragging for a smoother experience
         infinite: true,
-        slidesToShow: 5,
+        slidesToShow: 4,
         slidesToScroll: 1,
         arrows: false,
         dots: false,
-        pauseOnHover: true,  // Prevents pause on hover
+        pauseOnHover: false,  // Prevents pause on hover
         responsive: [
             {
                 breakpoint: 991,
@@ -499,6 +499,7 @@ $(document).ready(function () {
         ]
     });
 });
+
 </script>
  
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

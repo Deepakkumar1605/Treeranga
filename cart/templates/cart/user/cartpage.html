@@ -11,67 +11,63 @@
 <section class="container">
     <div class="row my-lg-3">
         <div class="col-md-8">
-            <div class="d-flex justify-content-end  border p-lg-3 my-lg-2" >
+            <div class="d-flex justify-content-end  border p-lg-3 my-lg-2 my-2" >
                 <a href="{% url 'users:home' %}" class="vd_button" id="continue-shop" >Continue Shopping</a>
             </div>
             <!-- Cart Items List -->  
-            <table class="table table-hover my-table table-striped border">
-                <thead>
-                    <tr class="cart-table">
-                        <th >Product Image</th>
-                        <th>Product & Price</th>
-                        <th>Quantity</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody class="tbody-light">
-                    {% if products %}
-                        {% for key, value in products.items %}
-                        <tr>
-                            <td class="cart-product-image" style="width: 25%;" id="t-Body">
-                                <a href="{% url 'product:product_detail' key %}">
-                                    <img src="{{ value.info.image }}" class="img-thumbnail" alt="product image">
-                                </a>
-                            </td>
-                            <td id="t-Body">
-                                <p class="m-0"><b>{{ value.info.name | truncatechars:30 }} </b></p>
-                                <p><i class="bi bi-currency-rupee"></i>{{ value.info.discount_price }}</p>
-                                
-                            </td>
-                            <td>
-                                <div class="quantity_add mt-lg-4">
-                                    <a href="{% url 'cart:managecart' value.info.uid %}?operation=min">
-                                        <i class="fas fa-minus-square"></i>
-                                    </a>
-                                    <input class="" id="quantity-{{ value.info.uid }}" type="number" value="{{ value.quantity }}" readonly />
-                                    <a href="{% if value.quantity < 6 %}{% url 'cart:managecart' value.info.uid %}?operation=plus{% else %}javascript:void(0);{% endif %}" 
-                                       class="{% if value.quantity >= 6 %}disabled{% endif %}" 
-                                       onclick="checkQuantity('{{ value.info.uid }}', {{ value.quantity }})">
-                                        <i class="fas fa-plus-square"></i>
-                                    </a>
-                                </div>
-                            </td>
-                            
-                            <td >
-                                <div class="mt-lg-4 ms-lg-4">
-                                    <a href="{% url 'cart:removefromcart' key %}" >
-                                        <i class="fa fa-trash text-danger"aria-hidden="true"></i>
-                                    </a>
-                                </div>
-                            </td>
+            <div class="table-responsive-sm table-responsive">
+                <table class="table table-hover my-table table-striped border">
+                    <thead>
+                        <tr class="cart-table">
+                            <th class="pb-lg-2">Product Image</th>
+                            <th class="pb-lg-2">Product & Price</th>
+                            <th class="pb-3 pb-lg-2">Quantity</th=>
+                            <th class="pb-3 pb-lg-2">Remove</th>
                         </tr>
-                        <tr>
-                            
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="4" class="text-center">Your cart is empty !!!</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-            <div class="proceed-to">
+                    </thead>
+                    <tbody class="tbody-light">
+                        {% if products %}
+                            {% for key, value in products.items %}
+                            <tr>
+                                <td class="cart-product-image p-0" id="t-Body">
+                                    <a href="{% url 'product:product_detail' key %}">
+                                        <img src="{{ value.info.image }}" class="img-thumbnail" alt="product image">
+                                    </a>
+                                </td>
+                                <td id="t-Body" class="mt-lg-4">
+                                    <p class="m-0">{{ value.info.name | truncatechars:30 }}</p>
+                                    <p style="color:green!important;"><i class="bi bi-currency-rupee"></i>{{ value.info.discount_price }}</p>
+                                </td>
+                                <td>
+                                    <div class="quantity_add d-lg-flex d-flex justify-content-lg-evenly justify-content-around mt-lg-3">
+                                        <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" class=" text-center">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </a>
+                                        <input class="ps-2" id="quantity-{{ value.info.uid }}" type="number" value="{{ value.quantity }}" readonly />
+                                        <a class=" text-center" href="{% if value.quantity < 6 %}{% url 'cart:managecart' value.info.uid %}?operation=plus{% else %}javascript:void(0);{% endif %}" class="{% if value.quantity >= 6 %}disabled{% endif %}" onclick="checkQuantity('{{ value.info.uid }}', {{ value.quantity }})">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mt-lg-3 mt-4 text-center">
+                                        <a href="{% url 'cart:removefromcart' key %}">
+                                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Your cart is empty !!!</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="proceed-to d-none d-lg-block d-md-block">
                 <div class=" proceed-to-checkout">
                     {% if products %}
                     <a href="{% url 'cart:checkout' %}" class="u-button">Place order</a>
@@ -82,15 +78,15 @@
             </div>
         </div>
 
-        <div class="col col-lg-4" >
+        <div class="col col-lg-4 col-12 col-md-4" >
             <!-- Cart Summary -->
-            <div class="product-price-details">
-                <div class="border" >
-                    <div class="border-bottom p-lg-3 price-details">
+            <div class="product-price-details my-3">
+                <div class="border p-lg-3 p-3" >
+                    <div class="border-bottom  price-details p-2">
                      <span class=""> PRICE DETAILS</span>
                     </div>
      
-                    <div class="p-lg-3 amount-details">
+                    <div class=" p-3 amount-details">
                          <div class="d-flex justify-content-between mb-2">
                              <span>MRP </span>
                              <span><i class="bi bi-currency-rupee"></i>{{ totaloriginalprice }}</span>
@@ -117,11 +113,21 @@
                      </div>
                     
                  </div>
-                 <span class="d-flex mt-lg-3 p-lg-2"  id="t-Head">
+                 <span class="d-flex mt-3 p-2"  id="t-Head">
                      <i class="bi bi-shield-fill-check"></i>
                      <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
                  </span>
             </div>
+            
+        </div>
+    </div>
+    <div class="proceed-to d-block d-sm-block d-lg-none d-md-none my-3 p-0">
+        <div class=" proceed-to-checkout">
+            {% if products %}
+            <a href="{% url 'cart:checkout' %}" class="u-button">Place order</a>
+        {% else %}
+            <a href="#" class="u-button">Place order</a>
+        {% endif %}
         </div>
     </div>
 </section>

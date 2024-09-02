@@ -7,13 +7,16 @@ Product Details - {{ product_obj.name }}
 
 {% block content %}
 
+
+
+
     
 <section class="" id="products_of_category">
     <div class="container py-lg-5">
         <div class="row">
             <!-- side img  -->
             <div class="col col-lg-6 d-flex">
-                <div class="gallery-container">
+                <div class="gallery-container d-lg-block d-none">
                     <div class="gallery-wrapper">
                         <div class="gallery-items">
                             {% if image_gallery %}
@@ -36,8 +39,32 @@ Product Details - {{ product_obj.name }}
                         </div>
                     </div>
                 </div>
+
+
+
+                <div class="gallery-container d-lg-none d-block">
+                    <div class="gallery-slider">
+                        {% if image_gallery %}
+                            {% for image in image_gallery.images %}
+                                <div class="gallery-slide">
+                                    <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image" class="thumb">
+                                </div>
+                            {% endfor %}
+                            {% for video in image_gallery.video %}
+                                <div class="gallery-slide">
+                                    <video controls class="thumb">
+                                        <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No media available.</p>
+                        {% endif %}
+                    </div>
+                </div>
                 
-                <div class="product-image" id="mediaContainer">
+                <div class="product-image d-lg-block d-none" id="mediaContainer">
                     {% if product_obj.image %}
                         <img src="{{ MEDIA_URL }}{{ product_obj.image }}" alt="{{ product_obj.name }}" id="mainImage">
                     {% else %}
@@ -89,18 +116,17 @@ Product Details - {{ product_obj.name }}
                         <h5 class="">Description :</h5>
                         <p>{{ product_obj.product_short_description | truncatechars:200 }}</p>
                     </div>
-                    <div class="quantity-selector mt-3">
+                    <div class="quantity-selector  my-lg-3 my-3">
                         <label for="quantity">Quantity:</label>
                         <div class="input-group">
-                            <button type="button" id="decrement" class="w-25 ">-</button>
+                            <button type="button" id="decrement" class="w-25">-</button>
                             <input type="number" id="quantity" name="quantity" value="1" min="1" max="6" class="form-control text-center" readonly>
                             <button type="button" id="increment" class="w-25">+</button>
                         </div>
-                        <small id="quantityHelp" class="form-text text-muted">Maximum 6 units per product.</small>
                     </div>
-
-                    <div class="buttons mt-4 ">
-                        <a href="#" id="addToCartButton" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1  cart-btn">
+                    <small id="quantityHelp" class="form-text text-muted">Maximum 6 units per product.</small>
+                    <div class="buttons my-3">
+                        <a href="#" id="addToCartButton" class=" btn">
                             Add To Cart
                         </a>
                         <!-- <a href="#" class="btn btn-success fs-6 fw-bold mt-2 mx-1 buy-btn">
@@ -110,6 +136,9 @@ Product Details - {{ product_obj.name }}
                 </div>
             </div>
         </div>
+
+
+
         <!--------------------------------- product long description-------------------- -->
         <div class="py-lg-4 description">
             <h5 class="border-bottom text-center p-lg-3">Description</h5>
@@ -138,15 +167,14 @@ Product Details - {{ product_obj.name }}
                             <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
                             {% endif %}
                         </p>
-                        <a href="{% url 'product:product_detail' item.product.id %}" class="btn btn-success product-btn w-100">Product Details</a>
+                        <a href="{% url 'product:product_detail' item.product.id %}"  class="btn vd_button addto-cart">Product Details</a>
                     </div>
                 </div>
                </div>
                 {% endfor %}
             </div>
     </div>
-    {% comment %}
-
+   
     {% comment %}
     <div class="container">
         <div class=" ">
@@ -234,6 +262,8 @@ Product Details - {{ product_obj.name }}
     </div>
     {% endcomment %} 
     </div>
+    
+    
 </section>
 
 
@@ -317,6 +347,17 @@ Product Details - {{ product_obj.name }}
 </script>
     
 
+<script>
+    $(document).ready(function(){
+      $('.gallery-slider').slick({
+        dots: true, /* Show dots */
+        infinite: true,
+        speed: 300,
+        slidesToShow: 1,
+        slidesToScroll: 1
+      });
+    });
+  </script>
 
 
 
