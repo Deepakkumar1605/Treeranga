@@ -1,0 +1,25 @@
+:root{
+     --primary:#069753;
+    --secondary:rgb(245, 191, 18);;
+    --secondary2:rgb(249, 206, 61);;
+    --tb-head:#00836c;
+    --white:#ffffff;
+    --button:#399918;
+    --sub_button:#fb641b;
+    --pagebg:#f5f5f5;
+    --p:rgb(102, 102, 102);
+    --dark: #000000;
+    --para:#212121;
+    --header:#f9f9f9;
+    --danger:#ec0606;
+
+
+  --p-fontfamily:"Nunito", sans-serif;
+  --heading:"Inter", sans-serif;
+  --sub-heading: "Poppins", sans-serif;
+
+
+
+    --box1-box-shadow:rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  --sm-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}

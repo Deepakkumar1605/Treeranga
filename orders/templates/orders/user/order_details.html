@@ -6,36 +6,11 @@
 
 {% block content %}
 
-<style>
-  .row {
-    font-size: 14px;
-  }
-  .order_details {
-    border: none;
-    border-radius: 0;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  }
-  #tb_hd {
-    background-color: #00836c;
-    color: white;
-    font-weight: 400;
-  }
-  #t_heaD {
-    color: #535B61;
-  }
-  #amt_table {
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  }
-  .additional-info {
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-  }
-</style>
+
+
 <section class="container">
     <div class="row mx-0">
-      <div class="col-lg-12  my-lg-5">
+      <div class="col-lg-12  my-lg-5 ">
         <div class="card table-responsive">
           <div class="">
             <table class="table table-hover table-nowrap">
@@ -56,31 +31,31 @@
                   <td class="tb-body">
                     <img src="{{ product.image.url }}" style="height: 60px; width: 60px;" alt="{{ product.name }}"/>
                   </td>
-                  <td class="tb-body">
+                  <td id="tb-body">
                     {{ product.name }}
                   </td>
-                  <td class="tb-body">
+                  <td id="tb-body">
                     {{ quantity }}
                   </td>
-                  <td class="tb-body">
-                    {{ price_per_unit|default:"N/A" }}
+                  <td id="tb-body">
+                    ₹ {{ price_per_unit|default:"N/A" }}
                   </td>
-                  <td class="tb-body">
-                    {{ product.cgst|default:"N/A" }}%
+                  <td id="tb-body">
+                     {{ product.cgst|default:"N/A" }}%
                   </td>
                   
-                  <td class="tb-body">
-                    {{ product.sgst|default:"N/A" }}%
+                  <td id="tb-body" >
+                     {{ product.sgst|default:"N/A" }}%
                   </td>
-                  <td class="tb-body">
-                    {{ total_price|default:"N/A" }}
+                  <td id="tb-body" class="fw-bold">
+                   ₹ {{ total_price|default:"N/A" }}
                   </td>
                 </tr>
                 {% endfor %}
                 <tr>
                     <td class="tb-body"></td>
-                    <td class="tb-body">Total Quantity</td>
-                    <td class="tb-body"> {{ total_quantity }}</td>
+                    <td class="tb-body fw-bold">Total Quantity</td>
+                    <td class="tb-body fw-bold"> {{ total_quantity }} items</td>
                     <td class="tb-body"></td>
                     <td class="tb-body"></td>
                     <td class="tb-body"></td>
@@ -95,6 +70,57 @@
   </section>
   
 
+<section class="container">
+  <div class="card p-lg-3">
+    <h3>Order Summary</h3>
+    <p></p>
+    <div class="row">
+      <div class="col-8 d-flex flex-column lh-lg">
+     
+        <div>Delivery Charge</div>
+        <div>Payment Method</div>
+        <div class="text-success">Discount</div>
+        <div>CGST</div>
+        <div>SGST</div>
+        <div class="fw-bold">Total</div>
+      </div>
+
+      <div class="col-2 d-flex flex-column ">
+  
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <div class="col-2 d-flex flex-column align-items-end lh-lg">
+
+        <div>{{ delivery_charge|default:"Free Shipping" }}</div>
+        <div class="text-uppercase">{{ payment_method|default:"N/A" }}</div>
+        <div class="text-success">- ₹ {{ discount_amount|default:"N/A" }}</div>
+        <div>₹ {{ cgst_amount|floatformat:2 }}</div>
+        <div>₹ {{ sgst_amount|floatformat:2 }}</div>
+        <div class="fw-bold">₹ {{ grand_total|default:"N/A" }}</div>
+      </div>
+      <div class="card-footer">
+        {% if order.order_status == 'Cancel' %}
+            <button type="button" class="btn btn-secondary u-button" disabled>Order Canceled</button>
+        {% else %}
+              <button type="button" class="btn btn-danger w-25 u-button" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
+        {% endif %}
+      </div>
+    </div>
+
+
+
+   
+  </div>
+</section>
+
+
+{% comment %}
 <main class="py-6 container" style="min-height: 60vh;">
     <div class="row mt-5">
         <div class="col-lg-12">
@@ -162,6 +188,8 @@
                     {% else %}
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
                     {% endif %}
+
+
                     <!-- Cancel Order Modal -->
                     <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -202,6 +230,7 @@
         </div>
     </div>
 </main>
+{% endcomment %}
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>

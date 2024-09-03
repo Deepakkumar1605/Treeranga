@@ -22,7 +22,7 @@ urlpatterns = [
     path("ProductList", admin_product_views.ProductList.as_view(), name="product_list"),
     path("ProductSearch", admin_product_views.ProductSearch.as_view(), name="product_search"),
     path("ProductFilter", admin_product_views.ProductFilter.as_view(), name="product_filter"),
-    path('AdminProductReviews&Ratings/', admin_product_views.AdminReviewApprovalView.as_view(), name='review_approval'),
+    path('AdminProductReviews&Ratings/', admin_product_views.AdminReviewManagementView.as_view(), name='admin_review_management'),
     
     #simple product
     path("SimpleProductList", admin_product_views.SimpleProductList.as_view(), name="simple_product_list"),

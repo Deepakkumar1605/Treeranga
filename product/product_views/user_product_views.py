@@ -88,7 +88,7 @@ class AllTrendingProductsView(View):
         updated_trending_products = []
         for product in trending_products:
             if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
-                updated_new_products.append(product)
+                updated_trending_products.append(product)
         
         context = {
             'trending_products': updated_trending_products,

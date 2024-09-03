@@ -63,7 +63,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
     
 class ForgotPasswordForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address'}))
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if not User.objects.filter(email=email).exists():
