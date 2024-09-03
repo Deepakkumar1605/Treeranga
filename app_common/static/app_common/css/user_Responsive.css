@@ -25,6 +25,18 @@ header{
     display: flex;
     justify-content:space-between; 
   }
+  #offcanvasWithBothOptions .offcanvas-body{
+    padding: 0;
+  }
+  #offcanvasWithBothOptions .offcanvas-body ul li a{
+    padding: 10px 5px;
+    margin: 10px 5px;
+    background-color: var(--primary);
+    text-align: center;
+    color: var(--white);
+    font-size: 16px;
+    text-transform: uppercase;
+  }
 
 .navbar-brand{
     display: flex;
@@ -176,7 +188,7 @@ header{
   line-height: 23px;
   padding: 10px 0;
 }
-/* -------------------------------About us page----------------------- */
+/* -------------------------------About us landing page----------------------- */
 .aboutniwa_bg{
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), 
   url("../images/PictureUnlock_TOI_254730_user0.pictureunlock.jpg");
@@ -289,16 +301,394 @@ header{
     font-weight: 300;
     line-height: 25px;
   }
-/*                      f--------------- */
+/*                      --------------- */
   .Main_Image{
     height: 250px;
     overflow: hidden;
     width: auto;
     object-fit: cover;
   }
+ /* ----------------------------About us Page css------------------------- */
+ #about {
+  margin: 20px auto 40px;
+}
+#about div h3 {
+  font-size: 22px;
+}
+#about div p {
+  font-size: 15px;
+  margin: 12px 0;
+}
+
+.side_img img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+.aboutus_card{
+  border: 1px solid var(--p);
+  padding:15px;
+  border-radius: 5px;
+}
+
+   /* ----------------------------Return Policy Page css------------------------- */
 
 
-  
+#return {
+  width: 100%; 
+  margin: 10px auto 40px; 
+  padding: 0 10px;
+}
+
+#return div p {
+  font-size: 14px; 
+  margin: 15px 0; 
+  line-height: 1.8; 
+}
+
+#return div h3 {
+  font-size: 22px;
+}
+
+#return div h5 {
+  font-size: 14px;
+  margin: 10px 0; 
+}
+
+#return div ul li {
+  font-size: 14px;
+  line-height: 2.2; 
+}
+
+#return div ul li ul li {
+  font-size: 14px;
+  line-height: 2.2; 
+}
+  /* ----------------------------Privacy Policy Page css------------------------- */
+  #Privacy {
+    width: 100%;
+    margin: 10px auto 40px; 
+  }
+
+#Privacy div p, 
+#Privacy div ul li ul li {
+    font-size: 14px; 
+    line-height: 1.8;
+}
+
+#Privacy div h3 {
+    font-size: 22px; 
+    text-align: center; 
+}
+
+#Privacy div h4 {
+    font-size: 18px;
+    margin-top: 15px; 
+}
+
+#Privacy div ul li ul li {
+    margin: 8px 0;
+}
+
+.breadcrumb {
+    font-size: 12px;
+}
+/* ----------------------------Contact Us Page css------------------------- */
+
+.contactus-page {
+  padding: 30px 15px;
+}
+
+.Address-page {
+  padding: 10px 15px;
+}
+
+.contactus-page .Address-page h5 {
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.contactus-page .Address-page p {
+  font-size: 14px;
+  line-height: 22px;
+  margin-bottom: 20px;
+}
+
+.contactus-page .Address-page .social-icons {
+  font-size: 18px;
+  line-height: 35px;
+}
+
+.contactus-page .Address-page .social-icons i {
+  margin: 0 5px;
+}
+
+.contact_us_image {
+  height: 250px;
+}
+
+.contact_us_image img {
+  height: 350px;
+}
+
+.contact-form h4 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.contact-form form button {
+  font-size: 12px;
+  padding: 15px 30px;
+}
+
+.contact-form form .form-field {
+  margin: 10px 0;
+}
+
+.contact-form form .form-field input,
+.contact-form form .form-field textarea {
+  font-size: 14px;
+}
+
+.contact-form form .form-field input:focus,
+.contact-form form .form-field textarea:focus {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 6px;
+}
+
+/* ---------------------Showcart Page CSS------------------------- */
+
+
+.product-price-details{
+  position:static;
+  height: auto; 
+ 
+}
+.proceed-to{
+  position: sticky;
+  bottom: 0%;
+  z-index: 10;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.proceed-to-checkout a{
+  background-color: var(--sub_button);
+  color: var(--white);
+  text-transform: uppercase;
+  padding: 15px 80px;
+  word-spacing: 5px;
+  width: 100%;
+}
+.cart-product-image a img{
+  height:80px;
+  width: 160px;
+}
+.quantity_add{
+  padding: 5px 10px;
+  margin: 20px 0px;
+}
+
+.quantity_add input{
+  width: 40px;
+  border: none;
+  background-color: transparent;
+  text-align: center;
+}
+.quantity_add a i{
+  color: var(--p);
+  font-size: 14px;
+}
+
+
+/* ---------------------Proceed to Payment With Address?------------------------- */
+
+.modal-content{
+  height: auto;
+  width:100% !important;
+}
+/* ============================User Product of catagory  Page CSS================ */
+#products_of_category {
+  padding: 10px;
+}
+
+.product-head {
+  width: 100%;
+  height: auto;
+}
+
+#product-cards {
+  width: 100%;
+  height: auto;
+}
+
+#product-cards a img {
+  width: 100%;
+  height: auto;
+}
+
+#product-cards div h5 {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+#discount_price {
+  font-size: 15px;
+}
+
+#max_price {
+  font-size: 12px;
+}
+
+#product-cards .card-body a {
+  width: 100%;
+  padding: 8px;
+}
+
+/* Change layout to single-column */
+.row-cols-lg-5 {
+  display: block;
+}
+
+.product-head {
+  margin-bottom: 20px;
+}
+
+
+/* ============================User Product detail page CSS================ */
+
+
+
+.product-image img {
+  object-fit: contain;
+}
+
+.gallery-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  margin-bottom: 10px;
+}
+
+.gallery-items {
+  flex-direction: row;
+}
+
+.gallery-item img,
+.gallery-item video {
+  width: 80px;
+  height: 80px;
+}
+
+/* Product Details */
+.product-details h1 {
+  font-size: 22px;
+  line-height: 32px;
+}
+
+.discount-price {
+  font-size: 18px;
+}
+
+.original-price {
+  font-size: 12px;
+}
+.quantity-selector{
+  display: flex;
+  justify-content: space-evenly;
+}
+.quantity-selector .input-group{
+  width: 50%;
+}
+#quantityHelp{
+  display: flex;
+  justify-content: center;
+}
+
+.buttons #addToCartButton{
+  border-radius: 2px;
+  width: 100%;
+}
+
+.wishlist-btn i {
+  font-size: 20px;
+}
+
+/* Description */
+.description {
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.description h5 {
+  font-size: 16px;
+}
+
+/* Similar Products */
+.similar-products .product-card {
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.similar-products .product-card a img {
+  height: 150px;
+}
+
+/* Review Section */
+.review-item p {
+  font-size: 14px;
+}
+
+.review-item div span {
+  font-size: 18px;
+}
+
+.review-summary h4 {
+  font-size: 18px;
+}
+
+/* Form Elements */
+.Rating_forms label {
+  font-size: 14px;
+}
+
+.Rating_forms input {
+  font-size: 14px;
+  padding: 5px;
+}
+
+.u-button.Review {
+  font-size: 14px;
+  padding: 10px 15px;
+}
+
+/* General adjustments */
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 15px;
+  font-size: 14px;
+}
+.product-image {
+  width: 100%;
+  height: auto;
+}
+
+.gallery-container {
+  width: 100%;
+  height: auto;
+}
+
+
 
 
 

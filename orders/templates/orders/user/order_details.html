@@ -41,11 +41,11 @@
                     ₹ {{ price_per_unit|default:"N/A" }}
                   </td>
                   <td id="tb-body">
-                    ₹ {{ product.cgst|default:"N/A" }}%
+                     {{ product.cgst|default:"N/A" }}%
                   </td>
                   
                   <td id="tb-body" >
-                    ₹ {{ product.sgst|default:"N/A" }}%
+                     {{ product.sgst|default:"N/A" }}%
                   </td>
                   <td id="tb-body" class="fw-bold">
                    ₹ {{ total_price|default:"N/A" }}
@@ -120,7 +120,7 @@
 </section>
 
 
-
+{% comment %}
 <main class="py-6 container" style="min-height: 60vh;">
     <div class="row mt-5">
         <div class="col-lg-12">
@@ -230,6 +230,7 @@
         </div>
     </div>
 </main>
+{% endcomment %}
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>

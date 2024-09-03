@@ -169,7 +169,7 @@
   }
   h3{
     color: var(--primary) !important;
-    
+    font-family: "Poppins",sans-serif !important;
   }
   header {
     background: var(--header) !important;
@@ -702,107 +702,113 @@ color: #fff;
 }
 
 
-
-
-
-
    /* ----------------------------About us Page css------------------------- */
-#about{     
-  font-family: "Poppins",sans-serif;
-  margin:20px  auto 80px;
- }
 
- #about div h3{
-  font-family: "Rufina",sans-serif;   
- }
+   #about {
+     font-family: "Poppins", sans-serif;
+     margin: 20px auto 80px;
+   }
+   
+   #about div h3 {
+     font-family: "Rufina", sans-serif;
+   }
+   
+   #about div p {
+     font-family: sans-serif;
+     font-size: 15px;
+     font-weight: 100;
+     line-height: 1.56;
+     word-spacing: 2px;
+   }
+   
+   .side_img img {
+     border-radius: 5px;
+     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+     width: 100%;
+     height: auto;
+   }
 
- #about div p{
-  font-family:sans-serif ;
-  font-size: 15px;
-  font-weight: 100;
-  line-height:1.56;                 
-  }
-  .side_img img{ 
-      
-      border-radius:5px;
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
-  }
   /* ----------------------------Return Policy Page css------------------------- */
   
-  #return{
-      font-family: "Poppins",sans-serif;
-      width: 70%;
-      margin:20px  auto 80px;
-    
-  }
-  #return div h3{
-      font-family: "Rufina",sans-serif;
-  }
-  #return div p{
-      font-family:sans-serif ;
-      font-size: 15px;
-      font-weight: 100;
-      margin: 20px 0;
-      line-height: 2;
-  }
-  #return div h5{
-      font-weight: 600;
-      font-size: 15px;
-      margin: 12px 0;
-  }
-  #return div ul li{
-      list-style-type: number;
-  }
-  
-  #return div ul li ul li{
-      list-style-type: disc;
-      line-height: 2.5;
-      font-family:sans-serif ;
-      font-size: 15px;
-      font-weight: 100;
-  }
-  #return div ul li ul{
-      font-family:sans-serif ;
-      font-size: 15px;
-      font-weight: 100;
-  }
+  #return {
+    font-family: "Poppins", sans-serif;
+    margin: 20px auto 80px;
+}
+
+#return div h3 {
+    font-family: "Poppins", sans-serif;
+}
+
+#return div p {
+    font-family:"Poppins" ,sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    margin: 20px 0;
+    line-height: 2;
+}
+
+#return div h5 {
+    font-weight: 600;
+    font-size: 15px;
+    margin: 12px 0;
+}
+
+#return div ul li {
+    list-style-type: number !important;
+}
+
+#return div ul li ul li {
+    list-style-type: disc !important;
+    line-height: 2.5;
+    font-family:"Poppins", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+#return div ul li ul {
+    font-family:"Poppins", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
   
   /* ----------------------------Privacy Policy Page css------------------------- */
   
-  #Privacy{
-      font-family: "Poppins",sans-serif;
-      width: 70%;
-      margin:20px  auto 80px;
-      font-weight: 100;
-    
-  }
-  #Privacy div h3{
-      font-family: "Rufina",sans-serif;
-  }
-  #Privacy div p{
-      font-family:sans-serif ;
-      font-size: 15px;
-      font-weight: 100;
-      margin: 20px 0;
-      line-height: 2;
-}
-#Privacy div ul li{
-    
-    list-style-type: number;
+  #Privacy {
+    font-family: "Poppins", sans-serif;
+    margin: 20px auto 80px;
 }
 
-#Privacy div ul li ul li{
-    list-style: disc;
-    font-family:sans-serif ;
+#Privacy div h3 {
+    font-family: "Poppins", sans-serif;
+}
+
+#Privacy div p {
+    font-family:"Poppins", sans-serif;
     font-size: 15px;
-    font-weight: 100;
+    font-weight: 400;
+    margin: 20px 0;
+    line-height: 2;
+}
+
+#Privacy div ul li {
+    list-style-type: number !important;
+}
+
+#Privacy div ul li ul li {
+    list-style: disc;
+    font-family:"Poppins", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
     line-height: 2;
     margin: 10px 0;
-    
+}
+#Privacy div ul li ul li b{
+  font-weight:500;
 }
 
 
-/* ----------------------------Contact Us Page css------------------------- */
+/* ----------------------------Contact Us Page CSS------------------------- */
 
 #conatct_us{
     font-family: "Poppins",sans-serif;
@@ -862,8 +868,8 @@ color: #fff;
     color: #363636 !important;
 }
 .contact-form form button{
-    background-color: var(--discount);
-    color: var(--third);
+    background-color: var(--primary);
+    color: var(--white);
     font-family:'inter',sans-serif;
     font-weight: 400;
     letter-spacing: 3px;
@@ -891,6 +897,7 @@ color: #fff;
 
 /* ---------------------Showcart Page CSS------------------------- */
 
+
 .product-price-details{
   position: sticky;
   top:16.5%;
@@ -900,30 +907,57 @@ color: #fff;
 }
 
 #continue-shop{
-  background-color: var(--third2);
+  background-color: var(--button);
+  color: var(--white);
   padding: 15px 30px;
+}
+#continue-shop:focus{
+  color: var(--white);
+}
+
+.cart-table th{
+  font-family:"Inter",sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--para);
+  font-style: normal;
 }
 .cart-product-image a img{
   height:80px;
   width: 150px;
+  object-fit: cover;
 }
+
 .checkout-check{
   border-bottom: 1px dotted rgb(188, 188, 188);
 }
+.quantity_add{
+  border: 1px solid #66be23;
+  margin: 15px auto;
+  padding: 5px 10px;
+}
 
 .quantity_add input{
-  width:50px ;
+  width: 40px;
+  border: none;
+  background-color: transparent;
+  text-align: center;
 }
-.quantity_add i{
-  color: var(--h6);
+.quantity_add a i{
+  color: var(--p);
+  padding: 0;
+  background-color: transparent;
 }
-
+.quantity_add a:focus{
+  outline: none;
+  border: none;
+}
 .price-details span{
   font-family:"Inter",sans-serif;
   font-weight: 500;
   font-size: 16px;
   line-height: 22px;
-  color: var(--h6);
+  color: var(--p);
   font-style: normal;
   word-spacing: 2px;
 }
@@ -932,7 +966,7 @@ color: #fff;
   font-weight: 400;
   font-size: 15px;
   line-height: 22px;
-  color: var(--para2);
+  color: var(--para);
   font-style: normal;
   word-spacing: 2px;
 }
@@ -941,7 +975,7 @@ color: #fff;
   font-weight: 600;
   font-size: 18px;
   line-height: 25px;
-  color: var(--para2);
+  color: var(--para);
   font-style: normal;
   word-spacing: 3px;
 }
@@ -950,7 +984,7 @@ color: #fff;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-  color: var(--h6);
+  color: var(--p);
   font-style: normal;
   word-spacing: 2px;
 }
@@ -958,9 +992,17 @@ color: #fff;
   font-size: 30px;
   text-shadow: rgba(7, 7, 7, 0.15) 3px 2px 2.6px;;
 }
+
+#t-Body p{
+  font-family:"Inter",sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--para);
+  font-style: normal;
+}
 .proceed-to{
   width: 100%;
-  background-color: var(--third);
+  background-color: var(--white);
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
   position: sticky;
@@ -971,14 +1013,14 @@ color: #fff;
   justify-content: end;
 }
 .proceed-to-checkout a{
-  background-color: var(--place-order);
-  color: var(--third);
+  background-color: var(--sub_button);
+  color: var(--white);
   text-transform: uppercase;
   padding: 15px 80px;
   word-spacing: 5px;
 }
 .proceed-to-checkout a:hover{
-  color: var(--third);
+  color: var(--white);
   transform: scale(1);
 }
 .proceed-to-checkout a:hover::before {
@@ -989,34 +1031,30 @@ color: #fff;
 /* ---------------------Proceed to Payment With Address?------------------------- */
 
 .proceed-to-payment button{
-  background-color: var(--place-order);
-  color: var(--third);
+  background-color: var(--sub_button);
+  color: var(--white);
   text-transform: uppercase;
   padding: 15px 80px;
   word-spacing: 5px;
 }
 #addAddress{
-  background-color: var(--discount);
-  color: var(--third);
+  background-color: var(--primary);
+  color: var(--white);
 }
 .u-button.trash{
-  color: var(--third);
+  color: var(--white);
   background-color:var(--danger) ;
   font-size: 12px;
   padding:10px;
   
 }
 .u-button.pencil{
-  color: var(--third);
-  background-color:var(--info) ;
+  color: var(--white);
+  background-color:var(--tb-head) ;
   font-size: 12px;
   padding: 10px;
   text-transform: capitalize;
 }
-
-
-
-
 .address-details li {
   font-family:"Inter",sans-serif;
   font-weight: 500;
@@ -1037,16 +1075,27 @@ color: #fff;
   word-spacing: 2px;
   letter-spacing: 1px;
 }
-#addAddressModal .modal-header,#addAddressModal .modal-footer{
-  background-color: var(--third2);
-  color: var(--third);
+#addAddressModal,#updateAddressModal{
+  z-index: 111111111111;
+}
+.modal-content{
+  height: 90vh;
+  width:80% !important;
+}
+#addAddressModal .modal-header,
+#addAddressModal .modal-footer{
+  background-color: var(--primary);
+  color: var(--white);
 }
 #addAddressModal .modal-footer{
   display: flex;
   justify-content:space-around;
 }
-
-
+#updateAddressModal .modal-header,
+#updateAddressModal .modal-footer{
+  background-color: var(--primary);
+  color: var(--white);
+}
 #updateAddressModal .form-control {
   border: 1px solid rgba(209, 203, 203, 0.45);
   border-radius:2px;
@@ -1058,14 +1107,14 @@ color: #fff;
   border-radius:2px;
 }
 .u-button.add{
-  color: var(--third);
-  background-color:var(--info) ;
+  color: var(--white);
+  background-color:var(--button) ;
   font-size: 15px;
   padding: 10px;
 }
 .u-button.close{
-  color: var(--third);
-  background-color:var(--h6) ;
+  color: var(--white);
+  background-color:var(--danger) ;
   font-size: 15px;
   padding: 10px 45px;
 }
@@ -1082,52 +1131,51 @@ color: #fff;
 
 
 /* ============================User Product of catagory  Page CSS================ */
-
-#products_of_category{
+#products_of_category {
   background: var(--pagebg);
 }
-.product-head{
+.product-head {
   height: 450px;
-  width:  268px;
+  width: 268px;
   overflow: hidden;
 }
-#product-cards{
+#product-cards {
   height: 450px;
-  width:  257px;
+  width: 257px;
   overflow: hidden;
 }
-#product-cards a img{
+#product-cards a img {
   height: 257px;
   width: 257px;
 }
-#product-cards div{
+#product-cards div {
   text-align: start;
 }
-#product-cards div h5{
-  font-family: "inter",sans-serif;
+#product-cards div h5 {
+  font-family: "inter", sans-serif;
   font-weight: 700;
   font-size: 15px;
   line-height: 21px;
-
 }
-#discount_price{
-  font-family: var(--heading);
-  color: var( --primary);
+#discount_price {
+  font-family: var(--header);
+  color: var(--primary);
   font-weight: 700;
   font-size: 16px;
   line-height: 15px;
   font-style: normal;
 }
-#max_price{
-  font-family:var(--heading);
-  color: var( --p);
+#max_price {
+  font-family: var(--heading);
+  color: var(--p);
   font-weight: 400;
   font-size: 13px;
   line-height: 15px;
   font-style: normal;
 }
-#product-cards .card-body a{
-  background-color: var(--discount);
+#product-cards .card-body a {
+  background-color: var(--primary);
+  color: var(--white);
   padding: 10px;
   width: 80%;
   margin: auto;
@@ -1153,11 +1201,36 @@ color: #fff;
 .gallery-container {
   display: flex;
   flex-direction: column;
-  margin: 0;
-  width: 150px ;
+  width: 150px;
   height: 500px;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+.gallery-slider {
+  display: flex;
+}
+.gallery-slide {
+  flex: 0 0 auto;
+  width: 100%;
+}
+.gallery-slide img,
+.gallery-slide video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.slick-dots {
+  bottom: -30px;
+}
+
+.slick-dots li button:before {
+  font-size: 12px; 
+  color: #ddd;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #1a02f6; 
 }
 .gallery-container::-webkit-scrollbar{
   display: none;
@@ -1234,8 +1307,9 @@ color: #fff;
 }
 .quantity-selector .input-group{
   width: 25%;
-  border: 1px solid var(--h6);
+  border: 1px solid var(--p);
 }
+
 .stock-Details span{
   font-family:"inter",sans-serif;
   font-style: normal;
@@ -1244,22 +1318,10 @@ color: #fff;
   margin: 10px 0;
   font-size: 17px;
 }
-.product-deatils-Buttons #addToCartButton{
-  font-family:"inter",sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  width: 30%;
+#addToCartButton{
   background-color: var(--secondary);
-  color: var(--para);
-  
-}
-.product-deatils-Buttons #Buynow-Button{
-  font-family:"inter",sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  width: 30%;
-  background-color: var(--third2);
-  color: var(--third);
+  color: var(--white);
+  padding: 10px 50px;
 }
 
 
@@ -1325,7 +1387,7 @@ height:180px;
 object-fit: cover;
 }
 
-.review-item h6{
+.review-item p{
   font-family:"Poppins",sans-serif;
   font-style: normal;
   font-weight: 600;
@@ -1397,7 +1459,6 @@ object-fit: cover;
   .review-rating label.gold {
       color: #ffcc00; /* Gold color for selected stars */
   }
-
 
 /*---------------------------- new products------------------------------- */
                       /* nocss */
@@ -1517,7 +1578,7 @@ footer {
   color: var(--p);
 }
 
-.footer_div_ul div h6{
+.footer_div_ul div p{
 color: var(--p);
 font-size:13px;
 font-weight: 400;

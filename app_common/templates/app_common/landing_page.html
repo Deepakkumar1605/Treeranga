@@ -100,13 +100,13 @@
             <h5>{{ item.product.name|truncatechars:25 }}</h5>
             
             <p class="card-text">
-              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+              <span class="price me-lg-2 ms-md-2 ms-1" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
               {% if item.simple_product.product_max_price %}
               <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
               {% endif %}
             </p>
             <div class="d-flex mt-3">
-              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button">Add To Cart</a>
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button addto-cart">Add To Cart</a>
             </div>
           </div>
         </div>
@@ -145,13 +145,13 @@
             <h5>{{ item.product.name|truncatechars:25 }}</h5>
             
             <p class="card-text">
-              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+              <span class="price me-lg-2 ms-md-2 ms-1 " id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
               {% if item.simple_product.product_max_price %}
               <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
               {% endif %}
             </p>
             <div class="d-flex mt-3">
-              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button">Add To Cart</a>
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button addto-cart">Add To Cart</a>
             </div>
           </div>
         </div>

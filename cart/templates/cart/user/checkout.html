@@ -21,7 +21,7 @@ Checkout | NiwaAgro.com
             <input type="hidden" name="cartID" value={{cart_id}} />
             <div class="address-list row my-lg-3 ">
                 {% for i in addresses %}
-                <div class="col-md-6 col-lg-6 d-flex flex-row pb-lg-3">
+                <div class="col-md-6 col-lg-6 d-flex flex-row my-2">
                     <div class="card w-100">
                         
                         <div class=" d-flex justify-content-around pt-lg-3" >
@@ -66,6 +66,7 @@ Checkout | NiwaAgro.com
                 </div>
                 {% endfor %}
             </div>
+
             <!-- Update Address -->
             <div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="updateAddressModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -80,40 +81,40 @@ Checkout | NiwaAgro.com
                                 <!-- Address form fields -->
                                 <input type="text" id="a_id" name="a_id" hidden>
 
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-Address1" class="form-label">Address 1</label>
                                     <input type="text" class="form-control" id="update-Address1" name="Address1" required>
                                 </div>
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-Address2" class="form-label">Address 2</label>
                                     <input type="text" class="form-control" id="update-Address2" name="Address2">
                                 </div>
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-mobile_no" class="form-label">Mobile No.</label>
                                     <input type="text" class="form-control" id="update-mobile_no" name="mobile_no" required>
                                 </div>
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-state" class="form-label">State</label>
                                     <input type="text" class="form-control" id="update-state" name="state" required>
                                 </div>
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-country" class="form-label">Country</label>
                                     <input type="text" class="form-control" id="update-country" name="country" required>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-city" class="form-label">City</label>
                                     <input type="text" class="form-control" id="update-city" name="city" required>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="">
                                     <label for="update-zipcode" class="form-label">Pincode</label>
                                     <input type="text" class="form-control" id="update-zipcode" name="zipcode" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-success" style="background-color: #00836C;">Update Address</button>
+                                <button type="button" class="u-button close" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="u-button add">Update Address</button>
                             </div>
                         </form>
                     </div>
@@ -125,7 +126,7 @@ Checkout | NiwaAgro.com
 
             <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content">
+                    <div class="modal-content ">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -181,11 +182,11 @@ Checkout | NiwaAgro.com
 
             <div class="product-price-details">
                 <div class="border" >
-                    <div class="border-bottom p-lg-3 price-details">
+                    <div class="border-bottom p-lg-3 p-2 price-details">
                      <span class=""> PRICE DETAILS</span>
                     </div>
         
-                    <div class="p-lg-3 amount-details">
+                    <div class="p-lg-3 p-2 amount-details">
                          <div class="d-flex justify-content-between mb-2">
                              <span>MRP </span>
                              <span><i class="bi bi-currency-rupee"></i>{{ totaloriginalprice }}</span>
@@ -207,11 +208,11 @@ Checkout | NiwaAgro.com
         
                          </div>
                     </div>
-                     <div class="d-flex justify-content-between p-lg-3 total-amount">
+                     <div class="d-flex justify-content-between p-lg-3 p-2 total-amount">
                          <span>Total Amount </span>
                          <span><i class="bi bi-currency-rupee"></i>{{ final_cart_value }}</span>
                      </div>
-                     <div class="payment-method p-lg-3">
+                     <div class="payment-method p-lg-3 p-2">
                         <h6>Select Payment Method</h6>
                         <label>
                             <input type="radio" name="payment_method" value="razorpay" checked>
@@ -224,11 +225,11 @@ Checkout | NiwaAgro.com
                         </label>
                         </div>
 
-                     <div class="p-lg-3 proceed-to-payment">
+                     <div class="p-lg-3 p-2 proceed-to-payment">
                         <button class="u-button w-100" id="proceed-button">Proceed To Payment</button>
                     </div>
                  </div>
-                 <span class="d-flex mt-lg-3 p-lg-2"  id="t-Head">
+                 <span class="d-flex my-2 "  id="t-Head">
                      <i class="bi bi-shield-fill-check"></i>
                      <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
                  </span>
