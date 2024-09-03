@@ -24,6 +24,7 @@ class VariantProduct(models.Model):
     product_discount_price = models.FloatField(default=0.0, null=True, blank=True)    
     stock = models.IntegerField(default=1, blank=True, null=True)
     taxable_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, editable=False)
+    is_visible = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.product and self.product.gst_rate is not None:
@@ -34,6 +35,12 @@ class VariantProduct(models.Model):
         super(VariantProduct, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.product.name} - {self.variant.name} - {self.attribute.name}"
+        return f"{self.product.name}"
 
-    
+class VariantImageGallery(models.Model):
+    variant_product = models.ForeignKey(VariantProduct, on_delete=models.CASCADE, related_name='image_gallery')
+    images = models.JSONField(default=list, null=True, blank=True)
+    video = models.JSONField(default=list, null=True, blank=True)
+
+    def __str__(self):
+        return f"Gallery for {self.variant_product.product}"

@@ -439,102 +439,89 @@ Product {% endblock title %} {% block content %}
       $(document).on("click", ".combination-link", function (event) {
         event.preventDefault();
         var combination = $(this).data("combination");
-  
+    
         // Simulate fetching details
-        // Replace with actual logic to retrieve details if needed
         var details = {
-          "example combination": {
-            product_max_price: 100,
-            product_discount_price: 80,
-            stock: 10,
-          },
+            "example combination": {
+                product_max_price: 100,
+                product_discount_price: 80,
+                stock: 10,
+            },
         };
-  
+    
         var detail = details[combination] || {
-          product_max_price: "",
-          product_discount_price: "",
-          stock: "",
+            product_max_price: "",
+            product_discount_price: "",
+            stock: "",
         };
-  
+    
         $("#variant-details-list").empty();
         $("#variant-details-list").append(
-          '<div class="variant-details-form">' +
-            '<input type="hidden" name="combination" value="' +
-            combination +
-            '">' +
-            "<label>Price:</label>" +
-            '<input type="number" class="form-control" name="product_max_price" value="' +
-            detail.product_max_price +
-            '" required>' +
-            "<label>Discount Price:</label>" +
-            '<input type="number" class="form-control" name="product_discount_price" value="' +
-            detail.product_discount_price +
-            '" required>' +
-            "<label>Stock:</label>" +
-            '<input type="number" class="form-control" name="stock" value="' +
-            detail.stock +
-            '" required>' +
-            '<button type="button" class="btn btn-primary save-combination-btn mt-2" data-combination="' +
-            combination +
-            '">Save</button>' +
+            '<div class="variant-details-form">' +
+                '<input type="hidden" name="combination" value="' + combination + '">' +
+                "<label>Price:</label>" +
+                '<input type="number" class="form-control" name="product_max_price" value="' + detail.product_max_price + '" required>' +
+                "<label>Discount Price:</label>" +
+                '<input type="number" class="form-control" name="product_discount_price" value="' + detail.product_discount_price + '" required>' +
+                "<label>Stock:</label>" +
+                '<input type="number" class="form-control" name="stock" value="' + detail.stock + '" required>' +
+                "<label>Images:</label>" +
+                '<input type="file" class="form-control" name="new_images" multiple>' +
+                "<label>Videos:</label>" +
+                '<input type="file" class="form-control" name="new_videos" multiple>' +
+                '<button type="button" class="btn btn-primary save-combination-btn mt-2" data-combination="' + combination + '">Save</button>' +
             "</div>"
         );
         $("#variant-details-container").show();
-      });
-  
-      $(document).on("click", ".save-combination-btn", function () {
+    });
+    
+    $(document).on("click", ".save-combination-btn", function () {
         var combinationBtn = $(this);
         var combination = $(this).data("combination");
         console.log(combination);
-        var formData = {
-          product_id: $("#product_id").val(), // Include product ID here
-          combination: combination,
-          product_max_price: $(this)
-            .closest(".variant-details-form")
-            .find('input[name="product_max_price"]')
-            .val(),
-          product_discount_price: $(this)
-            .closest(".variant-details-form")
-            .find('input[name="product_discount_price"]')
-            .val(),
-          stock: $(this)
-            .closest(".variant-details-form")
-            .find('input[name="stock"]')
-            .val(),
-        };
-        console.log(formData);
-        $.ajax({
-          url: '{% url "product:save_combination" %}',
-          type: "POST",
-          contentType: "application/json",
-          headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-          },
-          data: JSON.stringify(formData),
-          success: function (response) {
-            if (response.success) {
-              // Show green tick icon next to the combination
-              var combinationLink = $(
-                '.combination-link[data-combination="' + combination + '"]'
-              );
-              combinationLink.after(
-                '<span class="text-success mx-3">Updated</span>'
-              );
-              $("#variant-details-container").hide();
-              // Increment saved combinations count
-              savedCombinations++;
-              console.log(savedCombinations, totalCombinations);
-              if (savedCombinations === totalCombinations) {
-                window.location.href = '{% url "product:product_list" %}';
-              }
-            }
-          },
-          error: function (xhr, status, error) {
-            console.error("Error:", error);
-          },
+    
+        var formData = new FormData();
+        formData.append("product_id", $("#product_id").val());
+        formData.append("combination", combination);
+        formData.append("product_max_price", $(this).closest(".variant-details-form").find('input[name="product_max_price"]').val());
+        formData.append("product_discount_price", $(this).closest(".variant-details-form").find('input[name="product_discount_price"]').val());
+        formData.append("stock", $(this).closest(".variant-details-form").find('input[name="stock"]').val());
+    
+        // Handle images
+        var imageFiles = $(this).closest(".variant-details-form").find('input[name="new_images"]')[0].files;
+        Array.from(imageFiles).forEach(function (file) {
+            formData.append("new_images", file);
         });
-      });
+    
+        // Handle videos
+        var videoFiles = $(this).closest(".variant-details-form").find('input[name="new_videos"]')[0].files;
+        Array.from(videoFiles).forEach(function (file) {
+            formData.append("new_videos", file);
+        });
+    
+        $.ajax({
+            url: '{% url "product:save_combination" %}',
+            type: "POST",
+            contentType: false,
+            processData: false,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    var combinationLink = $('.combination-link[data-combination="' + combination + '"]');
+                    combinationLink.after('<span class="text-success mx-3">Updated</span>');
+                    $("#variant-details-container").hide();
+                    savedCombinations++;
+                    if (savedCombinations === totalCombinations) {
+                        window.location.href = '{% url "product:product_list" %}';
+                    }
+                }
+            }
+        });
     });
-  </script>
+});
+</script>
   
 {% endblock js %}

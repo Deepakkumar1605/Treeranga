@@ -7,7 +7,7 @@ from django.conf import settings
 from helpers import utils
 from os.path import join
 import json
-from product_variations.models import Attribute, Variant, VariantProduct
+from product_variations.models import Attribute, Variant, VariantImageGallery, VariantProduct
 from product.models import Category, DeliverySettings,Products,SimpleProduct,ImageGallery,ProductReview
 from itertools import product
 from product import forms
@@ -204,25 +204,63 @@ def generate_combinations(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+# def save_combination(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+#             variant_details = data  # List of dictionaries with combination details
+#             print(f"Received data: {data}")
+#             product_id = data.get('product_id')
+#             combination = data.get('combination')
+#             product_max_price = data.get('product_max_price')
+#             product_discount_price = data.get('product_discount_price')
+#             stock = data.get('stock')
+#             main_product_obj = get_object_or_404(Products,id = int(product_id))
+#             combination_dict = dict(item.split(": ") for item in combination.split(", "))
+#             print(combination,product_max_price,product_discount_price,stock,product_id,combination_dict)
+#             # Create or update VariantProduct
+#             variant_product, created = VariantProduct.objects.get_or_create(
+#                 product = main_product_obj,
+#                 variant_combination=combination_dict,
+#                 defaults={'product_max_price': product_max_price, 'product_discount_price':product_discount_price ,'stock': stock}
+#             )
+
+#             if not created:
+#                 variant_product.product_max_price = product_max_price
+#                 variant_product.product_discount_price = product_discount_price
+#                 variant_product.stock = stock
+#                 variant_product.save()
+
+#             return JsonResponse({'success': True})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=500)
+#     else:
+#         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+        
 def save_combination(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            variant_details = data  # List of dictionaries with combination details
-            print(f"Received data: {data}")
-            product_id = data.get('product_id')
-            combination = data.get('combination')
-            product_max_price = data.get('product_max_price')
-            product_discount_price = data.get('product_discount_price')
-            stock = data.get('stock')
-            main_product_obj = get_object_or_404(Products,id = int(product_id))
+            product_id = request.POST.get('product_id')
+            combination = request.POST.get('combination')
+            product_max_price = request.POST.get('product_max_price')
+            product_discount_price = request.POST.get('product_discount_price')
+            stock = request.POST.get('stock')
+
+            main_product_obj = get_object_or_404(Products, id=int(product_id))
             combination_dict = dict(item.split(": ") for item in combination.split(", "))
-            print(combination,product_max_price,product_discount_price,stock,product_id,combination_dict)
+
             # Create or update VariantProduct
             variant_product, created = VariantProduct.objects.get_or_create(
-                product = main_product_obj,
+                product=main_product_obj,
                 variant_combination=combination_dict,
-                defaults={'product_max_price': product_max_price, 'product_discount_price':product_discount_price ,'stock': stock}
+                defaults={
+                    'product_max_price': product_max_price,
+                    'product_discount_price': product_discount_price,
+                    'stock': stock,
+                    'is_visible':True
+                }
             )
 
             if not created:
@@ -231,12 +269,45 @@ def save_combination(request):
                 variant_product.stock = stock
                 variant_product.save()
 
+            # Handle images
+            variant_image_gallery, gallery_created = VariantImageGallery.objects.get_or_create(
+                variant_product=variant_product
+            )
+
+            # Process images
+            remove_images = request.POST.getlist('remove_images')
+            new_uploaded_images = request.FILES.getlist('new_images')
+
+            current_images = variant_image_gallery.images or []
+            updated_images = [img for img in current_images if img not in remove_images]
+
+            for file in new_uploaded_images:
+                file_path = default_storage.save(os.path.join('variant_images', file.name), file)
+                updated_images.append(file_path.replace("\\", "/"))
+
+            variant_image_gallery.images = updated_images
+
+            # Process videos
+            remove_videos = request.POST.getlist('remove_videos')
+            new_uploaded_videos = request.FILES.getlist('new_videos')
+
+            current_videos = variant_image_gallery.video or []
+            updated_videos = [video for video in current_videos if video not in remove_videos]
+
+            for file in new_uploaded_videos:
+                file_path = default_storage.save(os.path.join('variant_videos', file.name), file)
+                updated_videos.append(file_path.replace("\\", "/"))
+
+            variant_image_gallery.video = updated_videos
+
+            variant_image_gallery.save()
+
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-        
+
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductEdit(View):
