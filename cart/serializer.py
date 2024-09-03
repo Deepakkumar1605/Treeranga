@@ -21,12 +21,10 @@ class CartSerializer(serializers.ModelSerializer):
         delivery_free_order_amount = delivery_settings.delivery_free_order_amount
 
         # Initialize flags and values for delivery calculations
-        flat_delivery_fee_applicable = False
-        has_flat_delivery_product = False
+        has_virtual_or_flat_delivery_product = False
         has_non_flat_delivery_product = False
 
         for key, value in obj.products.items():
-            print(key,value)
             product_key_parts = key.split('_')
             product_id = product_key_parts[0]
 
@@ -46,14 +44,11 @@ class CartSerializer(serializers.ModelSerializer):
                 cgst_amount = product.cgst * total_price / 100
 
                 # Check for virtual product and delivery fee applicability
-                if simple_product.virtual_product:
-                    # Virtual products are delivery-free
-                    has_flat_delivery_product = True
-                elif simple_product.flat_delivery_fee:
-                    # Products with flat delivery fee
-                    has_flat_delivery_product = True
+                if product.virtual_product or product.flat_delivery_fee:
+                    # Virtual products and those with a flat delivery fee have no delivery charge
+                    has_virtual_or_flat_delivery_product = True
                 else:
-                    # Normal products that require delivery charge
+                    # Normal products that may require a delivery fee
                     has_non_flat_delivery_product = True
 
                 product_data = {
@@ -83,7 +78,7 @@ class CartSerializer(serializers.ModelSerializer):
         final_cart_value = our_price
 
         # Apply delivery charges based on product types and total price
-        if has_flat_delivery_product and not has_non_flat_delivery_product:
+        if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
             # All products are virtual or have a flat delivery fee, so no delivery charge
             charges['Delivery'] = Decimal('0.00')
         elif final_cart_value < delivery_free_order_amount:
@@ -110,6 +105,7 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ["products_data"]
+
 
 
 class DirectBuySerializer(serializers.ModelSerializer):

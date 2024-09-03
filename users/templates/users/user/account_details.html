@@ -4,12 +4,12 @@
 {% block content %}
 
 <section>
-  <div class="row mx-0">
+  <div class="row p-1">
       {% include 'users/user/index.html' %}
-      <div class="col-sm-12 col-lg-9 d-flex justify-content-center my-lg-5 ">
+      <div class="col col-12 col-lg-9 d-flex justify-content-center my-lg-5 my-md-4 my-3">
           <div class="update-form">
-            <div class="row form_body ">
-              <div class="col-lg-5 prof-clm mx-0 px-0 d-flex justify-content-center align-items-center">
+            <div class="d-lg-flex form_body ">
+              <div class="col-lg-5 prof-clm  d-flex justify-content-center align-items-center">
                 <div class="d-flex justify-content-center align-items-center">
                   <div>
                     {% if userobj.profile_pic %}
@@ -41,9 +41,17 @@
                 <div class="w-100">
                   <a href="{% url 'users:updateprofile' %}"class="btn btn-warning w-100 mt-lg-4" data-mdb-ripple-color="dark"> Update Profile</a>
                 </div>
+                
               </div>
             </div>
-              
+            <div class="d-flex justify-content-evenly d-lg-none d-md-none d-block my-4 ">
+              <a href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-right-from-bracket me-lg-2"></i> Logout
+            </a>
+              <a href="{% url 'users:account_deletion' %}" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash-can"></i> Delete Account
+            </a>
+            </div>
           </div>
       </div>
   </div>

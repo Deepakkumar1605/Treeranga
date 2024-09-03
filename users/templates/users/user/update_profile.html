@@ -8,10 +8,10 @@
 
 
 <section class="">
-    <div class="row mx-0">
+    <div class="row p-1">
         {% include 'users/user/index.html' %}
-        <div class="col-sm-12 col-lg-9 d-flex justify-content-center my-lg-5 ">
-            <div class="update-form">
+        <div class="col-sm-12 col-12 col-lg-9 d-flex justify-content-center my-lg-5 my-md-4 my-3">
+            <div class="update-form p-2">
                 <form method="post" enctype="multipart/form-data"class="form_body ">
                     {% csrf_token %}
                     {{ form.as_p }}
