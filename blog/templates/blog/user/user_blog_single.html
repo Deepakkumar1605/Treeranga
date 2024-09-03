@@ -6,10 +6,10 @@ Blog Details | NiwaAgro.com
 {% block content %}
 
 
-    <section>
-        <div class="container my-lg-4 my-2">
-            <div class="Blog_detail_Title">
-                <h3 class="text-center my-lg-1 my-2 p-lg-4 p-2">{{ blogdetail.title }}</h3>
+    <section class="Blog_detail_Title" >
+        <div class="container my-2">
+            <div class="blog_title">
+                <h5 class="text-center my-lg-3 my-2 ">{{ blogdetail.title }}</h5>
             </div>
             <div class="Main_Image">
                 <img src="{{ blogdetail.image.url }}" class="img-responsive " alt="Image">  

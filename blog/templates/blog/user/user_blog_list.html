@@ -6,22 +6,19 @@ Blog List | NiwaAgro.com
 {% block content %}
 
 
-<section>
+<section class="">
     <div class="container my-lg-3 my-2">
-        <h2 class="py-lg-3 py-2">Gardenig Basics</h2>
-        <div class="row">
+        <h3 class="py-lg-3 py-2 text-center">Gardenig Basics of Blogs</h3>
+        <div class="row BlogLists">
             {% for blog in blogs %}
-
-            <div class="col col-12 col-lg-6 my-lg-3 my-2">
+            <div class="col col-12 col-lg-6 col-md-6 my-lg-3 my-md-3 my-2">
+            <a href="{% url 'blog:user_blog_details' slug=blog.slug %}">
                 <div class="BlogImage">
-                    <a href="{% url 'blog:user_blog_details' slug=blog.slug %}">
                     <img src="{{ blog.image.url }}" alt="blog_img">
-                </a>
                 </div>
+            </a>
                 <div class=" blog_title">
-                    <h5 class="mt-lg-3 mt-3">
-                        <a href="{% url 'blog:user_blog_details' slug=blog.slug %}">{{ blog.title }}</a>
-                    </h5>
+                    <h5 class="mt-lg-3 mt-3">{{ blog.title }}</h5>
                     <p>{{ blog.date }}</p>
                     <p>
                         {{ blog.content|truncatechars:200| safe }}
