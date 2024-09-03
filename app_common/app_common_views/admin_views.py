@@ -1,6 +1,7 @@
 from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.core.files.storage import default_storage
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from helpers import utils

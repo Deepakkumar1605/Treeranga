@@ -65,7 +65,8 @@ class Products(models.Model):
     gst_rate = models.DecimalField(max_digits=5, decimal_places=2, choices=GST_CHOICES, default=Decimal('0.00'))
     sgst = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'), editable=False)
     cgst = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'), editable=False)
-
+    flat_delivery_fee = models.BooleanField(default=False)
+    virtual_product = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         if self.gst_rate is not None:
             # Calculate SGST and CGST by dividing the GST rate by 2
@@ -86,8 +87,6 @@ class SimpleProduct(models.Model):
     product_discount_price = models.FloatField(default=0.0, null=True, blank=True)
     stock = models.IntegerField(default=1, blank=True, null=True)
     taxable_value = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
-    flat_delivery_fee = models.BooleanField(default=False)
-    virtual_product = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -126,9 +125,8 @@ class DeliverySettings(models.Model):
 class ProductReview(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(default=1)  # Rating out of 5
+    rating = models.PositiveIntegerField(choices=[(i, str(i)) for i in range(1, 6)])  # Rating out of 5
     review = models.TextField(null=True, blank=True)
-    approved = models.BooleanField(default=False)  # Admin approval required
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

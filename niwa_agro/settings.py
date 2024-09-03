@@ -93,23 +93,23 @@ WSGI_APPLICATION = 'niwa_agro.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'niwa_agro',
-        'USER': 'postgres',
-        'PASSWORD': 'tapas@123',
-        'HOST': 'localhost',  
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'niwa_agro',
+#         'USER': 'postgres',
+#         'PASSWORD': 'tapas@123',
+#         'HOST': 'localhost',  
+#     }
+# }
 
 
 # Password validation

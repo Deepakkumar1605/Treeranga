@@ -53,19 +53,18 @@ class ShowCart(View):
             product_id = product_info['info'].get('product_id')
             if product_id:
                 try:
-                    simple_product = SimpleProduct.objects.get(product=product_id)
-                    if simple_product.virtual_product:
+                    product = Products.objects.get(id=product_id)
+                    if product.virtual_product:
                         # Product is virtual; no delivery fee
                         has_flat_delivery_product = True
-                    elif simple_product.flat_delivery_fee:
+                    elif product.flat_delivery_fee:
                         # Product has a flat delivery fee; set flag
                         has_flat_delivery_product = True
                     else:
                         # Product is a normal product; requires delivery fee
                         has_non_flat_delivery_product = True
-                except SimpleProduct.DoesNotExist:
+                except Products.DoesNotExist:
                     pass
-
         if total_price > 0:
             final_cart_value = total_price
             discount_price = total_original_price - total_price

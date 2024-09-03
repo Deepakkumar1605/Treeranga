@@ -61,7 +61,6 @@ Product Details - {{ product_obj.name }}
                     <h1 class="text-capitalize">{{ product_obj.name }}</h1>
                     
                    </div>
-                   {% comment %}
                     <div class="product-ratings">
                     {% for i in star_range %}
                         {% if i <= average_rating %}
@@ -73,21 +72,20 @@ Product Details - {{ product_obj.name }}
                    <span> ({{ reviews.count }} Reviews ) </span>
 
                     </div>
-                    {% endcomment %}
                     <div class="discount-price mt-lg-3">
                         ₹{{ simple_product.product_discount_price }}
                         {% if simple_product.product_max_price %}
                         <span class="original-price"><s>₹{{ simple_product.product_max_price }}</s></span>
                         {% endif %}
                     </div>
-                    <!-- <button class="wishlist-btn {% if product_obj in wishlist_items %}in-wishlist{% endif %}">
+                    <button class="wishlist-btn {% if product_obj in wishlist_items %}in-wishlist{% endif %}">
     
                         {% if product_obj in wishlist_items %}
                         In Wishlist
                         {% else %}
                         <i class="fa-regular fa-heart"></i>
                         {% endif %}
-                    </button> -->
+                    </button>
                     <br>
                     <div class="description">
                         <h5 class="">Description :</h5>
@@ -149,9 +147,7 @@ Product Details - {{ product_obj.name }}
                 {% endfor %}
             </div>
     </div>
-    {% comment %}
 
-    {% comment %}
     <div class="container">
         <div class=" ">
             <div class="d-flex justify-content-between">
@@ -170,7 +166,11 @@ Product Details - {{ product_obj.name }}
                     </span>
                 </div>
                 <div>
+                    {% if has_ordered_product %}
                     <div class="btn btn-primary" id="toggleReviewBtn" onclick="toggleReviewForm()">Write a Review</div>
+                    {% else %}
+                        <p>You can only write a review if you have purchased this product.</p>
+                    {% endif %}
                 </div>
 
             </div>
@@ -236,7 +236,6 @@ Product Details - {{ product_obj.name }}
             </div>
     </div>
     </div>
-    {% endcomment %} 
     </div>
 </section>
 

@@ -1,0 +1,108 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}Wishlist{% endblock title %}
+{% block content %}
+<style>
+    .buy-btn {
+        text-decoration: none;
+        color: white;
+        background-color: #00836C;
+        padding: 6px 15px;
+        margin-top: 20px;
+        width: 100%;
+    }
+    .buy-btn:hover {
+        color: white;
+        background-color: #019277;
+        cursor: pointer;
+    }
+    .cart-btn {
+        color: white;
+        background-color: #f77c30;
+        padding: 6px 15px;
+        margin-top: 20px;
+        width: 100%;
+    }
+    .cart-btn:hover {
+        color: white;
+        background-color: #f98841;
+        cursor: pointer;
+    }
+    .rwl-btn {
+        text-decoration: none;
+        color: white;
+        background-color: #f70000;
+        padding: 6px 15px;
+        margin-top: 20px;
+        width: 100%;
+    }
+    .rwl-btn:hover {
+        color: white;
+        background-color: #fd4444;
+        cursor: pointer;
+    }
+    .wish_container {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    }
+    .card {
+        border: none;
+        border-bottom: .5px solid rgb(211, 211, 211);
+        border-radius: 0 !important;
+    }
+    .wish_header {
+        border-bottom: .5px solid rgba(211, 211, 211, 0.571);
+    }
+    .wish_details p {
+        font-size: 14px;
+        line-height: 1.2em;
+    }
+</style>
+<section class="h-100 gradient-custom" style="min-height: 60vh;">
+    <div class="container py-2">
+        <div class="row d-flex justify-content-center my-4">
+            <div class="col-md-12 bg-white wish_container pt-4 pb-5 px-0">
+                <h5 class="wish_header pb-2 ps-4">My Wishlist</h5>
+                {% for product_data in wishlist_items %}
+                <div class="card">
+                    <div class="card-body mx-2">
+                        <div class="row mx-0 my-0 px-0 py-0">
+                            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                    <a href="{% url 'product:productdetails' product_data.product.id %}">
+                                        {% if product_data.images %}
+                                            <img src="{{ MEDIA_URL }}{{ product_data.images.0 }}" class="w-50 h-50" alt="Product Image" />
+                                        {% else %}
+                                            <img src="{% static 'default-product-image.jpg' %}" class="w-50 h-50" alt="Default Image" />
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 mb-4 mb-lg-0 wish_details">
+                                <!-- Data -->
+                                <p>{{ product_data.product.name }}</p>
+                                <p>Price: {{ product_data.price }}</p>
+                                <p>Stock: {{ product_data.stock }}</p>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                                <!-- Actions -->
+                                <a href="{% url 'cart:addtocart' product_data.product.id %}" class="btn btn-lg fs-6 mt-2 cart-btn">
+                                    Add To Cart
+                                </a>
+                                <a href="" class="btn btn-lg fs-6 mt-2 buy-btn">
+                                    Buy Now
+                                </a>
+                                <a href="{% url 'wishlist:remove_from_wishlist' %}?prod_name={{ product_data.product.name }}" class="btn btn-lg fs-6 mt-2 rwl-btn">
+                                    Remove
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

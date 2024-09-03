@@ -463,43 +463,48 @@ class DeliverySettingsUpdateView(View):
 
 
 
+
 @method_decorator(utils.super_admin_only, name='dispatch')
-class AdminReviewApprovalView(View):
-    template_name = app + 'admin/admin_review_approval.html'
+class AdminReviewManagementView(View):
+    template_name = app + 'admin/admin_review_management.html'
+    paginate_by = 20  # Set the number of reviews per page
 
     def get(self, request):
-        filter_by = request.GET.get("filter_by", "pending")
+        user = request.user
+        category_obj = Category.objects.all()
 
-        if filter_by == "pending":
-            reviews = ProductReview.objects.filter(approved=False).select_related('user', 'product').order_by('-id')
-        elif filter_by == "approved":
-            reviews = ProductReview.objects.filter(approved=True).select_related('user', 'product').order_by('-id')
-        else:
-            reviews = ProductReview.objects.all().select_related('user', 'product').order_by('-id')
+        reviews = ProductReview.objects.select_related('user').order_by('-id')
 
-        paginated_data = utils.paginate(request, reviews, 20)  # Pagination function from utils
+        # Django's built-in paginator
+        paginator = Paginator(reviews, self.paginate_by)
+        page_number = request.GET.get('page')
+        try:
+            paginated_reviews = paginator.page(page_number)
+        except PageNotAnInteger:
+            paginated_reviews = paginator.page(1)
+        except EmptyPage:
+            paginated_reviews = paginator.page(paginator.num_pages)
 
         context = {
-            'reviews': paginated_data['items'],
-            'data_list': paginated_data['page_obj'],
-            'filter_by': filter_by,
-            'star_range': range(1, 6),  # Add star range to context for rendering star ratings
+            'user': user,
+            'category_obj': category_obj,
+            'reviews': paginated_reviews,  # Paginated reviews
+            'page_obj': paginated_reviews,  # Page object for pagination controls
+            'star_range': range(1, 6),  # Star range for rendering star ratings
+            'MEDIA_URL': settings.MEDIA_URL,
         }
+
         return render(request, self.template_name, context)
 
     def post(self, request):
         review_ids = request.POST.getlist('reviews')
-        action = request.POST.get('action')
 
         if not review_ids:
             messages.warning(request, "No reviews selected.")
-            return redirect('product:review_approval')
+            return redirect('product:admin_review_management')
 
-        if action == 'approve':
-            ProductReview.objects.filter(id__in=review_ids).update(approved=True)
-            messages.success(request, "Selected reviews have been approved.")
-        elif action == 'delete':
-            ProductReview.objects.filter(id__in=review_ids).delete()
-            messages.success(request, "Selected reviews have been deleted.")
+        # Delete selected reviews
+        ProductReview.objects.filter(id__in=review_ids).delete()
+        messages.success(request, "Selected reviews have been deleted.")
 
-        return redirect('product:review_approval')
+        return redirect('product:admin_review_management')
