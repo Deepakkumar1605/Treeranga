@@ -258,7 +258,7 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 	.vd_button {
 		width: 100%;
 		padding: 12px 0;
-		font-size: 15px;
+		font-size: 14px;
 	}
 
 	.vd_button#cancel-deletion {

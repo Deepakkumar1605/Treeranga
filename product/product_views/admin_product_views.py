@@ -74,7 +74,7 @@ class CategoryUpdate(View):
         if form.is_valid():
             form.save()
             messages.success(request, f"{category.title} updated successfully.")
-            return redirect("product:category_update", category_id=category_id)
+            return redirect("product:category_list")
         else:
             messages.error(request, "Form is not valid. Please check the errors.")
             return render(request, self.template, {'form': form})

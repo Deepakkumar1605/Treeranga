@@ -1,106 +1,115 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} all orders {% endblock title %}
+{% block title %} All Orders {% endblock title %}
 {% block content %}
 
-<center>
-  {% include 'snippets/alert.html' %}
-</center>
-<style>
-   .tablecard{
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    }
-    #tb-head{
-      background-color:#28B673;
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      font-size: 12px;
-    }
-    .BtM{
-    box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    .headinG{
-    color: navy;
-    font-weight: 500;
-    font-size: 30px;
-    margin-left:13px;
-    font-family: 'Poppins', sans-serif;
-    }
-    #test_table_tbody{
-    font-family: 'Poppins', sans-serif;
-    }
-    .px-5{
-      text-align: center;
-    }
-</style>
-<header>
+
+
+
+<main class="py-6">
   <div class="container-fluid">
-    <div class="border-bottom pt-6">
-      <div class="row align-items-center">
-        <div class="col-sm col-12">
-          <h1 class="h2 headinG ls-tight">ORDER LIST</h1>
-        </div>
+      <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Order List</h4>
+      <div class="vstack gap-4">
+          <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+              <form class="my-3 mx-2" action="{% url 'orders:admin_order_search' %}" method="post">
+                  {% csrf_token %}
+                  <div class="hstack gap-2">
+                    {% comment %}
+                      <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                          <option selected value="pk">All</option>
+                          <option value="id">ID</option>
+                          <option value="name">Name</option>
+                      </select>
+                      {% endcomment %}
+                      <span  class="input-group ">
+                          <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                          <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
+                      </span>
+                  </div>
+              </form>
+              <p class="">{% include 'snippets/alert.html' %}</p>
+              <button class="btn btn-outline-primary p-0" data-bs-toggle="modal" data-bs-target="#order_filter" id="Filetr_button">
+                <i class="fa-solid fa-filter"></i>
+                Filter
+              </button>
+              {% comment %}
+              <div class="btn-group catagory-btn">
+                
+                  <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
+                      <i class='bx bx-filter-alt' ></i>
+                  </button> -->
+                  <a href="{% url 'product:product_add' %}">
+                      <i class='bx bxs-plus-square'></i> Create New Product
+                  </a>
+                  
+              </div>
+              {% endcomment %}
+          </div>
+
+          <div class="tablecard">
+              <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                      <thead class="table-light">
+                          <tr>
+                              <th class="" id="tb-head" scope="col">Order ID</th>
+                              <th class="" id="tb-head" scope="col">Amount</th>
+                              <th class="" id="tb-head" scope="col">Transaction ID</th>
+                              <th class="" id="tb-head" scope="col">Status</th>
+                              <th class="" id="tb-head" scope="col">Payment</th>
+                              <th class="" id="tb-head" scope="col">Payment Method</th>
+                          </tr>
+                      </thead>
+                      <tbody id="test_table_tbody">
+                        {% for order in order_list %}
+                          <tr>
+                              <td class="tb-body">
+                                <div class="tb-body_sub">
+                                  <a target="_blank" href="{% url 'orders:admin_order_details' order.uid %}">
+                                    {{order.uid}}
+                                  </a>
+                                </div>
+                                
+                              </td>
+                              <td class="tb-body">
+                                  <div class="tb-body_sub">
+                                    {{order.order_value}}
+                                  </div>
+                                </td>
+                              <td class=" tb-body">
+                                <div class="tb-body_sub">
+                                  {{order.transaction_id}}
+                                </div>
+                              </td>
+                              <td class="tb-body">
+                                <div class="tb-body_sub">
+                                  {{order.order_status}}
+                                </div>
+                               </td>
+                              <td class="tb-body ">
+                                <div class="tb-body_sub">
+                                  {{order.payment_status}}
+                                </div>
+                                </td>
+                              <td class="tb-body text-uppercase">
+                                <div class="tb-body_sub">
+                                  {{order.payment_method}}
+                                </div>
+                                </td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
       </div>
-    </div>
-  </div>
-</header>
-
-<main class="py-6 bg-surface-secondary">
-
-
-  <div class="container-fluid">
-    <div class="vstack gap-4">
-      <div class="utility_order">
-        <button class="btn btn-outline-primary my-1" data-bs-toggle="modal" data-bs-target="#order_filter">
-          <i class="fa-solid fa-filter" style="color: #005cfa;"></i>
-          filter
-        </button>
-
-        <form method="get" action="{% url 'orders:admin_order_search' %}">
-          {% csrf_token %}
-          <input class="form-control" type="text" name="query" placeholder="SEARCH ID" required />
-          <button class="btn">
-            <i class="fa-solid fa-magnifying-glass fa-shake" style="color: #a805ff;"></i>
-          </button>
-        </form>
-      </div>
-
-      <div class="card tablecard mt-3">
-        <div class="table-responsive">
-            <table class="table table-hover table-nowrap">
-                <thead class="table-light">
-                    <tr>
-                        <th class="px-5" id="tb-head" scope="col">Order ID</th>
-                        <th class="px-5" id="tb-head" scope="col">Amount</th>
-                        <th class="px-5" id="tb-head" scope="col">Status</th>
-                        <th class="px-5" id="tb-head" scope="col">Payment</th>
-                        <th class="px-5" id="tb-head" scope="col">PAYMENT METHOD</th>
-                    </tr>
-                </thead>
-                <tbody id="test_table_tbody">
-                    {% for order in order_list %}
-                    <tr>
-                        <td class="px-5">
-                            <a target="_blank" href="{% url 'orders:admin_order_details' order.uid %}">
-                                {{ order.uid }}
-                            </a>
-                        </td>
-                        <td class="px-5">{{ order.order_value }}</td>
-                        <td class="px-5">{{ order.order_status }}</td>
-                        <td class="px-5">{{ order.payment_status }}</td>
-                        <td class="px-5">{{ order.payment_method }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    </div>
   </div>
 </main>
 
 
-<!-- filter -->
+
+<!-- ------------------------------filter modal----------------------- -->
+
+
 <div class="modal fade" id="order_filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -108,7 +117,7 @@
         <h5 class="modal-title" id="staticBackdropLabel">Filter By Order Status</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div id="order_filter">
+      <div id="order_filter" class="p-2">
 
         <form id="" method="get" action="{% url 'orders:order_status_search' %}">
           {% csrf_token %}
@@ -119,8 +128,8 @@
               {% endfor %}
             </select>
 
-            <button class="btn btn-primary" type="submit">
-              search
+            <button class="btn btn-primary w-100 mt-5 mb-2" type="submit">
+              Search
             </button>
           </div>
         </form>
@@ -130,51 +139,7 @@
     </div>
   </div>
 </div>
-<div class="pagination-container">
-  <nav aria-label="Page navigation">
-      <ul class="pagination justify-content-center">
-          {% if order_list.has_previous %}
-              <li class="page-item">
-                  <a class="page-link" href="?page=1" aria-label="First">
-                      <span aria-hidden="true">&laquo;&laquo;</span>
-                  </a>
-              </li>
-              <li class="page-item">
-                  <a class="page-link" href="?page={{ order_list.previous_page_number }}" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                  </a>
-              </li>
-          {% else %}
-              <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
-              <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-          {% endif %}
 
-          {% for num in order_list.paginator.page_range %}
-              {% if order_list.number == num %}
-                  <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-              {% elif num > order_list.number|add:'-5' and num < order_list.number|add:'5' %}
-                  <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-              {% endif %}
-          {% endfor %}
-
-          {% if order_list.has_next %}
-              <li class="page-item">
-                  <a class="page-link" href="?page={{ order_list.next_page_number }}" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                  </a>
-              </li>
-              <li class="page-item">
-                  <a class="page-link" href="?page={{ order_list.paginator.num_pages }}" aria-label="Last">
-                      <span aria-hidden="true">&raquo;&raquo;</span>
-                  </a>
-              </li>
-          {% else %}
-              <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-              <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
-          {% endif %}
-      </ul>
-  </nav>
-</div>
 {% endblock content %}
 {% block js %}
 {% endblock js %}

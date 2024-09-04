@@ -2,9 +2,110 @@
 {% load static %}
 {% block content %}
 
-<center>
-    {% include 'snippets/alert.html' %}
-</center>
+
+
+<section class="py-2">
+    <div class="container">
+      <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Banner List</h4>
+      <div class="vstack gap-4">
+        <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+            {% comment %}
+            <form class="my-3 mx-2" action="{% url 'orders:admin_order_search' %}" method="post">
+                {% csrf_token %}
+                <div class="hstack gap-2">
+                  
+                    <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                        <option selected value="pk">All</option>
+                        <option value="id">ID</option>
+                        <option value="name">Name</option>
+                    </select>
+                 
+                    <span  class="input-group ">
+                        <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                        <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
+                    </span>
+                </div>
+            </form>
+            {% endcomment %}
+            <p class="">{% include 'snippets/alert.html' %}</p>
+            <a style="margin-left: 1rem;" data-bs-toggle="modal" data-bs-target="#banner_create_modal" class="btn catagory-btn">
+                <i class="bi bi-plus">Add New Banner</i>
+            </a>
+            {% comment %}
+            <div class="btn-group catagory-btn">
+              
+                <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
+                    <i class='bx bx-filter-alt' ></i>
+                </button> -->
+                <a href="{% url 'product:product_add' %}">
+                    <i class='bx bxs-plus-square'></i> Create New Product
+                </a>
+                
+            </div>
+            {% endcomment %}
+        </div>
+
+
+        <div class="tablecard">
+          <div class="table-responsive">
+            <table class="table table-hover table-nowrap">
+              <thead class="table-light">
+                <tr>
+                  <th class="" id="tb-head" scope="col">Banner ID</th>
+                  <th class="" id="tb-head" scope="col">Banner Images</th>
+                  <th class="" id="tb-head" scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody id="test_table_tbody">
+                {% for banner in banner_list %}
+                <tr>
+                  <td class="tb-body">
+                    <div class="tb-body_sub">
+                        {{ banner.id }}
+                    </div>
+                  </td>
+                  <td class="tb-body">
+                    <div class="tb-body_sub p-1">
+                        {% if banner.image %}
+                        <img src="{{ banner.image.url }}" style="height: 50px; width: 150px;" />
+                        {% else %}
+                        No Image
+                        {% endif %}
+                    </div>
+                  </td>
+                  <td class="tb-body">
+                    <div class="tb-body_sub">
+                      <a href="{% url 'app_common:web_banner_delete' banner.id %}" class="text-danger">Delete</a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    pagination
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}
+
+
 
 <header>
     <div class="container-fluid">
@@ -63,6 +164,8 @@
     </div>
 </main>
 
+
+{% endcomment %}
 <!-- Banner Create Modal -->
 <div class="modal fade" id="banner_create_modal" tabindex="-1" aria-labelledby="bannerCreateModalLabel" aria-hidden="true">
     <div class="modal-dialog">

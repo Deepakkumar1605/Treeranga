@@ -45,7 +45,7 @@
                 <td class="tb-body">
                   <div class="tb-body_sub">
                     <a href="{% url 'users:user_detail' user.id %}" class="text-info">View</a>
-                    <button type="button" class="btn btn-danger delete-user-button" data-user-id="{{ user.id }}">
+                    <button type="button" class="text-danger btn  delete-user-button" data-user-id="{{ user.id }}">
                       Delete
                     </button>
                   </div>
@@ -79,7 +79,8 @@
   </div>
 </section>
 
-<!-- Logout Confirmation Modal -->
+<!-- -------------------Logout Confirmation Modal----------------------- -->
+
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

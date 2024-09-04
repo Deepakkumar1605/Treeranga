@@ -62,3 +62,50 @@ function toggleChevron(element) {
     const chevronIcon = element.querySelector('.chevron-icon');
     chevronIcon.classList.toggle('rotate');
 }
+
+$(document).ready(function() {
+	// Handle the click on the Products link to toggle the dropdown
+	$('#productsLink').on('click', function(e) {
+		e.stopPropagation();
+		$('#auth').collapse('toggle');
+	});
+	// Close the dropdown when clicking outside
+	$(document).on('click', function(e) {
+		if (!$(e.target).closest('#productsLink, #auth').length) {
+			$('#auth').collapse('hide');
+		}
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+const ctx = document.getElementById('myChart');
+	  
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+	labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+	datasets: [{
+	  label: '# of Votes',
+	  data: [12, 19, 3, 5, 2, 3],
+	  borderWidth: 1
+	}]
+  },
+  options: {
+	scales: {
+	  y: {
+		beginAtZero: true
+	  }
+	}
+  }
+});

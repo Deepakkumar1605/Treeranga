@@ -359,12 +359,13 @@ header {
 	background-color: var(--button);
 	color: var(--white);
 	padding: 10px;
-	width: 100%;
-	margin: auto;
+	width:90%;
+	margin: 0 auto;
 	font-weight: 400;
 	font-family: var(--heading);
 	line-height: 23px;
 	font-style: normal;
+	border-radius: 5px;
 }
 
 .vd_button.addto-cart:hover {

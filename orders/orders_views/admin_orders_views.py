@@ -184,6 +184,7 @@ class DownloadInvoice(View):
             'order': data,
             'address': data['address'],
             'user': order.user,
+            'price_per_unit' : price_per_unit,
             'productandquantity': prod_quant,
             'delivery_charge': data['order_meta_data']['charges']['Delivery'],
             'cgst_amount': "{:.2f}".format(total_cgst),

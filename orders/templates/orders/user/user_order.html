@@ -22,7 +22,7 @@
               {% for order in orders %} 
               <tr>
                 <td class="tb-body fw-bold">
-                  <a target="_blank" href="{% url 'orders:order_detail' order.uid %}">{{order.uid}}</a>
+                  <a href="{% url 'orders:order_detail' order.uid %}">{{order.uid}}</a>
                 </td>
                 <td class="tb-body">
                   {{order.order_value}}
