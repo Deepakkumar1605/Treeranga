@@ -2,7 +2,7 @@ from django.db import models
 from users.models import User
 from helpers import utils
 
-class WshList(models.Model):
+class WishList(models.Model):
     uid = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     products = models.JSONField(default=dict, null=True, blank=True)

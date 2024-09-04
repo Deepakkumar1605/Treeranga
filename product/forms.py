@@ -58,12 +58,18 @@ class ProductForm(forms.ModelForm):
     gst_rate = forms.ChoiceField(choices=Products.GST_CHOICES)
     gst_rate.widget.attrs.update({'class': 'form-control', 'required': 'required'})
 
+    flat_delivery_fee = forms.BooleanField(required=False)
+    flat_delivery_fee.widget.attrs.update({'class': 'form-check-input'})
+
+    virtual_product = forms.BooleanField(required=False)
+    virtual_product.widget.attrs.update({'class': 'form-check-input'})
+
 
     class Meta:
         model = Products
         fields = [
             'product_type','category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
-            'product_long_description', 'trending', 'show_as_new', 'gst_rate'
+            'product_long_description', 'trending', 'show_as_new', 'gst_rate','flat_delivery_fee','virtual_product'
         ]
 
     def __init__(self, *args, **kwargs):
@@ -83,15 +89,10 @@ class SimpleProductForm(forms.ModelForm):
     stock = forms.IntegerField()
     stock.widget.attrs.update({'class': 'form-control', 'type': 'number', 'required': 'required'})
 
-    flat_delivery_fee = forms.BooleanField(required=False)
-    flat_delivery_fee.widget.attrs.update({'class': 'form-check-input'})
-
-    virtual_product = forms.BooleanField(required=False)
-    virtual_product.widget.attrs.update({'class': 'form-check-input'})
 
     class Meta:
         model = SimpleProduct
-        fields = ['product_max_price', 'product_discount_price', 'stock','flat_delivery_fee','virtual_product']
+        fields = ['product_max_price', 'product_discount_price', 'stock']
 
 
 

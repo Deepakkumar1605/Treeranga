@@ -39,6 +39,30 @@ Product Details - {{ product_obj.name }}
                         </div>
                     </div>
                 </div>
+
+
+
+                <div class="gallery-container d-lg-none d-block">
+                    <div class="gallery-slider">
+                        {% if image_gallery %}
+                            {% for image in image_gallery.images %}
+                                <div class="gallery-slide">
+                                    <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image" class="thumb">
+                                </div>
+                            {% endfor %}
+                            {% for video in image_gallery.video %}
+                                <div class="gallery-slide">
+                                    <video controls class="thumb">
+                                        <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No media available.</p>
+                        {% endif %}
+                    </div>
+                </div>
                 
                 <div class="product-image d-lg-block d-none " id="mediaContainer">
                     {% if image_gallery and image_gallery.images %}
@@ -300,7 +324,7 @@ Product Details - {{ product_obj.name }}
     document.getElementById('addToCartButton').addEventListener('click', function(event) {
         event.preventDefault();
         let quantity = document.getElementById('quantity').value;
-        let url = "{% url 'cart:addtocart' simple_product.id %}?quantity=" + quantity;
+        let url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity;
         window.location.href = url;
     });
 </script>

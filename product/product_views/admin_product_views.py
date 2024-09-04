@@ -463,17 +463,17 @@ class DeliverySettingsUpdateView(View):
 
 
 
+
 @method_decorator(utils.super_admin_only, name='dispatch')
 class AdminReviewManagementView(View):
     template_name = app + 'admin/admin_review_management.html'
     paginate_by = 20  # Set the number of reviews per page
 
-    def get(self, request, p_id):
+    def get(self, request):
         user = request.user
         category_obj = Category.objects.all()
-        product_obj = get_object_or_404(Products, id=p_id)
 
-        reviews = ProductReview.objects.filter(product=product_obj).select_related('user').order_by('-id')
+        reviews = ProductReview.objects.select_related('user').order_by('-id')
 
         # Django's built-in paginator
         paginator = Paginator(reviews, self.paginate_by)
@@ -488,7 +488,6 @@ class AdminReviewManagementView(View):
         context = {
             'user': user,
             'category_obj': category_obj,
-            'product_obj': product_obj,
             'reviews': paginated_reviews,  # Paginated reviews
             'page_obj': paginated_reviews,  # Page object for pagination controls
             'star_range': range(1, 6),  # Star range for rendering star ratings
@@ -502,10 +501,10 @@ class AdminReviewManagementView(View):
 
         if not review_ids:
             messages.warning(request, "No reviews selected.")
-            return redirect('product:admin_review_management', p_id=p_id)
+            return redirect('product:admin_review_management')
 
         # Delete selected reviews
         ProductReview.objects.filter(id__in=review_ids).delete()
         messages.success(request, "Selected reviews have been deleted.")
 
-        return redirect('product:admin_review_management', p_id=p_id)
+        return redirect('product:admin_review_management')

@@ -50,3 +50,18 @@ class Order(models.Model):
             self.uid = utils.get_rand_number(5)
         super().save(*args, **kwargs)
 
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    user_info = models.JSONField(default=dict, null=True, blank=True)  # Store user details as JSON
+    product_info = models.JSONField(default=dict, null=True, blank=True)  # Store ordered product details as JSON
+    quantity = models.PositiveIntegerField(default=1)
+    total_price = models.FloatField(default=0.0)  # Calculated based on product_info['price_per_unit'] * quantity
+
+    def __str__(self):
+        return f"OrderItem {self.id} for Order {self.order.uid}"
+
+    def save(self, *args, **kwargs):
+        if 'price_per_unit' in self.product_info:
+            self.total_price = self.product_info['price_per_unit'] * self.quantity
+        super().save(*args, **kwargs)
