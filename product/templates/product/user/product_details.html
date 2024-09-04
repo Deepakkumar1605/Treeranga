@@ -67,9 +67,9 @@ Product Details - {{ product_obj.name }}
                         </div>
                     {% elif variant_products %}
                         <div class="discount-price mt-lg-3">
-                            ₹{{ variant_products.first.product_discount_price }}
-                            {% if variant_products.first.product_max_price %}
-                            <span class="original-price"><s>₹{{ variant_products.first.product_max_price }}</s></span>
+                            ₹{{ variant_products.product_discount_price }}
+                            {% if variant_products.product_max_price %}
+                            <span class="original-price"><s>₹{{ variant_products.product_max_price }}</s></span>
                             {% endif %}
                         </div>
                     {% endif %}

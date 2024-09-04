@@ -203,41 +203,6 @@ def generate_combinations(request):
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-# def save_combination(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             variant_details = data  # List of dictionaries with combination details
-#             print(f"Received data: {data}")
-#             product_id = data.get('product_id')
-#             combination = data.get('combination')
-#             product_max_price = data.get('product_max_price')
-#             product_discount_price = data.get('product_discount_price')
-#             stock = data.get('stock')
-#             main_product_obj = get_object_or_404(Products,id = int(product_id))
-#             combination_dict = dict(item.split(": ") for item in combination.split(", "))
-#             print(combination,product_max_price,product_discount_price,stock,product_id,combination_dict)
-#             # Create or update VariantProduct
-#             variant_product, created = VariantProduct.objects.get_or_create(
-#                 product = main_product_obj,
-#                 variant_combination=combination_dict,
-#                 defaults={'product_max_price': product_max_price, 'product_discount_price':product_discount_price ,'stock': stock}
-#             )
-
-#             if not created:
-#                 variant_product.product_max_price = product_max_price
-#                 variant_product.product_discount_price = product_discount_price
-#                 variant_product.stock = stock
-#                 variant_product.save()
-
-#             return JsonResponse({'success': True})
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=500)
-#     else:
-#         return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-
         
 def save_combination(request):
     if request.method == 'POST':
