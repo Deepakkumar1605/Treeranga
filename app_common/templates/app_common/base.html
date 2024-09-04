@@ -232,10 +232,14 @@
     </div>
   </header>
   {% endif %}
-  <p class="snippets_alert"> {% include 'snippets/alert.html' %}</p>
-  {% block content %}
+ 
+
+  <div style="max-width: 1440px; margin: 0 auto;">
+    {% block content %}
     
-  {% endblock %}
+    {% endblock content %}
+  </div>
+ 
   
   <!-- --------- 
 
