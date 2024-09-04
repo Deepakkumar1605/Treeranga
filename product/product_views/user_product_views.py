@@ -34,7 +34,7 @@ class ShowProductsView(View):
                     products_with_variants.append({
                         'product': product,
                         'simple_product': simple_product,
-                        'variant_product': None,
+                        'variant': "no",
                         'images': images,
                         'videos': videos
                     })
@@ -46,7 +46,7 @@ class ShowProductsView(View):
                     videos = variant_image_gallery.video if variant_image_gallery else []
                     products_with_variants.append({
                         'product': product,
-                        'simple_product': None,
+                        'variant': "yes",
                         'variant_product': variant_product,
                         'images': images,
                         'videos': videos
@@ -59,52 +59,77 @@ class ShowProductsView(View):
             "MEDIA_URL": settings.MEDIA_URL,
         })
 
-class ProductDetailsSmipleView(View):
+class ProductDetailsView(View):
     template_name = app + 'user/product_details.html'
 
     def get(self, request, p_id):
         user = request.user
-        product_obj = get_object_or_404(Products, id=p_id)
+        variant_param = request.GET.get('variant', '')
+        print(variant_param,"gggg")
+        if variant_param == "yes":
+            product_obj = get_object_or_404(VariantProduct, id=p_id)
+        elif variant_param == "no":
+            product_obj = get_object_or_404(SimpleProduct, id=p_id)
+        else:
+            raise ValueError("No Variant Selected")
         category_obj = Category.objects.all()
 
         images = []
-        videos = []
-        simple_product = None
-        variant_products = []  # List to hold all variant products for the product
+        videos = [] 
+        all_variants_of_this = []
 
-        if product_obj.product_type == "simple":
-            simple_product = SimpleProduct.objects.filter(product=product_obj, is_visible=True).first()
-            if simple_product:
-                image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
-                images = image_gallery.images if image_gallery else []
-                videos = image_gallery.video if image_gallery else []
-        elif product_obj.product_type == "variant":
-            variant_products = VariantProduct.objects.filter(product=product_obj, is_visible=True)
-            if variant_products.exists():
-                variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_products.first()).first()
-                images = variant_image_gallery.images if variant_image_gallery else []
-                videos = variant_image_gallery.video if variant_image_gallery else []
+        if product_obj:
+            if product_obj.product.product_type == "simple":
+                image_gallery = ImageGallery.objects.filter(simple_product=product_obj).first()
+            elif product_obj.product.product_type == "variant":
+                image_gallery = VariantImageGallery.objects.filter(variant_product=product_obj).first()
+                # Get all other variants of this product
+                avp = VariantProduct.objects.filter(product=product_obj.product)
+                for av in avp:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    all_variants_of_this.append({
+                        'product': av,
+                        'variant': "yes",
+                        'images': images,
+                        'videos': videos
+                    })
+            else:
+                image_gallery = None  # Handle unexpected product types gracefully
 
-        similar_product_list = Products.objects.filter(category=product_obj.category).exclude(id=product_obj.id)[:5]
-        similar_products_with_variants = []
+            images = image_gallery.images if image_gallery else []
+            videos = image_gallery.video if image_gallery else []
 
-        for product in similar_product_list:
+        product_list_category_wise = Products.objects.filter(category=product_obj.product.category)
+        all_simple_and_variant_similar = []
+        print(product_list_category_wise)
+        for product in product_list_category_wise:
             if product.product_type == "simple":
-                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).first()
+                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True)
                 if simple_product_similar:
-                    similar_products_with_variants.append({
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product_similar).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    all_simple_and_variant_similar.append({
                         'product': product,
-                        'simple_product': simple_product_similar,
-                        'variant_product': None
+                        'variant': "no",
+                        'images': images,
+                        'videos': videos
                     })
             elif product.product_type == "variant":
-                variant_product_similar = VariantProduct.objects.filter(product=product, is_visible=True).first()
+                variant_product_similar = VariantProduct.objects.filter(product=product, is_visible=True).exclude(id = product_obj.id)
                 if variant_product_similar:
-                    similar_products_with_variants.append({
-                        'product': product,
-                        'simple_product': None,
-                        'variant_product': variant_product_similar
-                    })
+                    for i in variant_product_similar:
+                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=i).first()
+                        images = variant_image_gallery.images if variant_image_gallery else []
+                        videos = variant_image_gallery.video if variant_image_gallery else []
+                        all_simple_and_variant_similar.append({
+                            'product': i,
+                            'variant': "yes",
+                            'images': images,
+                            'videos': videos
+                        })
 
         wishlist_items = []
         if user.is_authenticated:
@@ -115,13 +140,13 @@ class ProductDetailsSmipleView(View):
             'user': user,
             'category_obj': category_obj,
             'product_obj': product_obj,
-            'simple_product': simple_product,
-            'variant_products': variant_products,
+            'all_variants_of_this':all_variants_of_this,
             'images': images,
             'videos': videos,
-            'similar_products_with_variants': similar_products_with_variants,
+            'all_simple_and_variant_similar': all_simple_and_variant_similar,
             'wishlist_items': wishlist_items,
             'MEDIA_URL': settings.MEDIA_URL,
+            'variant_combination': product_obj.variant_combination if product_obj.product.product_type == "variant" else None
         }
 
         return render(request, self.template_name, context)

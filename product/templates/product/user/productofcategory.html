@@ -21,9 +21,15 @@ Products Of {{ category_obj.title }} Category
         {% for item in products_with_variants %}
         <div class="col product-head my-2">
             <div class="" id="product-cards">
-                <a href="{% url 'product:product_detail' item.product.pk %}">
-                    <img src="{% if item.images %}{{ MEDIA_URL }}{{ item.images.0 }}{% else %}{% static 'default_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ item.product.name }}" id="card-img1">
-                </a>
+                {% if item.variant == "yes" %}
+                    <a href="{% url 'product:product_detail' item.variant_product.pk %}?variant=yes">
+                        <img src="{% if item.images %}{{ MEDIA_URL }}{{ item.images.0 }}{% else %}{% static 'default_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ item.product.name }}" id="card-img1">
+                    </a>
+                {% else %}
+                    <a href="{% url 'product:product_detail' item.simple_product.pk %}?variant=no">
+                        <img src="{% if item.images %}{{ MEDIA_URL }}{{ item.images.0 }}{% else %}{% static 'default_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ item.product.name }}" id="card-img1">
+                    </a>
+                {% endif %}
                 <div class="card-body py-2">
                     <h5 class="card-title">{{ item.product.name | truncatechars:27 }}</h5>
                     <p class="card-text m-0">{{ item.product.product_short_description | truncatechars:20 }}</p>
@@ -49,8 +55,12 @@ Products Of {{ category_obj.title }} Category
                             </s>
                         </span>
                     </p>
+                    {% if item.variant == "yes" %}
+                        <a href="{% url 'product:product_detail' item.variant_product.pk %}?variant=yes" class="btn vd_button">View Details</a>
+                    {% else %}
+                        <a href="{% url 'product:product_detail' item.simple_product.pk %}?variant=no" class="btn vd_button">View Details</a>
+                    {% endif %}
                     <div class="d-flex mt-3">
-                        <a href="{% url 'product:product_detail' item.product.pk %}" class="btn vd_button">View Details</a>
                     </div>
                 </div>
             </div>

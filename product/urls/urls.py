@@ -32,7 +32,7 @@ urlpatterns = [
 
     # product web user
     path('category/<str:category_name>/', user_product_views.ShowProductsView.as_view(), name='products_of_category'),
-    path('product/<int:p_id>/', user_product_views.ProductDetailsSmipleView.as_view(), name='product_detail'),
+    path('product/<int:p_id>/', user_product_views.ProductDetailsView.as_view(), name='product_detail'),
     path('new-products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('trndong-products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
 
