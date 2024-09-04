@@ -67,11 +67,11 @@
             </div>
             <div class="offcanvas-body">
               <ul class="list-unstyled">
-                <li><a class="nav-link" href="{% url 'app_common:home' %}">Home</a></li>
-                <li><a class="nav-link" href="{% url 'app_common:about_us' %}">About us</a></li>
-                <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
-                <li><a class="nav-link" href="#">Services</a></li>
-                <li><a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:home' %}"><i class="fa-solid fa-house me-4"></i>Home</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:about_us' %}"><i class="fa-solid fa-user me-3"></i>About us</a></li>
+                <li><a class="nav-link" href="{% url 'orders:orders' %}"> <i class="fa-solid fa-box me-3"></i>My Orders</a></li>
+                <li><a class="nav-link" href="{% url 'users:profile_addaddress' %}"> <i class="fa-solid fa-address-book me-2"></i>Add Address</a></li>
+                <li><a class="nav-link" href="{% url 'users:alladdress' %}"> <i class="fa-solid fa-id-card me-2"></i>My Address</a></li>
               </ul>
             </div>
           </div>
@@ -187,13 +187,10 @@
               <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">Services</a>
+              <a class="nav-link active" aria-current="page" href="">Services</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Seeds</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
