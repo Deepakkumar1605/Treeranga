@@ -64,9 +64,9 @@ Account Deletion | NiwaAgro.com
     </ul>
     {% if user.deletion_requested %}
     <p class="fw-medium fs-6">Your account will be deleted in {{ days_remaining }} days.</p>
-    <button onclick="sendDeletionRequest('cancel_deletion')" class="vd_button" id="cancel-deletion">Cancel Deletion</button>
+    <button onclick="sendDeletionRequest('cancel_deletion')" class="vd_button c_deletion" id="cancel-deletion">Cancel Deletion</button>
 {% else %}
-    <button onclick="sendDeletionRequest('request_deletion')" class="vd_button r-deletion">Request Account Deletion</button>
+    <button onclick="sendDeletionRequest('request_deletion')" class="vd_button c_deletion">Request Account Deletion</button>
 {% endif %}
 </div>
 </section>

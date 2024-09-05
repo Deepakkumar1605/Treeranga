@@ -10,16 +10,22 @@
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="{% static 'app_common\images\img3.jpg' %}" class="d-block" alt="...">
+          <img src="https://images.pexels.com/photos/2232566/pexels-photo-2232566.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="{% static 'app_common\images\img2.jpg' %}" class="d-block" alt="...">
+          <img src="https://media.istockphoto.com/id/950933424/photo/my-beautiful-garden.jpg?s=2048x2048&w=is&k=20&c=4qeooHJOnDrUQp_Obh-SMag_aMK6DQ17K24R8nV3zN8=" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="{% static 'app_common\images\img3.jpg' %}" class="d-block" alt="...">
+          <img src="https://images.pexels.com/photos/3837317/pexels-photo-3837317.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="{% static 'app_common\images\image4.webp' %}" class="d-block" alt="...">
+          <img src="https://images.pexels.com/photos/5808/food-healthy-vegetables-village.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="https://images.pexels.com/photos/1105019/pexels-photo-1105019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="https://images.pexels.com/photos/7718476/pexels-photo-7718476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
@@ -50,9 +56,9 @@
 
 <!-- --------------------Shop by collection--------------- -->
 
-<section class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3 Shop_by_Collection">
+<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Shop_by_Collection">
   <div class="">
-      <div class="pb-lg-5 pb-md-5 pb-4">
+      <div class="pb-lg-3 pb-md-3 pb-2">
         <h3 class="text-center">Shop By Collection</h3>
       </div> 
    
@@ -79,9 +85,9 @@
 
 <!-- --------------------New Arrival Collection--------------- -->
 
-<section class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3">
+<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
   <div class="">
-    <div class="pb-lg-5 pb-md-5 pb-4">
+    <div class="pb-lg-3 pb-md-3 pb-2">
       <h3 class=" text-center">New Arrivals</h3>
     </div>
 
@@ -106,7 +112,7 @@
               {% endif %}
             </p>
             <div class="d-flex mt-3">
-              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button addto-cart">Add To Cart</a>
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class=" vd_button addto-cart">Add To Cart</a>
             </div>
           </div>
         </div>
@@ -124,9 +130,9 @@
 <!-- --------------------End New Arrival Collection--------------- -->
 
 <!-- --------------------Trending Arrival Collection--------------- -->
-<section class="px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3 Shop_by_Collection">
+<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Shop_by_Collection">
   <div class="">
-    <div class="pb-lg-5 pb-md-5 pb-4">
+    <div class="pb-lg-3 pb-md-3 pb-2">
       <h3 class=" text-center">Trending Products</h3>
     </div>
 
@@ -151,7 +157,7 @@
               {% endif %}
             </p>
             <div class="d-flex mt-3">
-              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class="btn vd_button addto-cart">Add To Cart</a>
+          <a href="{% url 'cart:addtocart' item.simple_product.id %}" class=" vd_button addto-cart">Add To Cart</a>
             </div>
           </div>
         </div>
@@ -177,8 +183,8 @@
 
 <!-- ------------------------- why  choose  niwa---------------------- -->
 
-<section class="whychoose px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3" >
-  <h3 class="text-center pb-lg-5 pb-md-5 pb-4">Why Choose Niwa Agro</h3>
+<section class="whychoose px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3" >
+  <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Why Choose Niwa Agro</h3>
   <div class="row text-center  p-lg-4 p-md-4 p-3 chooseniwa_logo">
     <div class="col-3 col-md-3 col-lg-3 mb-2">
       <img src="{% static 'app_common/images/bg2.avif' %}" alt="" class="img-fluid">
@@ -201,9 +207,8 @@
 
 <!-- --------------------------about niwa agro-------------------------------- -->
 
-<section class="aboutniwa_bg">
- <div class="p-lg-5 p-3 ">
-  <h3 class=" text-center pb-lg-5 ">About Us</h3>
+<section class="aboutniwa_bg px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
+  <h3 class=" text-center pb-lg-3 pb-md-3 pb-2">About Us</h3>
 <div class="aboutniwa1">
     <p ALIGN=CENTER >Niwa Agro is dedicated to revolutionizing agriculture through sustainable and innovative farming practices. Our mission is to empower farmers with the latest technology and knowledge, ensuring high-quality produce and environmentally friendly methods. At Niwa Agro, we believe in a future where agriculture thrives in harmony with nature, fostering growth and prosperity for communities worldwide.</p>
     <p ALIGN=CENTER>At Niwa Agro, we are dedicated to revolutionizing the agricultural landscape. Our mission is to empower farmers with innovative solutions and sustainable practices that enhance productivity and foster environmental stewardship. With a focus on cutting-edge technology and community support, we strive to create a thriving agricultural ecosystem that benefits both people and the planet. Join us in our journey to cultivate a brighter, greener future.</p>
@@ -211,7 +216,6 @@
         <a href="{% url 'app_common:about_us' %}" class=" text-decoration-none u-button">Know More</a>
     </div>
 </div>
- </div>
 </section>
 
 <!-- --------------------------End about niwa agro-------------------------------- -->
@@ -219,10 +223,10 @@
 
 <!-- --------------------------Testimonial------------------------------- -->
 
-<section class= "section mx-5 pt-5 pb-5 testimonial-section">
+<section class= "section px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 testimonial-section">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-start flex-column">
-        <h3 class="text-center p-lg-3 p-2">From Happy Customers</h3>
+        <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
      </div>
  </div>
   <div class=" ">
@@ -325,10 +329,10 @@
 <!-- --------------------------Start Accordian------------------------------------- -->
 
 
-<section class="Shop_by_Collection  px-lg-5 px-md-3 px-2 py-lg-4 py-md-4 py-3 Accordian">
+<section class="Shop_by_Collection  px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Accordian">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-center flex-column">
-        <h3 class="text-center  p-lg-3 p-2  pb-lg-5 pb-md-5 pb-4">Frequently Asked Questions</h3>
+        <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Frequently Asked Questions</h3>
      </div>
  </div>
   <div class="">

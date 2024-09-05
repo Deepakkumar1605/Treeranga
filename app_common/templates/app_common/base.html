@@ -69,6 +69,7 @@
               <ul class="list-unstyled">
                 <li><a class="nav-link" href="{% url 'app_common:home' %}"><i class="fa-solid fa-house me-4"></i>Home</a></li>
                 <li><a class="nav-link" href="{% url 'app_common:about_us' %}"><i class="fa-solid fa-user me-3"></i>About us</a></li>
+                <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}"><i class="fa-solid fa-blog me-5"></i>Blogs</a></li>
                 <li><a class="nav-link" href="{% url 'orders:orders' %}"> <i class="fa-solid fa-box me-3"></i>My Orders</a></li>
                 <li><a class="nav-link" href="{% url 'users:profile_addaddress' %}"> <i class="fa-solid fa-address-book me-2"></i>Add Address</a></li>
                 <li><a class="nav-link" href="{% url 'users:alladdress' %}"> <i class="fa-solid fa-id-card me-2"></i>My Address</a></li>
@@ -96,7 +97,7 @@
             </li>
               
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Services</a>
+              <a class="nav-link" href="{% url 'app_common:our_services' %}">Services</a>
             </li>
               
             <li class="nav-item">
@@ -111,9 +112,9 @@
         <!-- ----------===========Auth Nav buttons========== ------------->
 
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
-          <button type="button" class="btn" id="search-icon">
+          <!-- <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
-          </button>
+          </button> -->
           <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
             <i class="fa-regular fa-user HeaderIcons text-success"></i> 
           </a>
@@ -164,7 +165,7 @@
               <li><a class="nav-link" href="{% url 'app_common:home' %}">Home</a></li>
               <li><a class="nav-link" href="{% url 'app_common:about_us' %}">About</a></li>
               <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
-              <li><a class="nav-link" href="#">Services</a></li>
+              <li><a class="nav-link" href="{% url 'app_common:our_services' %}">Services</a></li>
               <li><a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a></li>
             </ul>
           </div>
@@ -187,7 +188,7 @@
               <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="">Services</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:our_services' %}">Services</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
@@ -234,7 +235,7 @@
   {% endif %}
  
 
-  <div style="max-width: 1440px; margin: 0 auto;">
+  <div>
     {% block content %}
     
     {% endblock content %}
@@ -468,7 +469,7 @@ $(document).ready(function () {
     $('.testimonial-slider').slick({
         autoplay: true,
         autoplaySpeed: 0,  // Set to 0 for continuous autoplay
-        speed: 3000,  // Adjust speed to control how fast the slide scrolls
+        speed: 8c000,  // Adjust speed to control how fast the slide scrolls
         cssEase: 'linear',  // Use linear easing for a uniform scrolling speed
         draggable: false,  // Disable dragging for a smoother experience
         infinite: true,

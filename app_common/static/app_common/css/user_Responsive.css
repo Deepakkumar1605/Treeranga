@@ -624,9 +624,17 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 		justify-content: center;
 	}
 
-	.buttons #addToCartButton {
-		border-radius: 2px;
+	 #addToCartButton {
+		background-color: var(--secondary);
+		color: var(--para);
 		width: 100%;
+		padding: 10px 122px;
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 28px;
+		font-size: 17px;
+		margin: 0 auto;
 	}
 
 	.wishlist-btn i {
@@ -727,14 +735,30 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 
 /* ------------------Between md to lg------------ */
 @media (min-width:768px) and (max-width:991.9px) {
+	
 }
 
 /* ------------------Between lg to xl------------ */
 @media (min-width:992px) and (max-width:1199.9px) {
+	
+
 }
 
 /* ------------------Between xl to xxl------------ */
-@media (min-width:1200px) and (max-width:1440px) {
+@media (min-width:1200px) and (max-width:1400px) {
+	.vd_button.addto-cart {
+		padding: 8px;
+		width:95%;
+		margin: 0 auto;
+		font-weight: 500;
+		line-height: 23px;
+		font-style: normal;
+		font-size: 14p;
+		overflow: hidden;
+	
+	}
+	
+
 }
 
 @media (max-width:1024px) {
