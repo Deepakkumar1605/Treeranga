@@ -68,84 +68,98 @@ class ProductDetailsView(View):
     def get(self, request, p_id):
         user = request.user
         variant_param = request.GET.get('variant', '')
-        print(variant_param,"gggg")
+        
+        # Determine the product object based on variant parameter
         if variant_param == "yes":
             product_obj = get_object_or_404(VariantProduct, id=p_id)
         elif variant_param == "no":
             product_obj = get_object_or_404(SimpleProduct, id=p_id)
         else:
             raise ValueError("No Variant Selected")
+        
         category_obj = Category.objects.all()
 
-        images = []
-        videos = [] 
         all_variants_of_this = []
         attributes = {}
+        active_variant_attributes = {}
+        product_images = []
+        product_videos = []
+
         if product_obj:
+            # Handling for Simple Product
             if product_obj.product.product_type == "simple":
                 image_gallery = ImageGallery.objects.filter(simple_product=product_obj).first()
+                if image_gallery:
+                    product_images = image_gallery.images
+                    product_videos = image_gallery.video
+            
+            # Handling for Variant Product
             elif product_obj.product.product_type == "variant":
                 image_gallery = VariantImageGallery.objects.filter(variant_product=product_obj).first()
+                if image_gallery:
+                    product_images = image_gallery.images
+                    product_videos = image_gallery.video
+                
                 # Get all other variants of this product
                 avp = VariantProduct.objects.filter(product=product_obj.product)
                 for av in avp:
                     variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
-                    images = variant_image_gallery.images if variant_image_gallery else []
-                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    variant_images = variant_image_gallery.images if variant_image_gallery else []
+                    variant_videos = variant_image_gallery.video if variant_image_gallery else []
+                    
                     all_variants_of_this.append({
                         'product': av,
                         'variant': "yes",
-                        'images': images,
-                        'videos': videos
+                        'images': variant_images,
+                        'videos': variant_videos
                     })
+                
+                # Extracting attributes for variant selection
                 for variant in avp:
                     variant_combination = variant.variant_combination
                     for attribute, value in variant_combination.items():
                         if attribute not in attributes:
                             attributes[attribute] = set()
                         attributes[attribute].add(value)
-
-                # Get the active variant's attributes
+                
+                # Active variant's attributes
                 active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
+            
             # Prepare attributes for display
             for attribute in attributes:
                 attributes[attribute] = sorted(attributes[attribute])
-            else:
-                image_gallery = None  # Handle unexpected product types gracefully
-
-            images = image_gallery.images if image_gallery else []
-            videos = image_gallery.video if image_gallery else []
-
+        
+        # Fetch similar products within the same category
         product_list_category_wise = Products.objects.filter(category=product_obj.product.category)
         all_simple_and_variant_similar = []
-        print(product_list_category_wise)
+
         for product in product_list_category_wise:
             if product.product_type == "simple":
-                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True)
-                if simple_product_similar:
-                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product_similar).first()
-                    images = image_gallery.images if image_gallery else []
-                    videos = image_gallery.video if image_gallery else []
+                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
+                for simple_product in simple_product_similar:
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                    similar_images = image_gallery.images if image_gallery else []
+                    similar_videos = image_gallery.video if image_gallery else []
                     all_simple_and_variant_similar.append({
-                        'product': product,
+                        'product': simple_product,
                         'variant': "no",
-                        'images': images,
-                        'videos': videos
+                        'images': similar_images,
+                        'videos': similar_videos
                     })
             elif product.product_type == "variant":
-                variant_product_similar = VariantProduct.objects.filter(product=product, is_visible=True).exclude(id = product_obj.id)
+                variant_product_similar = VariantProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id).first()
                 if variant_product_similar:
-                    for i in variant_product_similar:
-                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=i).first()
-                        images = variant_image_gallery.images if variant_image_gallery else []
-                        videos = variant_image_gallery.video if variant_image_gallery else []
-                        all_simple_and_variant_similar.append({
-                            'product': i,
-                            'variant': "yes",
-                            'images': images,
-                            'videos': videos
-                        })
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product_similar).first()
+                    similar_images = variant_image_gallery.images if variant_image_gallery else []
+                    similar_videos = variant_image_gallery.video if variant_image_gallery else []
+                    all_simple_and_variant_similar.append({
+                        'product': variant_product_similar,
+                        'variant': "yes",
+                        'images': similar_images,
+                        'videos': similar_videos
+                    })
 
+        # Fetch wishlist items if user is authenticated
         wishlist_items = []
         if user.is_authenticated:
             wishlist = WshList.objects.filter(user=user).first()
@@ -155,18 +169,19 @@ class ProductDetailsView(View):
             'user': user,
             'category_obj': category_obj,
             'product_obj': product_obj,
-            'all_variants_of_this':all_variants_of_this,
-            'images': images,
-            'videos': videos,
+            'all_variants_of_this': all_variants_of_this,
+            'images': product_images,
+            'videos': product_videos,
             'all_simple_and_variant_similar': all_simple_and_variant_similar,
             'wishlist_items': wishlist_items,
             'MEDIA_URL': settings.MEDIA_URL,
             'variant_combination': product_obj.variant_combination if product_obj.product.product_type == "variant" else None,
             'attributes': attributes,
-            'active_variant_attributes':active_variant_attributes
+            'active_variant_attributes': active_variant_attributes,
+            'variant_param': variant_param
         }
-        return render(request, self.template_name, context)
 
+        return render(request, self.template_name, context)
 
 class VariantRedirectView(View):
     def get(self, request):

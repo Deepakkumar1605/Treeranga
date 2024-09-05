@@ -202,19 +202,12 @@ Product Details - {{ product_obj.name }}
                         </a>
                     {% endif %}
                     <div class="card-body p-1">
-                        <h6 class="card-title">{{ item.product.name | truncatechars:18 }}</h6>
-                        <p class="card-text m-0">{{ item.product.product_short_description | truncatechars:20 }}</p>
+                        <h6 class="card-title">{{ item.product.product.name | truncatechars:18 }}</h6>
+                        <p class="card-text m-0">{{ item.product.product.product_short_description | truncatechars:20 }}</p>
                         <p class="card-text">
-                            {% if item.simple_product %}
-                                <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
-                                {% if item.simple_product.product_max_price %}
-                                <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
-                                {% endif %}
-                            {% elif item.variant_product %}
-                                <span class="price" id="discount_price">₹{{ item.variant_product.discounted_price }}</span>
-                                {% if item.variant_product.original_price %}
-                                <span class="original-price" id="max_price"><s>₹{{ item.variant_product.original_price }}</s></span>
-                                {% endif %}
+                            <span class="price" id="discount_price">₹{{ item.product.product_discount_price }}</span>
+                            {% if item.product.product_max_price %}
+                            <span class="original-price" id="max_price"><s>₹{{ item.product.product_max_price }}</s></span>
                             {% endif %}
                         </p>
                         {% if item.variant == "yes" %}
@@ -305,11 +298,20 @@ Product Details - {{ product_obj.name }}
         }
     });
     document.getElementById('addToCartButton').addEventListener('click', function(event) {
+        let variantParam = "{{ variant_param }}";
         event.preventDefault();
         let quantity = document.getElementById('quantity').value;
-        let url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity;
+        let url;
+
+        if (variantParam === 'yes') {
+            url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity + "&variant=yes";
+        } else {
+            url = "{% url 'cart:addtocart' product_obj.pk %}?quantity=" + quantity + "&variant=no";
+        }
+
         window.location.href = url;
     });
+
 </script>
  
 <script>

@@ -14,7 +14,6 @@ urlpatterns = [
     path('manage-cart/<str:c_p_uid>/', user_cart_views.ManageCart.as_view(), name='managecart'),
     path('remove-from-cart/<str:cp_uid>/', user_cart_views.RemoveFromCart, name='removefromcart'),
     path('checkout/',user_cart_views.Checkout.as_view(),name='checkout'),
-    path('directbuychecout/<int:p_id>',user_cart_views.DirectBuyCheckout.as_view(),name='directbuycheckout'),
 
 
      # checkout address

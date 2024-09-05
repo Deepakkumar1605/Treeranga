@@ -12,10 +12,11 @@ from users.models import User
 from product.models import DeliverySettings, Products, SimpleProduct, Category
 from orders.models import Order
 from cart.models import Cart
-from cart.serializer import CartSerializer,DirectBuySerializer
+from cart.serializer import CartSerializer
 from decimal import Decimal, InvalidOperation,ROUND_HALF_UP
 from uuid import uuid4
 from payment import razorpay
+from product_variations.models import VariantProduct
 
 class ShowCart(View):
     def get(self, request):
@@ -32,9 +33,13 @@ class ShowCart(View):
             products = request.session.get('cart', {}).get('products', {})
 
         # Fetch delivery settings
-        delivery_settings = DeliverySettings.objects.first()
-        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
-        delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
+        try:
+            delivery_settings = DeliverySettings.objects.first()
+            delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
+            delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
+        except Exception:
+            delivery_charge_per_bag = 0
+            delivery_free_order_amount = 0
 
         total_original_price = Decimal('0.00')
         total_price = Decimal('0.00')
@@ -101,6 +106,9 @@ class ShowCart(View):
 
 class AddToCartView(View):
     def get(self, request, product_id):
+        quantity = int(request.GET.get('quantity', 1))
+        variant = request.GET.get('variant', '')
+
         try:
             if request.user.is_authenticated:
                 cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -108,10 +116,10 @@ class AddToCartView(View):
             else:
                 cart = request.session.get('cart', {'products': {}})
                 is_user_authenticated = False
-
-            product_obj = get_object_or_404(SimpleProduct, id=product_id)
-            quantity = int(request.GET.get('quantity', 1))
-            
+            if variant == "yes":
+                product_obj = get_object_or_404(VariantProduct, id=product_id)
+            else:
+                product_obj = get_object_or_404(SimpleProduct, id=product_id)
             # Ensure quantity is within valid range
             if quantity <= 0:
                 messages.error(request, "Quantity must be at least 1.")
@@ -129,6 +137,7 @@ class AddToCartView(View):
                 'image': product_obj.product.image.url if product_obj.product.image else None,
                 'max_price': product_obj.product_max_price,
                 'discount_price': product_obj.product_discount_price,
+                'variant': variant,
             }
 
             products = cart.products if is_user_authenticated else cart.get('products', {})
@@ -255,9 +264,6 @@ class Checkout(View):
     model = Order
 
     def get(self, request):
-        if not request.user.is_authenticated:
-            return redirect(f"{reverse('users:login')}?next={request.path}")
-
         user = request.user
 
         try:
@@ -273,12 +279,13 @@ class Checkout(View):
                     else:
                         user_cart_products[key] = value
 
-                # Update the total price in the user cart
                 user_cart.products = user_cart_products
-                user_cart.total_price = sum(item['total_price'] for item in user_cart_products.values())
+                user_cart.total_price = sum(
+                    Decimal(item['product_discount_price']) * item['quantity'] 
+                    for item in user_cart_products.values()
+                )
                 user_cart.save()
 
-                # Clear session cart after merging
                 request.session.pop('cart', None)
 
             cart = Cart.objects.get(user=user)
@@ -290,25 +297,19 @@ class Checkout(View):
 
         # Serialize cart details
         order_details = CartSerializer(cart).data
-        totaloriginalprice = 0
-        totalPrice = 0
-        GST = 0
-        Delivery = 0
-        final_cart_value = 0
+
+        # Extract necessary details
+        final_cart_value = Decimal(order_details['products_data']['final_cart_value'])
+        totaloriginalprice = Decimal(order_details['products_data']['gross_cart_value'])
+        totalPrice = Decimal(order_details['products_data']['our_price'])
+        Delivery = Decimal(order_details['products_data']['charges']['Delivery'])
+        discount_price = totaloriginalprice - totalPrice
         addresses = user.address or []
 
         # Razorpay order creation
         status, rz_order_id = razorpay.create_order_in_razPay(
-            amount=int(float(order_details['products_data']['final_cart_value']) * 100)  # Amount in paise
+            amount=int(final_cart_value * 100)  # Amount in paise
         )
-
-        for i, j in order_details.items():
-            totaloriginalprice = Decimal(j['gross_cart_value'])
-            totalPrice = Decimal(j['our_price'])
-            Delivery = Decimal(j['charges']['Delivery'])
-            final_cart_value = j['final_cart_value']
-
-        discount_price = totaloriginalprice - totalPrice
 
         context = {
             "cart": cart.products,
@@ -324,65 +325,6 @@ class Checkout(View):
         }
 
         return render(request, self.template, context)
-
-
-
-@method_decorator(login_required(login_url='users:login'), name='dispatch')
-class DirectBuyCheckout(View):
-    template = "cart/user/directbuycheckout.html"  # Update with your actual template path
-
-    def get(self, request, p_id):
-        user = request.user
-        product = get_object_or_404(Products, id=p_id)
-        product_uid = product.uid
-
-        our_price = 0
-        totaloriginalprice = 0
-        GST = 0
-        Delivery = 0
-        final_value = 0
-        discount_amount = 0
-
-        order_details = DirectBuySerializer(product).data
-        
-        for i, j in order_details.items():
-            totaloriginalprice = Decimal(j['gross_value'])
-            our_price = Decimal(j['our_price'])
-            GST = Decimal(j['charges']['GST'])
-            Delivery = Decimal(j['charges']['Delivery'])
-            final_value = j['final_value']
-            discount_amount = j['discount_amount']
-
-        addresses = user.address or []
-        # Commented out Razorpay fields for now
-        # status, rz_order_id = rozerpay.create_order_in_razPay(amount=int(float(final_value)))
-
-        context = {
-            'p_id': p_id,
-            'our_price': our_price,
-            'totaloriginalprice': totaloriginalprice,
-            "total_price": final_value,
-            'GST': GST,
-            'Delivery': Delivery,
-            'discount_amount': discount_amount,
-            "MEDIA_URL": settings.MEDIA_URL,
-            # "rz_order_id": rz_order_id,
-            # "api_key": settings.RAZORPAY_API_KEY,
-            "product_uid": product_uid,
-            "addresses": addresses,
-        }
-
-        return render(request, self.template, context)
-
-    def post(self, request):
-        p_id = request.POST['product_id']
-        url = reverse('cart:directbuycheckout', args=[p_id])
-
-        return HttpResponseRedirect(url)
-
-
-
-
 
 
 # checkout address
