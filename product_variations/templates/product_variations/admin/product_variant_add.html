@@ -1,9 +1,9 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} Variation List {% endblock title %}
+{% block title %} Attribute List {% endblock title %}
 
 {% block content%}
-<h2>Add Product Variant</h2>
+<h2>Add Product Attribute</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

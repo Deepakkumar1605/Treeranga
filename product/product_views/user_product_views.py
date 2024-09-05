@@ -7,6 +7,7 @@ from app_common import models
 from django.contrib import messages
 from product.models import Products, Category,SimpleProduct,ImageGallery,ProductReview
 from django.db.models import Avg
+from product.serializers import SimpleProductSerializer, VariantProductSerializer
 from product_variations.models import Variant, VariantImageGallery, VariantProduct
 from wishlist.models import WshList
 from product.forms import ProductReviewForm

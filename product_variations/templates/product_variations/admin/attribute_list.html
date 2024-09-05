@@ -1,11 +1,11 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
-{% block title %} Attribute List {% endblock title %}
+{% block title %} Variant List {% endblock title %}
 {% block content%}
 
 <main class="py-4">
   <div class="container-fluid">
-    <h4 class="">All Attributes</h4>
+    <h4 class="">All Variant</h4>
       <div class="vstack gap-4">
           <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
               <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
@@ -27,7 +27,7 @@
               <p class="snippets">{% include 'snippets/alert.html' %}</p>
               <div class="btn-group catagory-btn">
                   <a href="{% url 'product_variations:attribute_add' %}">
-                      <i class='bx bxs-plus-square'></i> Create New Attribute
+                      <i class='bx bxs-plus-square'></i> Create New Variant
                   </a>
               </div>
           </div>
@@ -37,8 +37,8 @@
                   <table class="table table-hover table-nowrap">
                       <thead class="table-light">
                           <tr>
-                              <th class="" id="tb-head" scope="col">Variant Name</th>
                               <th class="" id="tb-head" scope="col">Attribute Name</th>
+                              <th class="" id="tb-head" scope="col">variant Name</th>
                               <th class="" id="tb-head" scope="col">Code</th>
                               <th class="" id="tb-head" scope="col">Action</th>
                           </tr>
