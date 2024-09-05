@@ -1,4 +1,7 @@
+import json
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404,redirect
+from django.urls import reverse
 from django.views import View
 from app_common import models
 from django.contrib import messages
@@ -77,7 +80,7 @@ class ProductDetailsView(View):
         images = []
         videos = [] 
         all_variants_of_this = []
-
+        attributes = {}
         if product_obj:
             if product_obj.product.product_type == "simple":
                 image_gallery = ImageGallery.objects.filter(simple_product=product_obj).first()
@@ -95,6 +98,18 @@ class ProductDetailsView(View):
                         'images': images,
                         'videos': videos
                     })
+                for variant in avp:
+                    variant_combination = variant.variant_combination
+                    for attribute, value in variant_combination.items():
+                        if attribute not in attributes:
+                            attributes[attribute] = set()
+                        attributes[attribute].add(value)
+
+                # Get the active variant's attributes
+                active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
+            # Prepare attributes for display
+            for attribute in attributes:
+                attributes[attribute] = sorted(attributes[attribute])
             else:
                 image_gallery = None  # Handle unexpected product types gracefully
 
@@ -146,13 +161,37 @@ class ProductDetailsView(View):
             'all_simple_and_variant_similar': all_simple_and_variant_similar,
             'wishlist_items': wishlist_items,
             'MEDIA_URL': settings.MEDIA_URL,
-            'variant_combination': product_obj.variant_combination if product_obj.product.product_type == "variant" else None
+            'variant_combination': product_obj.variant_combination if product_obj.product.product_type == "variant" else None,
+            'attributes': attributes,
+            'active_variant_attributes':active_variant_attributes
         }
-
         return render(request, self.template_name, context)
 
 
+class VariantRedirectView(View):
+    def get(self, request):
+        attributes = request.GET.get('attributes', '{}')
+        attributes = json.loads(attributes)
+        product_id = request.GET.get('product_id', '')
+        # Fetch the product
+        product_obj = get_object_or_404(Products, id=product_id)
 
+        # Fetch all variants for this product
+        variants = VariantProduct.objects.filter(product=product_obj)
+
+        # Filter variants based on selected attributes manually
+        matching_variants = []
+        for variant in variants:
+            variant_combination = variant.variant_combination
+            if all(variant_combination.get(attr) == val for attr, val in attributes.items()):
+                matching_variants.append(variant)
+
+        if matching_variants:
+            first_variant = matching_variants[0]
+            variant_url = f"{reverse('product:product_detail', kwargs={'p_id': first_variant.id})}?variant=yes"
+            return JsonResponse({'redirect_url': variant_url})
+        else:
+            return JsonResponse({'error': 'No matching variant found'}, status=404)
 
 
 class AllTrendingProductsView(View):

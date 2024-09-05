@@ -36,6 +36,8 @@ urlpatterns = [
     path('new-products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('trndong-products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
 
+    path('redirect-to-variant/', user_product_views.VariantRedirectView.as_view(), name='redirect_to_variant'),
+
     path('update-delivery-settings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),
 
     # path('get-variant-types/', admin_product_views.get_variant_types, name='get_variant_types'),

@@ -1,6 +1,5 @@
 {% extends 'app_common/base.html' %}
 {% load static %}
-
 {% block title %}
 Product Details - {{ product_obj.name }}
 {% endblock title %}
@@ -30,6 +29,30 @@ Product Details - {{ product_obj.name }}
     .variant-circle:hover {
         transform: scale(1.1);
         border-color: #000;
+    }
+
+    .variant-link.highlighted{
+        border: 1px solid green;
+        background: linear-gradient(344deg,rgba(5,131,47,1) 14% ,rgba(5,99,19,1) 52% ,rgba(6,175,27,1) 100%);
+        color: white;
+        font-weight: bold;
+        transform: scale(1.2);  /* Slightly larger */
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        font-size: 14px;
+    }
+    .vbtn{
+        border: 1px solid gray;
+        background: linear-gradient(344deg,rgb(179, 182, 180) 14% ,rgb(95, 97, 95) 52% ,rgb(190, 190, 190) 100%);
+        color: white;
+        font-weight: bold;
+        border-radius: 4px;
+        padding: 2px 5px;
+        margin-left: 15px;
+        font-size: 14px;
+    }
+    .vbtn:hover{
+        color: white;
+        font-weight: bold;
     }
 </style>
 
@@ -93,7 +116,29 @@ Product Details - {{ product_obj.name }}
                         <h5>Description:</h5>
                         <p>{{ product_obj.product.product_short_description | truncatechars:200 }}</p>
                     </div>
-                    <div class="variations">
+                    <div class="variant-options">
+                        <!-- Example attributes and their values -->
+                        {% for attribute, values in attributes.items %}
+                            <div class="attribute-group mb-2">
+                                <strong>{{ attribute }} : </strong>
+                                <span class="d-inline-flex flex-wrap">
+                                    {% for value in values %}
+                                        <a href="#" class="vbtn py-0 variant-link {% if active_variant_attributes %}
+                                            {% for key, val in active_variant_attributes.items %}
+                                                {% if key == attribute and val == value %}
+                                                    highlighted
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}" data-attribute="{{ attribute }}" data-value="{{ value }}">
+                                            {{ value }}
+                                        </a>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- <div class="variations">
                         {% if variant_combination %}
                             {% for i,j in variant_combination.items %}
                                 {{ i }} : {{ j }} <br>
@@ -111,7 +156,7 @@ Product Details - {{ product_obj.name }}
                                 </a>
                             {% endfor %}
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Quantity Selector -->
                     <div class="quantity-selector mt-3">
                         <label for="quantity">Quantity:</label>
@@ -187,63 +232,48 @@ Product Details - {{ product_obj.name }}
             {% endfor %}
         </div>
     </div>
-
-    <!-- Reviews Section (Optional) -->
-    {% comment %}
-    <div class="container">
-        <div class="review-summary">
-            <h4>Customer Ratings & Reviews</h4>
-            <span class="product-ratings">
-                {% for i in star_range %}
-                    {% if i <= average_rating %}
-                        ★
-                    {% else %}
-                        ☆
-                    {% endif %}
-                {% endfor %}
-            </span>
-            <span>{{ reviews.count }} Reviews</span>
-        </div>
-
-        <!-- Write a Review -->
-        <div>
-            <button class="btn btn-primary" id="toggleReviewBtn" onclick="toggleReviewForm()">Write a Review</button>
-        </div>
-
-        <div id="Rating_form" style="display: none;">
-            {% if user.is_authenticated %}
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="full_name">Your Name:</label>
-                    <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="email">Your Email:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <div class="review-rating">
-                        {% for i in star_range %}
-                            <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
-                            <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="review">Review:</label>
-                    {{ form.review }}
-                </div>
-                <button type="submit" class="btn btn-primary my-lg-3">Submit Review</button>
-            </form>
-            {% else %}
-            <p>Please <a href="{% url 'users:login' %}">login</a> to submit a review.</p>
-            {% endif %}
-        </div>
-    </div>
-    {% endcomment %}
 </section>
+
+<script>
+    $(document).ready(function(){
+        $('.variant-link').on('click', function(e) {
+            e.preventDefault();
+
+            var attributes = {};
+            
+            // Collect all currently selected attributes
+            $('.variant-link.highlighted').each(function() {
+                var attr = $(this).data('attribute');
+                var val = $(this).data('value');
+                attributes[attr] = val;
+            });
+
+            // Add the newly clicked attribute
+            var attribute = $(this).data('attribute');
+            var value = $(this).data('value');
+            attributes[attribute] = value;
+
+            var queryParams = $.param({
+                attributes: JSON.stringify(attributes),
+                product_id: "{{ product_obj.product.id }}"
+            });
+
+            $.ajax({
+                url: "{% url 'product:redirect_to_variant' %}",
+                data: queryParams,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.redirect_url) {
+                        window.location.href = response.redirect_url;
+                    }
+                },
+                error: function(xhr) {
+                    alert('No matching variant found.');
+                }
+            });
+        });
+    });
+</script>
 
 <script>
     function displayMedia(mediaElement) {

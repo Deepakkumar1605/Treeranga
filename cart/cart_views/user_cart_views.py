@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from users.models import User
 from product.models import DeliverySettings, Products, SimpleProduct, Category
 from orders.models import Order
 from cart.models import Cart
