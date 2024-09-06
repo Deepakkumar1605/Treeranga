@@ -1,0 +1,78 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Variant List {% endblock title %}
+{% block content%}
+
+<section class="py-2">
+    <div class="container">
+        <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Variants</h4>
+        <div class="vstack">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
+                <div class="btn-group catagory-btn my-3 mx-2">
+                    <a href="{% url 'product_variations:attribute_add' %}">
+                        <i class='bx bxs-plus-square'></i>
+                        Create New Variant
+                    </a>
+                </div>
+            </div>
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="" id="tb-head" scope="col">SL No.</th>
+                                <th class="" id="tb-head" scope="col">Attribute Name</th>
+                                <th class="" id="tb-head" scope="col">Variant Name</th>
+                                <th class="" id="tb-head" scope="col">Code Name</th>
+                                <th class="" id="tb-head" scope="col">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="test_table_tbody">
+                            {% for attribute in attribute_list %}
+                            <tr>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">
+                                        {{ attribute.id }}
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub text-capitalize">
+                                        {{ attribute.variant_type.name }}
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub text-capitalize">
+                                        {{ attribute.name }}
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub text-capitalize">
+                                        {{ attribute.code }}
+                                    </div>
+                                </td>
+                                <td class="d-flex justify-content-evenly p-3">
+                                    <div class="">
+                                        <a href="{% url 'product_variations:attribute_update' attribute.id %}">
+                                            <i class='bx bx-edit text-primary'></i>
+                                        </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="{% url 'product_variations:attribute_delete' attribute.id %}">
+                                            <i class='bx bx-trash text-danger'></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock content %}

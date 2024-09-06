@@ -32,12 +32,16 @@ urlpatterns = [
 
     # product web user
     path('category/<str:category_name>/', user_product_views.ShowProductsView.as_view(), name='products_of_category'),
-    path('Product/<int:p_id>/', user_product_views.ProductDetailsSmipleView.as_view(), name='product_detail'),
+    path('Product/<int:p_id>/', user_product_views.ProductDetailsView.as_view(), name='product_detail'),
     path('New-Products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('Trending-Products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
-
+    path('redirect-to-variant/', user_product_views.VariantRedirectView.as_view(), name='redirect_to_variant'),
     path('UpdateDeliverySettings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),
 
+    # path('get-variant-types/', admin_product_views.get_variant_types, name='get_variant_types'),
+    path('get-attributes/<int:variant_type_id>', admin_product_views.get_attributes, name='get_attributes'),
+    path('generate-combinations/', admin_product_views.generate_combinations, name='generate_combinations'),
+    path('save-combination/', admin_product_views.save_combination, name='save_combination'),
 
 ]   
 
