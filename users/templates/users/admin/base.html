@@ -48,29 +48,42 @@
 			</li>
 
 			<li class="sidebar-item">
-				<a href="#" class="sidebar-link has-dropdown collapsed" id="productsLink" data-bs-toggle="collapse"
-					data-bs-target="#auth" aria-expanded="false" aria-controls="auth" onclick="toggleChevron(this)">
-
-					<i class='bx bxs-doughnut-chart'></i>
+				<a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                data-bs-target="#auth" aria-expanded="false" aria-controls="auth" onclick="toggleChevron(this)">
+					<i class='bx bxs-doughnut-chart' ></i>
 					<span>Products</span><i class="lni lni-chevron-down chevron-icon"></i>
 				</a>
-				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
+                <ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
+                    <li class="sidebar-item">
+                        <a href="{% url 'product:category_list' %}" class="sidebar-links">
+                          <i class="lni lni-list"></i><span class="ms-4">All Category List</span></a>
+                    </li>
+                      <!-- <li class="sidebar-item">
+                          <a href="{% url 'product:category_add' %}" class="sidebar-links">
+                            <i class="lni lni-files"></i> <span class="ms-4">Add Category</span> </a>
+                      </li> -->
+                      <li class="sidebar-item">
+                          <a href="{% url 'product:product_list' %}" class="sidebar-links">
+                            <i class="lni lni-line-double"></i><span class="ms-4">All Products</span></a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a href="{% url 'product:simple_product_list' %}" class="sidebar-links">
+                          <i class="lni lni-database"></i><span class="ms-4">All Simple Products</span></a>
+                    </li>
 					<li class="sidebar-item">
-						<a href="{% url 'product:category_list' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">All Category List</span>
-						</a>
-					</li>
+                        <a href="{% url 'product_variations:variant_product_list' %}" class="sidebar-links">
+                          <i class="lni lni-database"></i><span class="ms-4">All variant Products</span></a>
+                    </li>
 					<li class="sidebar-item">
-						<a href="{% url 'product:product_list' %}" class="sidebar-links">
-							<i class="lni lni-line-double"></i><span class="ms-4">All Products</span>
-						</a>
-					</li>
+                        <a href="{% url 'product_variations:variation_list' %}" class="sidebar-links">
+                          <i class="lni lni-database"></i><span class="ms-4">Attribute</span></a>
+                    </li>
 					<li class="sidebar-item">
-						<a href="{% url 'product:simple_product_list' %}" class="sidebar-links">
-							<i class="lni lni-database"></i><span class="ms-4">All Simple Products</span>
-						</a>
-					</li>
-				</ul>
+                        <a href="{% url 'product_variations:attribute_list' %}" class="sidebar-links">
+                          <i class="lni lni-database"></i><span class="ms-4">Variant</span></a>
+                    </li>
+					          
+                  </ul>
 			</li>
 			<li>
 				<a href="{% url 'blog:blog_list' %}" class="">
@@ -110,7 +123,7 @@
 			</li>
 			<li>
 				<a href="{% url 'app_common:admin_message_list' %}" class="">
-					<i class='bx bxs-contact'></i>
+					<i class='bx bxs-group' ></i>
 					<span class="text">Contact Message</span>
 				</a>
 			</li>
@@ -196,7 +209,9 @@
 			});
 		});
 	</script>
-
+	{% block js %}
+	
+	{% endblock js %}
 	<script src="{% static 'users/js/script.js' %}"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

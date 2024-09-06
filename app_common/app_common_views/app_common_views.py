@@ -22,6 +22,8 @@ class HomeView(View):
     template = app + "landing_page.html"
 
     def get(self, request):
+        if request.user.is_superuser:
+            return redirect('users:admin_dashboard')
         categories = Category.objects.all()
         
         trending_products = []

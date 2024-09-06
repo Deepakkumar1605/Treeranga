@@ -1,0 +1,80 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Variation List {% endblock title %}
+{% block content%}
+
+
+<main class="py-4">
+  <div class="container-fluid">
+    <h4 class="">All Attribute</h4>
+      <div class="vstack gap-4">
+          <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+              <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
+                  {% csrf_token %}
+                  <div class="hstack gap-2">
+                    {% comment%}
+                      <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                          <option selected value="pk">All</option>
+                          <option value="id">ID</option>
+                          <option value="name">Name</option>
+                      </select>
+                      <span  class="input-group ">
+                          <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                          <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
+                      </span>
+                      {% endcomment%}
+                  </div>
+              </form>
+              <p class="snippets">{% include 'snippets/alert.html' %}</p>
+              <div class="btn-group catagory-btn">
+                  <!-- <button data-bs-toggle="modal" data-bs-target="#select_filter" class="btn-sm btn-neutral">
+                      <i class='bx bx-filter-alt' ></i>
+                  </button> -->
+                  <a href="{% url 'product_variations:variation_add' %}">
+                      <i class='bx bxs-plus-square'></i> Create New Attribute
+                  </a>
+              </div>
+          </div>
+
+          <div class="tablecard">
+              <div class="table-responsive">
+                  <table class="table table-hover table-nowrap">
+                      <thead class="table-light">
+                          <tr>
+                              <th class="" id="tb-head" scope="col">Attribute Name</th>
+                              <th class="" id="tb-head" scope="col">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody id="test_table_tbody">
+                        {% for variant in variant_list %}
+                        <tr>
+                          <td class="tb-body">
+                            <a class="text-heading text-black font-semibold">{{variant.name}}</a>
+                          </td>
+                          <td class="tb-body">
+                            <a href="{% url 'product_variations:variation_update' variant.id %} " class="BtM">
+                              <i class='bx bx-edit text-primary' ></i>
+                            </a> &nbsp;
+                            <a href="{% url 'product_variations:variation_delete' variant.id %}">
+                              <button
+                                type="button"
+                                class="BtM1">
+                                <i class='bx bx-trash text-danger'></i>
+                              </button>
+                            </a>
+                          </td> 
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+              
+          </div>
+      </div>
+  </div>
+</main>
+
+
+  
+
+{% endblock content %}

@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from product.models import DeliverySettings, Products,SimpleProduct,ImageGallery
+from product_variations.models import VariantProduct
 
 class CartSerializer(serializers.ModelSerializer):
     products_data = serializers.SerializerMethodField()
@@ -29,17 +30,25 @@ class CartSerializer(serializers.ModelSerializer):
             product_id = product_key_parts[0]
 
             try:
-                simple_product = SimpleProduct.objects.get(id=product_id)
-                product = simple_product.product
+                if value['info']['variant'] == "yes":
+                    print("yes")
+                    product_obj = VariantProduct.objects.get(id=product_id)
+                else:
+                    print("no")
+                    product_obj = SimpleProduct.objects.get(id=product_id)
+
+                product = product_obj.product
                 quantity = int(value['quantity'])
 
                 # Calculate product prices and totals
-                gross_cart_value += Decimal(simple_product.product_max_price) * quantity
-                our_price += Decimal(simple_product.product_discount_price) * quantity
+                product_max_price = Decimal(product_obj.product_max_price) * quantity
+                product_discount_price = Decimal(product_obj.product_discount_price) * quantity
+                gross_cart_value += product_max_price
+                our_price += product_discount_price
                 total_cart_items += quantity
 
                 # Retrieve SGST and CGST from the related Products model
-                total_price = Decimal(simple_product.product_discount_price) * quantity
+                total_price = product_discount_price
                 sgst_amount = product.sgst * total_price / 100
                 cgst_amount = product.cgst * total_price / 100
 
@@ -56,15 +65,15 @@ class CartSerializer(serializers.ModelSerializer):
                     'name': product.name,
                     'brand': product.brand,
                     'image': product.image.url if product.image else None,
-                    'product_max_price': str(Decimal(simple_product.product_max_price) * quantity),
-                    'product_discount_price': str(Decimal(simple_product.product_discount_price) * quantity),
-                    'taxable_value': str(Decimal(simple_product.taxable_value) * quantity),
+                    'product_max_price': str(product_max_price.quantize(Decimal('0.01'))),
+                    'product_discount_price': str(product_discount_price.quantize(Decimal('0.01'))),
+                    'taxable_value': str(Decimal(product_obj.taxable_value) * quantity),
                     'quantity': quantity,
                     'sgst_amount': str(sgst_amount.quantize(Decimal('0.01'))),
                     'cgst_amount': str(cgst_amount.quantize(Decimal('0.01'))),
                     'total_price': str(total_price.quantize(Decimal('0.01'))),
-                    'images': simple_product.image_gallery.first().images if simple_product.image_gallery.exists() else [],
-                    'video': simple_product.image_gallery.first().video if simple_product.image_gallery.exists() else [],
+                    'images': product_obj.image_gallery.first().images if product_obj.image_gallery.exists() else [],
+                    'video': product_obj.image_gallery.first().video if product_obj.image_gallery.exists() else [],
                 }
 
                 products[key] = product_data
@@ -74,6 +83,7 @@ class CartSerializer(serializers.ModelSerializer):
             except Exception as e:
                 print(f"Error processing product {product_id}: {e}")
 
+        # Calculate discount and final cart value
         discount_amount = gross_cart_value - our_price
         final_cart_value = our_price
 
@@ -82,13 +92,13 @@ class CartSerializer(serializers.ModelSerializer):
             # All products are virtual or have a flat delivery fee, so no delivery charge
             charges['Delivery'] = Decimal('0.00')
         elif final_cart_value < delivery_free_order_amount:
-            # Apply normal delivery charge
             charges['Delivery'] = delivery_charge_per_bag
         else:
             charges['Delivery'] = Decimal('0.00')
 
         final_cart_value += charges.get('Delivery', Decimal('0.00'))
 
+        # Prepare the result data structure
         result = {
             'products': products,
             'total_cart_items': total_cart_items,

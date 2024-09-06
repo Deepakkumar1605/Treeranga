@@ -1,0 +1,90 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} All Products {% endblock title %}
+{% block content %}
+<main class="py-4">
+    <div class="container-fluid">
+        <h4>All Attribute Products</h4>
+        <div class="vstack gap-4">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <form class="my-3 mx-2" action="" method="post">
+                    {% csrf_token %}
+                    <div class="hstack gap-2">
+                        <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                            <option selected value="pk">All</option>
+                            <option value="id">ID</option>
+                            <option value="name">Name</option>
+                        </select>
+                        <span class="input-group">
+                            <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                            <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2'></i></button>
+                        </span>
+                    </div>
+                </form>
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
+            </div>
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th id="tb-head" scope="col">Product ID</th>
+                                <th id="tb-head" scope="col">Name</th>
+                                <th id="tb-head" scope="col">Image</th>
+                                <th id="tb-head" scope="col">Brand</th>
+                                <th id="tb-head" scope="col">Max Price</th>
+                                <th id="tb-head" scope="col">Discounted Price</th>
+                                <th id="tb-head" scope="col">Stock</th>
+                                <th id="tb-head" scope="col">Variants</th> <!-- New Column for Variants -->
+                                <th id="tb-head" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test_table_tbody">
+                            {% for product in variant_products %}
+                            <tr {% if product.stock <= 10 %} style="background: #f6a4a4;" {% endif %}>
+                                <td class="tb-body">{{ product.pk }}</td>
+                                <td class="tb-body">{{ product.product.name|truncatewords:5 }}</td>
+                                <td class="tb-body">
+                                    {% if product.product.image %}
+                                        <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
+                                    {% endif %}
+                                </td>
+                                <td class="tb-body">{{ product.product.brand }}</td>
+                                <td class="tb-body">{{ product.product_max_price }}</td>
+                                <td class="tb-body">{{ product.product_discount_price }}</td>
+                                <td class="tb-body">{{ product.stock }}</td>
+
+                                <!-- New Column to Display Variants -->
+                                <td class="tb-body">
+                                    <ul>
+                                        {% if product.variant_combination %}
+                                            {% for key, value in product.variant_combination.items %}
+                                                <li>{{ key|capfirst }}: {{ value }}</li>
+                                            {% endfor %}
+                                        {% else %}
+                                            <li>No variants available</li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+
+                                <td class="tb-body">
+                                    <a href="{% url 'product_variations:product_variant_edit' product.pk %}" class="BtM">
+                                        <i class='bx bx-edit text-primary'></i>
+                                    </a>
+                                    <a href="{% url 'product_variations:product_variant_delete' product.pk %}" class="BtM">
+                                        <button type="button" class="BtM1">
+                                            <i class='bx bx-trash text-danger'></i>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
