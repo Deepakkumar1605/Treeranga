@@ -6,54 +6,7 @@ Product Details - {{ product_obj.name }}
 
 {% block content %}
 <style>
-    .variant-link {
-        text-decoration: none;
-        margin: 5px;
-    }
-
-    .variant-circle {
-        width: 50px;  /* Adjust the size as needed */
-        height: 50px;  /* Adjust the size as needed */
-        border-radius: 50%;
-        background-size: cover;
-        background-position: center;
-        border: 2px solid #ddd;
-        transition: transform 0.3s ease;
-    }
-
-    .variant-link.selected .variant-circle {
-        border-color: #007bff;  /* Highlight border color */
-        transform: scale(1.2);  /* Slightly larger */
-    }
-
-    .variant-circle:hover {
-        transform: scale(1.1);
-        border-color: #000;
-    }
-
-    .variant-link.highlighted{
-        border: 1px solid green;
-        background: linear-gradient(344deg,rgba(5,131,47,1) 14% ,rgba(5,99,19,1) 52% ,rgba(6,175,27,1) 100%);
-        color: white;
-        font-weight: bold;
-        transform: scale(1.2);  /* Slightly larger */
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,rgba(0, 0, 0, 0.23) 0px 3px 6px;
-        font-size: 14px;
-    }
-    .vbtn{
-        border: 1px solid gray;
-        background: linear-gradient(344deg,rgb(179, 182, 180) 14% ,rgb(95, 97, 95) 52% ,rgb(190, 190, 190) 100%);
-        color: white;
-        font-weight: bold;
-        border-radius: 4px;
-        padding: 2px 5px;
-        margin-left: 15px;
-        font-size: 14px;
-    }
-    .vbtn:hover{
-        color: white;
-        font-weight: bold;
-    }
+ 
 </style>
 
 <section id="products_of_category">
@@ -101,9 +54,7 @@ Product Details - {{ product_obj.name }}
             <!-- Product Details -->
             <div class="col-lg-5">
                 <div class="product-details">
-                    <h1 class="text-capitalize">{{ product_obj.name }}</h1>
-
-                 
+                    <h1 class="text-capitalize">{{ product_obj.product.name }}</h1>                 
                     <div class="discount-price mt-lg-3">
                         ₹{{ product_obj.product_discount_price }}
                         {% if product_obj.product_max_price %}
@@ -123,7 +74,7 @@ Product Details - {{ product_obj.name }}
                                 <strong>{{ attribute }} : </strong>
                                 <span class="d-inline-flex flex-wrap">
                                     {% for value in values %}
-                                        <a href="#" class="vbtn py-0 variant-link {% if active_variant_attributes %}
+                                        <a href="#" class="vbtn variant-link text-capitalize {% if active_variant_attributes %}
                                             {% for key, val in active_variant_attributes.items %}
                                                 {% if key == attribute and val == value %}
                                                     highlighted
@@ -170,7 +121,7 @@ Product Details - {{ product_obj.name }}
 
                     <!-- Add to Cart Button -->
                     <div class="buttons mt-4">
-                        <a href="#" id="addToCartButton" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1 cart-btn">
+                        <a href="#" id="addToCartButton" class=" cart-btn">
                             Add To Cart
                         </a>
                     </div>
@@ -181,7 +132,7 @@ Product Details - {{ product_obj.name }}
         <!-- Long Description -->
         <div class="py-lg-4 description">
             <h5 class="border-bottom text-center p-lg-3">Description</h5>
-            <p>{{product_obj.product.product_long_description}}</p>
+            <p>{{ product_obj.product.product_long_description }}</p>
         </div>
     </div>
 
