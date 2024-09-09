@@ -1809,3 +1809,32 @@ footer {
 	margin: 0;
 	font-size: 13px;
 }
+
+
+
+/* Style for the suggestions list container */
+.suggestions-list {
+    border: 1px solid #ccc; /* Border color for the suggestions list */
+    border-radius: 4px; /* Rounded corners for the list */
+    margin-top: 10px; /* Space between the input and suggestions list */
+    max-width: 400px; /* Maximum width of the suggestions list */
+    list-style-type: none; /* Remove default list styling */
+    padding: 0; /* Remove default padding */
+    position: absolute; /* Position relative to the parent input */
+    background-color: #fff; /* Background color for the list */
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+/* Style for individual suggestion items */
+.suggestions-list li {
+    padding: 8px; /* Space inside each item */
+    cursor: pointer; /* Pointer cursor on hover */
+    color: #333; /* Text color */
+}
+
+/* Highlight suggestion item on hover */
+.suggestions-list li:hover {
+    background-color: #f0f0f0; /* Background color on hover */
+    color: #000; /* Text color on hover */
+}
+
