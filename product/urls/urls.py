@@ -36,7 +36,9 @@ urlpatterns = [
     path('New-Products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('Trending-Products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
     path('redirect-to-variant/', user_product_views.VariantRedirectView.as_view(), name='redirect_to_variant'),
-    path('search/', user_product_views.ProductSearchView.as_view(), name='product_search'),
+    path('search_products/', user_product_views.search_product_names, name='search_product_names'),
+    path('search/', user_product_views.SearchItems.as_view(), name='search_items'),
+    path('filter/', user_product_views.FilterItems.as_view(), name='filter_items'),
 
     # delivery charge settings
     path('UpdateDeliverySettings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),

@@ -1,0 +1,91 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+
+{% block title %}
+Products
+{% endblock title %}
+
+{% block content %}
+<style>
+    #card-img1 {
+        height: 15rem;
+        width: 100%;
+        padding: 5px;
+    }
+    @media (max-width: 576px) {
+        #card-img1 {
+            height: 10rem;
+            width: 100%;
+            padding: 5px;
+        }
+    }
+    .add-crt-btn {
+        border: 1px solid #00836C;
+        border-radius: 5px;
+        padding: 3px 10px;
+        color: #00836C;
+        text-decoration: none;
+    }
+    .add-crt-btn:hover {
+        background-color: #00836C;
+        color: white;
+    }
+    @media (max-width: 768px) {
+        .col-lg-3 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        .card-body {
+            padding: 10px;
+        }
+        .card-title {
+            font-size: 14px;
+        }
+        .card-body p {
+            font-size: 12px;
+        }
+        .add-crt-btn {
+            padding: 2px 8px;
+        }
+    }
+    section option:hover {
+        background-color: #00836C;
+    }
+</style>
+
+<section class="mt-5" style="min-height: 60vh;">
+    <div class="container mt-3">
+        <div class="row">
+            {% for item in all_search_items %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ MEDIA_URL }}{{ item.product.product.image }}" class="card-img-top" alt="Product Image" id="card-img1">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product.product.name }}</h5>
+                            <p style="color:black; font-size: 16px;"><b>₹{{ item.product.product_discount_price }}</b></p>
+                            <p style="color: gray; font-size: 12px;" class="ms-2">
+                                <span class="text-decoration-line-through">₹{{ item.product.product_max_price }}</span>
+                            </p>
+                            <p>Description: {{ item.product.product.product_short_description }}</p>
+                            <a href="{% url 'product:product_detail' item.product.id %}?variant={{ item.is_variant }}" class="btn add-crt-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No products found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+    function filterProducts() {
+        const minPrice = document.getElementById('min_price').value;
+        const maxPrice = document.getElementById('max_price').value;
+        let url = "{% url 'product:filter_items' %}?";
+        if (minPrice) url += "min_price=" + minPrice + "&";
+        if (maxPrice) url += "max_price=" + maxPrice;
+        window.location.href = url;
+    }
+</script>
+{% endblock %}

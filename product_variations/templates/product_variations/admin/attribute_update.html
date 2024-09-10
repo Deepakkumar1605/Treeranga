@@ -4,46 +4,22 @@
 {% block content %}
 
 
-    <style>
-        #vstack {
-            border-radius: 10px;
-            background: #e0e0e0;
-            box-shadow: inset 5px 5px 8px #929292,
-                inset -5px -5px 8px #ffffff;
+<section class="py-lg-2">
+    <div class="conatiner">
+        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Update Your Variants</h4>
+        <p class="text-center"> {% include 'snippets/alert.html' %}</p>
+        <div class="product-form-container w-50" >
+            <form action="" method="post" enctype="multipart/form-data" class=" lh-lg" >
+                {% csrf_token %}
+                {{form.as_p}}
+                <br>
+                <button type="submit" class="btn btn-warning w-100">Update Variant</button>
+            </form>
+    </div>
+    </div>
+</section>
 
-            .BtM {
-                box-shadow: inset 4px 2px 5px rgba(0, 0, 0, 0.3);
-                font-family: 'Poppins', sans-serif;
-            }
+    
 
-            #update-form {
-                border-radius: 18px;
-                background: linear-gradient(145deg, #cacaca, #f0f0f0);
-                box-shadow: 5px 5px 15px #aaaaaa,
-                    -5px -5px 15px #ffffff;
-            }
-            label, .form-control, p{
-                font-family: 'Poppins', sans-serif; 
-            }
-        }
-    </style>
-
-    <main class="py-6 bg-surface-secondary">
-
-        <div class="container-fluid">
-            <div class="vstack gap-4">
-                <div class="card create_test" id="vstack">
-                    <form action="" method="post" class="p-5" enctype="multipart/form-data" id="update-form">
-                        {% include 'snippets/alert.html' %}
-                        {% csrf_token %}
-                        {{form.as_p}}
-                        <br>
-                        <center><button type="submit" class="btn btn-success BtM px-12">Update</button></center>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </main>
 
 {% endblock content %}

@@ -108,6 +108,16 @@ Product Details - {{ product_obj.name }}
                         <span class="original-price"><s>₹{{ product_obj.product_max_price }}</s></span>
                         {% endif %}
                     </div>
+                    <button id="wishlist-btn" class="{% if product_obj.pk in wishlist_items %}in-wishlist{% endif %}" 
+                            data-product-id="{{ product_obj.pk }}" data-is-variant="{% if product_obj.is_variant %}true{% else %}false{% endif %}">
+                        
+                        {% if product_obj.pk in wishlist_items %}
+                            In Wishlist
+                        {% else %}
+                            <i class="fa-regular fa-heart"></i> Add to Wishlist
+                        {% endif %}
+                    </button>
+                
 
                     <!-- Product Description -->
                     <div class="description mt-3">
@@ -341,4 +351,45 @@ Product Details - {{ product_obj.name }}
         });
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#wishlist-btn').on('click', function() {
+            let button = $(this);
+            let productId = button.data('product-id');
+            let isVariant = button.data('is-variant');
+            let inWishlist = button.hasClass('in-wishlist');
+            
+            // Determine the URL based on whether the product is in the wishlist
+            let url = inWishlist ? "{% url 'wishlist:remove_from_wishlist' %}" : "{% url 'wishlist:add_to_wishlist' %}";
+            
+            // Perform AJAX request
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {
+                    product_id: productId,
+                    is_variant: isVariant
+                },
+                success: function(response) {
+                    if (inWishlist) {
+                        // Product was removed from wishlist
+                        button.removeClass('in-wishlist');
+                        button.html('<i class="fa-regular fa-heart"></i> Add to Wishlist');
+                    } else {
+                        // Product was added to wishlist
+                        button.addClass('in-wishlist');
+                        button.html('In Wishlist');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                    alert('An error occurred while updating the wishlist. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+
 {% endblock content %}

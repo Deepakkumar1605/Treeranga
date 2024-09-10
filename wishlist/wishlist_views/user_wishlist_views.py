@@ -1,86 +1,94 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from product.models import Products,SimpleProduct,ImageGallery
-
+from django.conf import settings
 from wishlist.models import WishList
+from product.models import SimpleProduct,Products
+from product_variations.models import VariantProduct
+from django.views import View
+
 
 def add_to_wishlist(request):
     if request.method == 'GET':
         user = request.user
-        product_name = request.GET.get('prod_name')
+        product_id = request.GET.get('product_id')  # Use the product id to fetch the product
+        is_variant = request.GET.get('is_variant', 'false')  # Check if the product is a variant
         
-        product = get_object_or_404(Products, name=product_name)
+        # Get the correct product (SimpleProduct or VariantProduct)
+        if is_variant == 'true':
+            product = get_object_or_404(VariantProduct, pk=product_id)
+        else:
+            product = get_object_or_404(SimpleProduct, pk=product_id)
         
+        # Fetch or create the wishlist for the user
         wishlist, created = WishList.objects.get_or_create(user=user)
         
-        product_key = str(product.id)
-        
-        if product_key not in wishlist.products:
-            wishlist.products[product_key] = {
-                'name': product.name,
-                'image': product.image.url,  # Assuming your product has an image field
-                'price': product.simpleproduct.product_discount_price  # Adjust based on your model structure
-            }
-            wishlist.save()
-        
-        return redirect("shoppingsite:wishlist_products")
+        # Ensure products field is a dictionary
+        if not isinstance(wishlist.products, dict):
+            wishlist.products = {}
 
+        # Add product details to the wishlist (JSON structure)
+        wishlist.products[product_id] = {
+            "name": product.product.name,
+            "discount_price": product.product_discount_price,
+            "is_variant": is_variant,
+        }
+        wishlist.save()
+
+        return redirect("wishlist:wishlist_products")
 
 
 def remove_from_wishlist(request):
     if request.method == 'GET':
         user = request.user
-        product_name = request.GET.get('prod_name')
-        
-        product = get_object_or_404(Products, name=product_name)
-        product_key = str(product.id)
+        product_id = request.GET.get('product_id')  # Product id to remove
         
         try:
             wishlist = WishList.objects.get(user=user)
-            products = wishlist.products
-            
-            if product_key in products:
-                del products[product_key]
+            if product_id in wishlist.products:
+                del wishlist.products[product_id]  # Remove the product from the wishlist
                 wishlist.save()
-                return redirect("shoppingsite:wishlist_products")
+
+                return JsonResponse({'status': 'Product removed from wishlist'}, status=200)
             else:
-                return JsonResponse({'status': 'Product not found in wishlist'}, status=400)
+                return JsonResponse({'status': 'Product not found in wishlist'}, status=404)
 
         except WishList.DoesNotExist:
-            return JsonResponse({'status': 'Wishlist does not exist for this user'}, status=400)
+            return JsonResponse({'status': 'Wishlist does not exist'}, status=404)
 
-    return JsonResponse({'status': 'Invalid request method or not AJAX'}, status=400)
+
 
 class AllWishListProducts(View):
-    template_name = 'wishlist/wishlist_items.html'
-
     def get(self, request):
         user = request.user
         try:
             wishlist = WishList.objects.get(user=user)
-            products = wishlist.products
-
+            product_ids = wishlist.products.keys()
             prd_objs = []
-            for product_id in list(products):
-                prd_obj = Products.objects.filter(id=product_id).first()
-                if prd_obj:
-                    prd_objs.append(prd_obj)
+            prd_is_variant = []
+
+            # Retrieve products from both SimpleProduct and VariantProduct models
+            for product_id in product_ids:
+                product_data = wishlist.products[product_id]
+                is_variant = product_data.get('is_variant', 'false') == 'true'
+
+                if is_variant:
+                    prd_obj = get_object_or_404(VariantProduct, pk=product_id)
                 else:
-                    # Remove product from wishlist if it doesn't exist
-                    del products[product_id]
+                    prd_obj = get_object_or_404(SimpleProduct, pk=product_id)
 
-            wishlist.save()
+                prd_objs.append(prd_obj)
+                prd_is_variant.append(is_variant)
 
-            # Zip wishlist items with their corresponding Product objects
-            wishlist_items = zip(products.values(), prd_objs)
-        
-            return render(request, self.template_name, {
+            wishlist_items = zip(wishlist.products.values(), prd_objs, prd_is_variant)
+
+            return render(request, 'wishlist/user/wishlist_items.html', {
                 "wishlist_items": wishlist_items,
                 "MEDIA_URL": settings.MEDIA_URL
             })
 
         except WishList.DoesNotExist:
-            return render(request, self.template_name, {
+            return render(request, 'wishlist/user/wishlist_items.html', {
                 "wishlist_items": [],
                 "MEDIA_URL": settings.MEDIA_URL
             })
+
