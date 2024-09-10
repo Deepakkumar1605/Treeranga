@@ -10,7 +10,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
-print(vars(os.getenv))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -106,7 +105,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'niwa_agro',
         'USER': 'postgres',
-        'PASSWORD': 'tapas@123',
+        'PASSWORD': 'root',
         'HOST': 'localhost',  
     }
 }

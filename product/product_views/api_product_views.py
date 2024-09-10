@@ -5,11 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from product import models
 from rest_framework import status
-from product.serializers import CategorySerializer, ProductSerializer, ProductsSerializer, SimpleProductSerializer, VariantProductSerializer
+from product.serializers import CategorySerializer, ImageGallerySerializer, ProductSerializer, ProductsSerializer, SimpleProductSerializer, VariantImageGallerySerializer, VariantProductSerializer
 
 from rest_framework.views import APIView
 
-from product_variations.models import VariantProduct
+from product_variations.models import VariantImageGallery, VariantProduct
 
 class CategoryListAPIView(APIView):
     permission_classes = [IsAuthenticated]  # Only authenticated users can access this view
@@ -27,30 +27,6 @@ class CategoryListAPIView(APIView):
         category_serializer = CategorySerializer(categories, many=True)  # Serialize the categories
 
         return Response({'categories': category_serializer.data})  # Return serialized data
-
-class ShowProductsAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Only authenticated users can access this view
-
-    @swagger_auto_schema(
-        tags=["Product"],
-        operation_description="Product List",
-        responses={
-            200: 'Successfully retrieved the products',
-            401: 'Unauthorized',
-            404: 'Category not found'
-        }
-    )
-    def get(self, request, category_name):
-        category_obj = get_object_or_404(models.Category, title=category_name)
-
-        products_for_this_category = models.Products.objects.filter(category=category_obj)
-        
-        product_serializer = ProductSerializer(products_for_this_category, many=True)
-
-        return Response({
-            'category': category_obj.title,
-            'products': product_serializer.data
-        })
     
 class ProductDetailsApiView(APIView):
     permission_classes = [IsAuthenticated]
@@ -93,35 +69,7 @@ class ProductDetailsApiView(APIView):
         }
 
         return Response(data)
-    
-class AllTrendingProductsAPIView(APIView):
-    @swagger_auto_schema(
-        tags=["Product"],
-        operation_description="All Trending Product",
-        responses={
-            200: 'Successfully retrieved the trending product',
-            401: 'Unauthorized'
-        }
-    )
-    def get(self, request):
-        trending_products = models.Products.objects.filter(trending="yes")
-        serializer = ProductSerializer(trending_products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-class AllNewProductsAPIView(APIView):
-    @swagger_auto_schema(
-        tags=["Product"],
-        operation_description="All New Product",
-        responses={
-            200: 'Successfully retrieved the new product',
-            401: 'Unauthorized'
-        }
-    )
-    def get(self, request):
-        new_products = models.Products.objects.filter(show_as_new="yes")
-        serializer = ProductSerializer(new_products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        
 
 class ShowProductsAPIView(APIView):
     @swagger_auto_schema(
@@ -158,4 +106,214 @@ class ShowProductsAPIView(APIView):
             'products_with_variants': products_with_variants,
             'category': CategorySerializer(category_obj).data,
             "MEDIA_URL": settings.MEDIA_URL,
+        }, status=status.HTTP_200_OK)
+
+
+class ProductDetailsAPIView(APIView):
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="Product Details",
+        responses={
+            200: 'Successfully retrieved the product Details',
+            401: 'Unauthorized'
+        }
+    )
+    def get(self, request, p_id):
+        user = request.user
+        variant_param = request.GET.get('variant', '')
+        
+        # Fetch product object based on variant
+        if variant_param == "yes":
+            product_obj = get_object_or_404(VariantProduct, id=p_id)
+        elif variant_param == "no":
+            product_obj = get_object_or_404(models.SimpleProduct, id=p_id)
+        else:
+            return Response({"error": "No variant selected"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Serialize category data
+        category_obj = models.Category.objects.all()
+        category_data = CategorySerializer(category_obj, many=True).data
+
+        all_variants_of_this = []
+        attributes = {}
+        active_variant_attributes = {}
+        product_images = []
+        product_videos = []
+
+        # Handle product images and variants
+        if product_obj:
+            if product_obj.product.product_type == "simple":
+                image_gallery = models.ImageGallery.objects.filter(simple_product=product_obj).first()
+                if image_gallery:
+                    product_images = ImageGallerySerializer(image_gallery).data['images']
+                    product_videos = ImageGallerySerializer(image_gallery).data['video']
+            elif product_obj.product.product_type == "variant":
+                image_gallery = VariantImageGallery.objects.filter(variant_product=product_obj).first()
+                if image_gallery:
+                    product_images = VariantImageGallerySerializer(image_gallery).data['images']
+                    product_videos = VariantImageGallerySerializer(image_gallery).data['video']
+                
+                avp = VariantProduct.objects.filter(product=product_obj.product)
+                for av in avp:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
+                    variant_images = VariantImageGallerySerializer(variant_image_gallery).data['images'] if variant_image_gallery else []
+                    variant_videos = VariantImageGallerySerializer(variant_image_gallery).data['video'] if variant_image_gallery else []
+
+                    all_variants_of_this.append({
+                        'product': VariantProductSerializer(av).data,
+                        'variant': "yes",
+                        'images': variant_images,
+                        'videos': variant_videos
+                    })
+
+                for variant in avp:
+                    variant_combination = variant.variant_combination
+                    for attribute, value in variant_combination.items():
+                        if attribute not in attributes:
+                            attributes[attribute] = set()
+                        attributes[attribute].add(value)
+
+                active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
+        
+        attributes = {attribute: sorted(values) for attribute, values in attributes.items()}
+
+        # Similar products
+        product_list_category_wise = models.Products.objects.filter(category=product_obj.product.category)
+        all_simple_and_variant_similar = []
+
+        for product in product_list_category_wise:
+            if product.product_type == "simple":
+                simple_products = models.SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
+                for sp in simple_products:
+                    gallery = models.ImageGallery.objects.filter(simple_product=sp).first()
+                    all_simple_and_variant_similar.append({
+                        'product': SimpleProductSerializer(sp).data,
+                        'variant': "no",
+                        'images': ImageGallerySerializer(gallery).data['images'] if gallery else [],
+                        'videos': ImageGallerySerializer(gallery).data['video'] if gallery else []
+                    })
+            elif product.product_type == "variant":
+                variant_product = VariantProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id).first()
+                if variant_product:
+                    gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    all_simple_and_variant_similar.append({
+                        'product': VariantProductSerializer(variant_product).data,
+                        'variant': "yes",
+                        'images': VariantImageGallerySerializer(gallery).data['images'] if gallery else [],
+                        'videos': VariantImageGallerySerializer(gallery).data['video'] if gallery else []
+                    })
+
+        # Return JSON response
+        return Response({
+            'user': user.id if user.is_authenticated else None,
+            'category': category_data,
+            'product': VariantProductSerializer(product_obj).data if variant_param == "yes" else SimpleProductSerializer(product_obj).data,
+            'all_variants_of_this': all_variants_of_this,
+            'images': product_images,
+            'videos': product_videos,
+            'similar_products': all_simple_and_variant_similar,
+            'attributes': attributes,
+            'active_variant_attributes': active_variant_attributes,
+        }, status=status.HTTP_200_OK)
+    
+class AllTrendingProductsAPIView(APIView):
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="All New Product",
+        responses={
+            200: 'Successfully retrieved the new product',
+            401: 'Unauthorized'
+        }
+    )
+    def get(self, request):
+        trending_products = models.Products.objects.filter(trending="yes")
+        updated_trending_products = []
+
+        for product in trending_products:
+            # Check for simple products
+            if product.product_type == "simple":
+                simple_products = models.SimpleProduct.objects.filter(product=product, is_visible=True)
+                for simple_product in simple_products:
+                    image_gallery = models.ImageGallery.objects.filter(simple_product=simple_product).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    updated_trending_products.append({
+                        'product_id': product.id,
+                        'product_name': product.name,
+                        'product_type': "simple",
+                        'simple_product': SimpleProductSerializer(simple_product).data,
+                        'variant': "no",
+                        'images': images,
+                        'videos': videos
+                    })
+            # Check for variant products
+            elif product.product_type == "variant":
+                variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+                for variant_product in variant_products:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    updated_trending_products.append({
+                        'product_id': product.id,
+                        'product_name': product.name,
+                        'product_type': "variant",
+                        'variant_product': VariantProductSerializer(variant_product).data,
+                        'variant': "yes",
+                        'images': images,
+                        'videos': videos
+                    })
+
+        return Response({
+            'trending_products': updated_trending_products
+        }, status=status.HTTP_200_OK)
+    
+class AllNewProductsAPIView(APIView):
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="All Trending Product",
+        responses={
+            200: 'Successfully retrieved the trending product',
+            401: 'Unauthorized'
+        }
+    )
+    def get(self, request):
+        new_products = models.Products.objects.filter(show_as_new="yes")
+        updated_new_products = []
+
+        for product in new_products:
+            # Check for simple products
+            if product.product_type == "simple":
+                simple_products = models.SimpleProduct.objects.filter(product=product, is_visible=True)
+                for simple_product in simple_products:
+                    image_gallery = models.ImageGallery.objects.filter(simple_product=simple_product).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    updated_new_products.append({
+                        'product_id': product.id,
+                        'product_name': product.name,
+                        'product_type': "simple",
+                        'simple_product': SimpleProductSerializer(simple_product).data,
+                        'variant': "no",
+                        'images': images,
+                        'videos': videos
+                    })
+            # Check for variant products
+            elif product.product_type == "variant":
+                variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+                for variant_product in variant_products:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    updated_new_products.append({
+                        'product_id': product.id,
+                        'product_name': product.name,
+                        'product_type': "variant",
+                        'variant_product': VariantProductSerializer(variant_product).data,
+                        'variant': "yes",
+                        'images': images,
+                        'videos': videos
+                    })
+
+        return Response({
+            'new_products': updated_new_products
         }, status=status.HTTP_200_OK)

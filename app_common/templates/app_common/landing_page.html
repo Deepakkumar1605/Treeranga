@@ -82,7 +82,6 @@
 </section>
 <!-- --------------------end Shop by collection--------------- -->
 
-
 <!-- --------------------New Arrival Collection--------------- -->
 
 <section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
@@ -95,7 +94,11 @@
       {% for item in new_products %}
       <div class="col col-lg-2 col-md-3 col-6 new-head">
         <div class="" id="new-products">
-          <a href="{% url 'product:product_detail' item.product.id %}">
+            {% if item.variant == "no" %}
+            <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
+            {% elif item.variant == "yes" %}
+                <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
+            {% endif %}            
             {% if item.product.image %}
               <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
             {% else %}
@@ -106,13 +109,26 @@
             <h5>{{ item.product.name|truncatechars:25 }}</h5>
             
             <p class="card-text">
-              <span class="price me-lg-2 ms-md-2 ms-1" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
-              {% if item.simple_product.product_max_price %}
-              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% if item.variant == "no" %}
+                <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+                {% if item.simple_product.product_max_price %}
+                <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+                {% endif %}
+              {% else %}
+                <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
+                {% if item.variant_product.product_max_price %}
+                <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
+                {% endif %}
               {% endif %}
             </p>
+            
+            <!-- Add To Cart button with ID validation -->
             <div class="d-flex mt-3">
-              <a href="{% url 'cart:addtocart' item.simple_product.id %}" class=" vd_button addto-cart">Add To Cart</a>
+              {% if item.variant == "no" %}
+                <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class="btn vd_button">Add To Cart</a>
+              {% elif item.variant == "yes" %}
+                <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class="btn vd_button">Add To Cart</a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -121,16 +137,17 @@
     </div>
 
     <div class="d-flex justify-content-center viewmoreButton">
-      <a href="{% url 'product:all_trending_products' %}" class="u-button">View More Products</a>
+      <a href="{% url 'product:all_new_products' %}" class="u-button">View More Products</a>
     </div>
   </div>
 </section>
 
-
 <!-- --------------------End New Arrival Collection--------------- -->
 
-<!-- --------------------Trending Arrival Collection--------------- -->
-<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Shop_by_Collection">
+
+<!-- --------------------Trending Products Collection--------------- -->
+
+<section class="px-lg-5 py-lg-4">
   <div class="">
     <div class="pb-lg-3 pb-md-3 pb-2">
       <h3 class=" text-center">Trending Products</h3>
@@ -140,7 +157,11 @@
       {% for item in trending_products %}
       <div class="col col-lg-2 col-md-3 col-6 new-head">
         <div class="" id="new-products">
-          <a href="{% url 'product:product_detail' item.product.id %}">
+            {% if item.variant == "no" %}
+            <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
+            {% elif item.variant == "yes" %}
+                <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
+            {% endif %}            
             {% if item.product.image %}
               <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
             {% else %}
@@ -151,13 +172,26 @@
             <h5>{{ item.product.name|truncatechars:25 }}</h5>
             
             <p class="card-text">
-              <span class="price me-lg-2 ms-md-2 ms-1 " id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
-              {% if item.simple_product.product_max_price %}
-              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% if item.variant == "no" %}
+                <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+                {% if item.simple_product.product_max_price %}
+                <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+                {% endif %}
+              {% else %}
+                <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
+                {% if item.variant_product.product_max_price %}
+                <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
+                {% endif %}
               {% endif %}
             </p>
+            
+            <!-- Add To Cart button with ID validation -->
             <div class="d-flex mt-3">
-          <a href="{% url 'cart:addtocart' item.simple_product.id %}" class=" vd_button addto-cart">Add To Cart</a>
+              {% if item.variant == "no" %}
+                <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class="btn vd_button">Add To Cart</a>
+              {% elif item.variant == "yes" %}
+                <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class="btn vd_button">Add To Cart</a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -172,12 +206,7 @@
 </section>
 
 
-
-
-
-
-<!-- --------------------End Trending Arrival Collection--------------- -->
-
+<!-- --------------------End Trending Products Collection--------------- -->
 
 
 

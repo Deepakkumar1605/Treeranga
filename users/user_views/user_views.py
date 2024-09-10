@@ -98,7 +98,7 @@ class ProfileAddAddress(View):
             country = form.cleaned_data["country"]
             state = form.cleaned_data["state"]
             city = form.cleaned_data["city"]
-            mobile_no = form.cleaned_data["contact"]
+            mobile_no = form.cleaned_data["mobile_no"]
             pincode = form.cleaned_data["pincode"]
 
             address_id = str(uuid4())

@@ -7,8 +7,10 @@ app_name = 'cart'
 
 urlpatterns = [
     path('api/showcart/', api_cart_views.ShowCartAPIView.as_view(), name='show-cart-api'),
-    path('api/showcart/', api_cart_views.ShowCartAPIView.as_view(), name='show-cart-api'),
     path('api/add-to-cart/<int:product_id>/', api_cart_views.AddToCartAPIView.as_view(), name='add-to-cart-api'),
 
+    path('api/manage_cart/<str:c_p_uid>/', api_cart_views.ManageCartAPIView.as_view(), name='manage-cart-api'),
+    path('api/remove/<str:cp_uid>/', api_cart_views.RemoveFromCartAPIView.as_view(), name='remove_from_cart_api'),
+    path('api/checkout/', api_cart_views.CheckoutAPIView.as_view(), name='checkout_api'),
 
 ]

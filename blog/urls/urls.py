@@ -1,5 +1,5 @@
 from django.urls import path
-from blog.blog_views import admin_blog_views, user_blog_views
+from blog.blog_views import admin_blog_views, api_blog_views, user_blog_views
 
 app_name = 'blog'
 
@@ -15,6 +15,8 @@ urlpatterns = [
     path('BlogList/', user_blog_views.BlogCategory.as_view(), name='user_blog_list'),
     path('BlogDetails/<slug:slug>/', user_blog_views.BlogDetails.as_view(), name='user_blog_details'),
 
-
+    #api
+    path('api/blogs/', api_blog_views.BlogListAPIView.as_view(), name='blog_category'),
+    path('api/blogs/<slug:slug>/', api_blog_views.BlogDetailsAPIView.as_view(), name='blog_details'),
 ]
 

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views import View
 from app_common import models
 from django.contrib import messages
+from orders.models import Order
 from product.models import Products, Category,SimpleProduct,ImageGallery,ProductReview
 from django.db.models import Avg
 from product.serializers import SimpleProductSerializer, VariantProductSerializer
@@ -235,15 +236,43 @@ class AllTrendingProductsView(View):
     def get(self, request):
         trending_products = Products.objects.filter(trending="yes")
         updated_trending_products = []
+
         for product in trending_products:
-            if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
-                updated_trending_products.append(product)
-        
+            # Check for simple products
+            if product.product_type == "simple":
+                simple_products = SimpleProduct.objects.filter(product=product, is_visible=True)
+                for simple_product in simple_products:
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    updated_trending_products.append({
+                        'product': product,
+                        'simple_product': simple_product,
+                        'variant': "no",
+                        'images': images,
+                        'videos': videos
+                    })
+            # Check for variant products
+            elif product.product_type == "variant":
+                variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+                for variant_product in variant_products:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    updated_trending_products.append({
+                        'product': product,
+                        'variant_product': variant_product,
+                        'variant': "yes",
+                        'images': images,
+                        'videos': videos
+                    })
+
         context = {
             'trending_products': updated_trending_products,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
+
 
 
 
@@ -253,11 +282,39 @@ class AllNewProductsView(View):
     def get(self, request):
         new_products = Products.objects.filter(show_as_new="yes")
         updated_new_products = []
+
         for product in new_products:
-            if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
-                updated_new_products.append(product)
+            # Check for simple products
+            if product.product_type == "simple":
+                simple_products = SimpleProduct.objects.filter(product=product, is_visible=True)
+                for simple_product in simple_products:
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    updated_new_products.append({
+                        'product': product,
+                        'simple_product': simple_product,  # Pass simple product
+                        'variant': "no",  # Indicate it's not a variant
+                        'images': images,
+                        'videos': videos
+                    })
+            # Check for variant products
+            elif product.product_type == "variant":
+                variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+                for variant_product in variant_products:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    updated_new_products.append({
+                        'product': product,
+                        'variant_product': variant_product,  # Pass variant product
+                        'variant': "yes",  # Indicate it's a variant
+                        'images': images,
+                        'videos': videos
+                    })
+
         context = {
-            'new_products': updated_new_products,
+            'new_products': updated_new_products,  # Pass updated products
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
