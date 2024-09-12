@@ -1,4 +1,6 @@
+from datetime import timezone
 import email
+from uuid import uuid4
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
@@ -287,3 +289,139 @@ class UpdateProfileApiView(APIView):
                 return Response({"error": f"Error in updating profile: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"errors": form.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    
+class AddAddressAPIView(APIView):
+    parser_classes = [FormParser, MultiPartParser]
+
+    @swagger_auto_schema(
+        tags=["user"],
+        operation_description="Add address",
+        manual_parameters=swagger_documentation.add_address_post,
+        responses={
+            200: openapi.Response('Address add successfully'),
+            400: openapi.Response('Invalid input'),
+        }
+    )
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = serializers.AddressSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            address_id = str(uuid4())
+            
+            address_data = {
+                "id": address_id,
+                "Address1": data["Address1"],
+                "Address2": data["Address2"],
+                "country": data["country"],
+                "state": data["state"],
+                "city": data["city"],
+                'mobile_no': data["contact"],
+                "pincode": data["pincode"],
+            }
+
+            user = request.user
+            addresses = getattr(user, 'address', []) or []
+
+            # Append the new address data to the list of addresses
+            addresses.append(address_data)
+
+            # Save the updated list of addresses back to the user model
+            user.address = addresses
+            user.save()
+
+            return Response({"message": "Address added successfully"}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AllAddressAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(
+        tags=["user"],
+        operation_description="Retrieve all addresses of the authenticated user.",
+        responses={
+                200: 'Successfully show Address',
+                401: 'Unauthorized',
+                404: 'Address not found'
+            }
+        )
+    def get(self, request):
+        user = request.user
+        addresses = user.address or []  # This will return a list of addresses
+
+        # Serialize the addresses
+        serializer = serializers.AddressSerializer(addresses, many=True)
+        
+        return Response({"addresses": serializer.data}, status=status.HTTP_200_OK)
+
+class ProfileUpdateAddressAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(
+        tags=["user"],
+        operation_description="Update address details.",
+        request_body=serializers.AddressSerializer,
+        responses={
+            200: openapi.Response(
+                description="Address updated successfully",
+                schema=serializers.AddressSerializer()
+            ),
+            400: 'Invalid input',
+            404: 'Address not found',
+            401: 'Unauthorized - User must be authenticated'
+        }
+    )
+    def post(self, request, address_id):
+        user = request.user
+        addresses = user.address or []
+        address_index = next((index for (index, addr) in enumerate(addresses) if addr["id"] == address_id), None)
+
+        if address_index is None:
+            return Response({"detail": "Address not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Validate and update address data
+        serializer = serializers.AddressSerializer(data=request.data)
+        if serializer.is_valid():
+            address_data = serializer.validated_data
+            address_data["id"] = address_id
+
+            # Update the address in the list
+            addresses[address_index] = address_data
+
+            # Save the updated list of addresses back to the user model
+            user.address = addresses
+            user.save()
+
+            return Response({"message": "Address updated successfully."}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfileDeleteAddressAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        tags=["user"],
+        operation_description="Delete an address by its ID.",
+        responses={
+            200: 'Address deleted successfully',
+            404: 'Address not found',
+        }
+    )
+    def delete(self, request, address_id):
+        user = request.user
+        addresses = user.address or []
+
+        # Filter out the address with the specified ID
+        filtered_addresses = [address for address in addresses if address.get("id") != address_id]
+
+        if len(filtered_addresses) == len(addresses):
+            # If no address was removed, it means the address was not found
+            return Response({"error": "Address not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update the user model with the modified list of addresses
+        user.address = filtered_addresses
+        user.save()
+
+        return Response({"message": "Address deleted successfully"}, status=status.HTTP_200_OK)

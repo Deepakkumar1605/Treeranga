@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from users import models
 from django.contrib.auth import get_user_model
+import uuid
 
 class SignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -96,3 +97,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         exclude = ["password"]
+
+class AddressSerializer(serializers.Serializer):
+    id = serializers.UUIDField(format='hex_verbose')
+    Address1 = serializers.CharField(max_length=255)
+    Address2 = serializers.CharField(max_length=255, required=False, allow_blank=True)
+    country = serializers.CharField(max_length=255)
+    state = serializers.CharField(max_length=255)
+    city = serializers.CharField(max_length=255)
+    mobile_no = serializers.CharField(max_length=20)
+    pincode = serializers.CharField(max_length=10)

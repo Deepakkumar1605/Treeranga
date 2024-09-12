@@ -5,8 +5,12 @@ from django.urls import reverse
 from django.views import View
 from app_common import models
 from django.contrib import messages
+from orders.models import Order
 from product.models import Products, Category,SimpleProduct,ImageGallery,ProductReview
 from django.db.models import Avg
+from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
+from django.views.decorators.csrf import csrf_exempt
 from product.serializers import SimpleProductSerializer, VariantProductSerializer
 from product_variations.models import Variant, VariantImageGallery, VariantProduct
 from orders.models import Order
@@ -65,6 +69,8 @@ class ShowProductsView(View):
             'user': user,
             "MEDIA_URL": settings.MEDIA_URL,
         })
+
+
 
 class ProductDetailsView(View):
     template_name = app + 'user/product_details.html'
@@ -234,21 +240,91 @@ class VariantRedirectView(View):
             return JsonResponse({'error': 'No matching variant found'}, status=404)
 
 
+
+
+@login_required
+@csrf_exempt  # Only for simplicity; ideally, use CSRF tokens with AJAX requests
+def submit_review(request, product_type, product_id):
+    # Get the product type and the specific product
+    if product_type == 'simple':
+        product = get_object_or_404(SimpleProduct, pk=product_id)
+        content_type = ContentType.objects.get_for_model(SimpleProduct)
+    elif product_type == 'variant':
+        product = get_object_or_404(VariantProduct, pk=product_id)
+        content_type = ContentType.objects.get_for_model(VariantProduct)
+    else:
+        return JsonResponse({'error': 'Invalid product type'}, status=400)
+
+    # Check if the user has purchased this product by inspecting the products JSON in their orders
+    has_purchased = Order.objects.filter(
+        user=request.user,
+        products__contains={'product_id': product_id}
+    ).exists()
+
+    if not has_purchased:
+        return JsonResponse({'error': 'You can only review products you have purchased.'}, status=400)
+
+    # Check if the user already reviewed this product
+    existing_review = ProductReview.objects.filter(
+        content_type=content_type, object_id=product_id, user=request.user
+    ).first()
+
+    if request.method == 'POST':
+        form = ProductReviewForm(request.POST, instance=existing_review)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.content_type = content_type
+            review.object_id = product.id
+            review.save()
+            return JsonResponse({'success': 'Your review has been submitted!'})
+        else:
+            return JsonResponse({'error': 'There was an error submitting your review.'}, status=400)
+
+            
 class AllTrendingProductsView(View):
     template_name = app + 'user/trending_products.html'
 
     def get(self, request):
         trending_products = Products.objects.filter(trending="yes")
         updated_trending_products = []
+
         for product in trending_products:
-            if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
-                updated_trending_products.append(product)
-        
+            # Check for simple products
+            if product.product_type == "simple":
+                simple_products = SimpleProduct.objects.filter(product=product, is_visible=True)
+                for simple_product in simple_products:
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    updated_trending_products.append({
+                        'product': product,
+                        'simple_product': simple_product,
+                        'variant': "no",
+                        'images': images,
+                        'videos': videos
+                    })
+            # Check for variant products
+            elif product.product_type == "variant":
+                variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+                for variant_product in variant_products:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    updated_trending_products.append({
+                        'product': product,
+                        'variant_product': variant_product,
+                        'variant': "yes",
+                        'images': images,
+                        'videos': videos
+                    })
+
         context = {
             'trending_products': updated_trending_products,
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
+
 
 
 
@@ -258,11 +334,39 @@ class AllNewProductsView(View):
     def get(self, request):
         new_products = Products.objects.filter(show_as_new="yes")
         updated_new_products = []
+
         for product in new_products:
-            if SimpleProduct.objects.filter(product=product, is_visible=True).exists():
-                updated_new_products.append(product)
+            # Check for simple products
+            if product.product_type == "simple":
+                simple_products = SimpleProduct.objects.filter(product=product, is_visible=True)
+                for simple_product in simple_products:
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                    images = image_gallery.images if image_gallery else []
+                    videos = image_gallery.video if image_gallery else []
+                    updated_new_products.append({
+                        'product': product,
+                        'simple_product': simple_product,  # Pass simple product
+                        'variant': "no",  # Indicate it's not a variant
+                        'images': images,
+                        'videos': videos
+                    })
+            # Check for variant products
+            elif product.product_type == "variant":
+                variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+                for variant_product in variant_products:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    images = variant_image_gallery.images if variant_image_gallery else []
+                    videos = variant_image_gallery.video if variant_image_gallery else []
+                    updated_new_products.append({
+                        'product': product,
+                        'variant_product': variant_product,  # Pass variant product
+                        'variant': "yes",  # Indicate it's a variant
+                        'images': images,
+                        'videos': videos
+                    })
+
         context = {
-            'new_products': updated_new_products,
+            'new_products': updated_new_products,  # Pass updated products
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template_name, context)
@@ -291,16 +395,52 @@ def search_product_names(request):
 
 class SearchItems(View):
     template_name = 'product/user/search_items.html'
-    
+
     def get(self, request):
         search_title = request.GET.get("search_title", "").strip()
         if not search_title:
             return redirect("app_common:home")
 
-        all_search_items = []
-        product_is_variant = []
-
+        # Initial product query based on the search title
         products = Products.objects.filter(name__icontains=search_title)
+        
+        # Get filter criteria from request
+        category_id = request.GET.get('category')
+        product_type = request.GET.get('product_type')
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+        in_stock = request.GET.get('in_stock')
+
+        # Apply additional filters if provided
+        if category_id:
+            products = products.filter(category_id=category_id)
+        
+        
+        # Filter by price range
+        if min_price and max_price:
+            simple_product_ids = SimpleProduct.objects.filter(
+                product_discount_price__gte=min_price, 
+                product_discount_price__lte=max_price
+            ).values_list('product_id', flat=True)
+
+            variant_product_ids = VariantProduct.objects.filter(
+                product_discount_price__gte=min_price, 
+                product_discount_price__lte=max_price
+            ).values_list('product_id', flat=True)
+
+            products = products.filter(
+                Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
+            )
+
+        # Filter by stock availability
+        if in_stock:
+            simple_product_ids = SimpleProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
+            variant_product_ids = VariantProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
+            products = products.filter(
+                Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
+            )
+
+        all_search_items = []
         for product in products:
             if product.product_type == 'variant':
                 variants = VariantProduct.objects.filter(product=product)
@@ -317,183 +457,15 @@ class SearchItems(View):
                         'is_variant': False
                     })
 
+        # Categories for filtering
         categories = Category.objects.all()
 
+        # Pass the necessary data to the template
         context = {
             "all_search_items": all_search_items,
             "MEDIA_URL": settings.MEDIA_URL,
             "search_title": search_title,
             'categories': categories,
+            'request': request,  # Pass request to access filters in the template
         }
         return render(request, self.template_name, context)
-
-
-
-class FilterItems(View):
-    template_name = 'product/user/search_items.html'
-
-    def get(self, request):
-        search_title = request.GET.get('search_title', '')
-        category_id = request.GET.get('category', '')
-        min_price = request.GET.get('min_price', '')
-        max_price = request.GET.get('max_price', '')
-
-        all_search_items = []
-        product_is_variant = []
-
-        # Base query
-        prod_objs = Products.objects.filter(
-            Q(name__icontains=search_title) | Q(category__title__icontains=search_title)
-        )
-
-        if min_price and not max_price and not category_id:
-            self._filter_by_min_price(prod_objs, min_price, all_search_items, product_is_variant)
-        elif max_price and not min_price and not category_id:
-            self._filter_by_max_price(prod_objs, max_price, all_search_items, product_is_variant)
-        elif min_price and max_price and not category_id:
-            self._filter_by_price_range(prod_objs, min_price, max_price, all_search_items, product_is_variant)
-        elif category_id and min_price and max_price:
-            self._filter_by_category_and_price_range(category_id, search_title, min_price, max_price, all_search_items, product_is_variant)
-        elif category_id and not min_price and not max_price:
-            self._filter_by_category(category_id, search_title, all_search_items, product_is_variant)
-        elif category_id and min_price and not max_price:
-            self._filter_by_category_and_min_price(category_id, search_title, min_price, all_search_items, product_is_variant)
-        elif category_id and not min_price and max_price:
-            self._filter_by_category_and_max_price(category_id, search_title, max_price, all_search_items, product_is_variant)
-
-        categories = Category.objects.all()
-
-        context = {
-            "all_search_items": zip(all_search_items, product_is_variant),
-            'categories': categories,
-            'MEDIA_URL': settings.MEDIA_URL,
-            'selected_category': category_id,
-            'min_price': min_price,
-            'max_price': max_price,
-            'search_title': search_title
-        }
-        return render(request, self.template_name, context)
-
-    def _filter_by_min_price(self, prod_objs, min_price, all_search_items, product_is_variant):
-        min_price = float(min_price)
-        for product in prod_objs:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(product=product, product_discount_price__gte=min_price)
-                for variant in variants:
-                    if variant not in all_search_items:
-                        all_search_items.append(variant)
-                        product_is_variant.append("Yes")
-            else:
-                if product.product_discount_price >= min_price:
-                    if product not in all_search_items:
-                        all_search_items.append(product)
-                        product_is_variant.append("No")
-
-    def _filter_by_max_price(self, prod_objs, max_price, all_search_items, product_is_variant):
-        max_price = float(max_price)
-        for product in prod_objs:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(product=product, product_discount_price__lte=max_price)
-                for variant in variants:
-                    if variant not in all_search_items:
-                        all_search_items.append(variant)
-                        product_is_variant.append("Yes")
-            else:
-                if product.product_discount_price <= max_price:
-                    if product not in all_search_items:
-                        all_search_items.append(product)
-                        product_is_variant.append("No")
-
-    def _filter_by_price_range(self, prod_objs, min_price, max_price, all_search_items, product_is_variant):
-        min_price, max_price = float(min_price), float(max_price)
-        for product in prod_objs:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(
-                    product=product,
-                    product_discount_price__gte=min_price,
-                    product_discount_price__lte=max_price
-                )
-                for variant in variants:
-                    if variant not in all_search_items:
-                        all_search_items.append(variant)
-                        product_is_variant.append("Yes")
-            else:
-                if min_price <= product.product_discount_price <= max_price:
-                    if product not in all_search_items:
-                        all_search_items.append(product)
-                        product_is_variant.append("No")
-
-    def _filter_by_category(self, category_id, search_title, all_search_items, product_is_variant):
-        cat_products = Products.objects.filter(
-            Q(category=category_id) &
-            (Q(name__icontains=search_title) | Q(sub_category__title__icontains=search_title))
-        )
-        for product in cat_products:
-            if product.product_type == 'variant':
-                variant = VariantProduct.objects.filter(product=product).first()
-                if variant and variant not in all_search_items:
-                    all_search_items.append(variant)
-                    product_is_variant.append("Yes")
-            else:
-                if product not in all_search_items:
-                    all_search_items.append(product)
-                    product_is_variant.append("No")
-
-    def _filter_by_category_and_min_price(self, category_id, search_title, min_price, all_search_items, product_is_variant):
-        min_price = float(min_price)
-        cat_products = Products.objects.filter(
-            Q(category=category_id) &
-            (Q(name__icontains=search_title) | Q(sub_category__title__icontains=search_title))
-        )
-        for product in cat_products:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(product=product, product_discount_price__gte=min_price)
-                for variant in variants:
-                    if variant not in all_search_items:
-                        all_search_items.append(variant)
-                        product_is_variant.append("Yes")
-            else:
-                if product.product_discount_price >= min_price and product not in all_search_items:
-                    all_search_items.append(product)
-                    product_is_variant.append("No")
-
-    def _filter_by_category_and_max_price(self, category_id, search_title, max_price, all_search_items, product_is_variant):
-        max_price = float(max_price)
-        cat_products = Products.objects.filter(
-            Q(category=category_id) &
-            (Q(name__icontains=search_title) | Q(sub_category__title__icontains=search_title))
-        )
-        for product in cat_products:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(product=product, product_discount_price__lte=max_price)
-                for variant in variants:
-                    if variant not in all_search_items:
-                        all_search_items.append(variant)
-                        product_is_variant.append("Yes")
-            else:
-                if product.product_discount_price <= max_price and product not in all_search_items:
-                    all_search_items.append(product)
-                    product_is_variant.append("No")
-
-    def _filter_by_category_and_price_range(self, category_id, search_title, min_price, max_price, all_search_items, product_is_variant):
-        min_price, max_price = float(min_price), float(max_price)
-        cat_products = Products.objects.filter(
-            Q(category=category_id) &
-            (Q(name__icontains=search_title) | Q(sub_category__title__icontains=search_title))
-        )
-        for product in cat_products:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(
-                    product=product,
-                    product_discount_price__gte=min_price,
-                    product_discount_price__lte=max_price
-                )
-                for variant in variants:
-                    if variant not in all_search_items:
-                        all_search_items.append(variant)
-                        product_is_variant.append("Yes")
-            else:
-                if min_price <= product.product_discount_price <= max_price:
-                    if product not in all_search_items:
-                        all_search_items.append(product)
-                        product_is_variant.append("No")

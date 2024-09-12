@@ -10,7 +10,6 @@ class Blogs(models.Model):
     date = models.DateField()
     content = RichTextField()
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
-    # is_highlight = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
             if not self.slug:

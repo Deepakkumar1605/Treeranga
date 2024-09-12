@@ -28,8 +28,7 @@ class UpdateProfileView(View):
 
     def get(self, request):
         user = request.user
-        category_obj = Category.objects.all()
-
+        
         initial_data = {
             "full_name": user.full_name,
             "email": user.email,
@@ -65,7 +64,7 @@ class UpdateProfileView(View):
             except Exception as e:
                 messages.error(request, f"Error in updating profile: {str(e)}")
 
-        return render(request, self.template, {'category_obj': category_obj, 'form': form})
+        return render(request, self.template, {'form': form})
 
 
 
@@ -98,7 +97,7 @@ class ProfileAddAddress(View):
             country = form.cleaned_data["country"]
             state = form.cleaned_data["state"]
             city = form.cleaned_data["city"]
-            mobile_no = form.cleaned_data["contact"]
+            mobile_no = form.cleaned_data["mobile_no"]
             pincode = form.cleaned_data["pincode"]
 
             address_id = str(uuid4())

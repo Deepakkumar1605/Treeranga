@@ -14,3 +14,6 @@ class WishList(models.Model):
         if not self.uid:
             self.uid = utils.get_rand_number(5)
         super().save(*args, **kwargs)
+
+    
+    

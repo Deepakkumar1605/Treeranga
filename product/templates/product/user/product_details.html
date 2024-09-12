@@ -108,15 +108,8 @@ Product Details - {{ product_obj.name }}
                         <span class="original-price"><s>₹{{ product_obj.product_max_price }}</s></span>
                         {% endif %}
                     </div>
-                    <button id="wishlist-btn" class="{% if product_obj.pk in wishlist_items %}in-wishlist{% endif %}" 
-                            data-product-id="{{ product_obj.pk }}" data-is-variant="{% if product_obj.is_variant %}true{% else %}false{% endif %}">
-                        
-                        {% if product_obj.pk in wishlist_items %}
-                            In Wishlist
-                        {% else %}
-                            <i class="fa-regular fa-heart"></i> Add to Wishlist
-                        {% endif %}
-                    </button>
+                    <button id="wishlist-btn" data-product-id="{{ simple_product.id }}" data-is-variant="{{ is_variant }}">Add to Wishlist</button>
+
                 
 
                     <!-- Product Description -->
@@ -233,8 +226,52 @@ Product Details - {{ product_obj.name }}
             {% endfor %}
         </div>
     </div>
-</section>
+    <!-- Include jQuery library if not already included -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+<!-- The form for submitting reviews -->
+<form id="review-form" method="post" action="{% url 'product:submit_review' product_type=product_obj.product.product_type product_id=product_obj.id %}">
+    {% csrf_token %}
+    <!-- Form fields here -->
+    <div class="mb-3">
+        <label for="rating" class="form-label">Rating</label>
+        <select class="form-select" id="rating" name="rating">
+            {% for i in star_range %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="comment" class="form-label">Comment</label>
+        <textarea class="form-control" id="comment" name="comment"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+
+
+
+</section>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#review-form').submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    alert(response.success);
+                    location.reload(); // Reload the page
+                },
+                error: function(xhr) {
+                    var errorMsg = xhr.responseJSON.error || "An error occurred.";
+                    alert(errorMsg);
+                }
+            });
+        });
+    });
+    </script>
 <script>
     $(document).ready(function(){
         $('.variant-link').on('click', function(e) {
@@ -351,43 +388,40 @@ Product Details - {{ product_obj.name }}
         });
     });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-    $(document).ready(function() {
-        $('#wishlist-btn').on('click', function() {
-            let button = $(this);
-            let productId = button.data('product-id');
-            let isVariant = button.data('is-variant');
-            let inWishlist = button.hasClass('in-wishlist');
-            
-            // Determine the URL based on whether the product is in the wishlist
-            let url = inWishlist ? "{% url 'wishlist:remove_from_wishlist' %}" : "{% url 'wishlist:add_to_wishlist' %}";
-            
-            // Perform AJAX request
-            $.ajax({
-                url: url,
-                type: 'GET',
-                data: {
-                    product_id: productId,
-                    is_variant: isVariant
-                },
-                success: function(response) {
-                    if (inWishlist) {
-                        // Product was removed from wishlist
-                        button.removeClass('in-wishlist');
-                        button.html('<i class="fa-regular fa-heart"></i> Add to Wishlist');
-                    } else {
-                        // Product was added to wishlist
-                        button.addClass('in-wishlist');
-                        button.html('In Wishlist');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', error);
-                    alert('An error occurred while updating the wishlist. Please try again.');
-                }
-            });
+     document.getElementById('wishlist-btn').addEventListener('click', function() {
+        let button = document.getElementById('wishlist-btn');
+        let productId = button.getAttribute('data-product-id');
+        let isVariant = button.getAttribute('data-is-variant');
+        let inWishlist = button.classList.contains('in-wishlist');
+        let url = inWishlist ? "{% url 'wishlist:remove_from_wishlist' %}" : "{% url 'wishlist:add_to_wishlist' %}";
+
+        // AJAX request to add or remove from wishlist
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            params: {
+                product_id: productId,
+                is_variant: isVariant
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (inWishlist) {
+                // Product was removed from wishlist
+                button.classList.remove('in-wishlist');
+                button.innerHTML = '<i class="fa-regular fa-heart"></i> Add to Wishlist';
+            } else {
+                // Product was added to wishlist
+                button.classList.add('in-wishlist');
+                button.innerHTML = 'In Wishlist';
+            }
+        })
+        .catch(error => {
+            console.log('Error:', error);
+            alert('An error occurred while updating the wishlist. Please try again.');
         });
     });
 </script>

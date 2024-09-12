@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from app_common.models import ContactMessage
+from product_variations.models import VariantProduct
 from users.forms import LoginForm
 from app_common.models import ContactMessage
 from users.user_views.emails import send_template_email
@@ -24,21 +25,49 @@ class HomeView(View):
     def get(self, request):
         if request.user.is_superuser:
             return redirect('users:admin_dashboard')
+
+        # Get all categories
         categories = Category.objects.all()
-        
+
+        # Handle Trending Products (simple and variant)
         trending_products = []
-        for product in Products.objects.filter(trending="yes").order_by('-id')[:6]:
-            simple_product = SimpleProduct.objects.filter(
-                product=product, is_visible=True
-            ).first()
-            if simple_product:
-                trending_products.append({'product': product,'simple_product': simple_product})
-        
+        for product in Products.objects.filter(trending="yes").order_by('-id')[:7]:
+            if product.product_type == "simple":
+                simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
+                if simple_product:
+                    trending_products.append({
+                        'product': product,
+                        'simple_product': simple_product,
+                        'variant': "no"
+                    })
+            elif product.product_type == "variant":
+                variant_product = VariantProduct.objects.filter(product=product, is_visible=True).first()
+                if variant_product:
+                    trending_products.append({
+                        'product': product,
+                        'variant_product': variant_product,
+                        'variant': "yes"
+                    })
+
+        # Handle New Products (simple and variant)
         new_products = []
-        for product in Products.objects.filter(show_as_new="yes").order_by('-id')[:6]:
-            simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
-            if simple_product:
-                new_products.append({'product': product,'simple_product': simple_product})
+        for product in Products.objects.filter(show_as_new="yes").order_by('-id')[:7]:
+            if product.product_type == "simple":
+                simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
+                if simple_product:
+                    new_products.append({
+                        'product': product,
+                        'simple_product': simple_product,
+                        'variant': "no"
+                    })
+            elif product.product_type == "variant":
+                variant_product = VariantProduct.objects.filter(product=product, is_visible=True).first()
+                if variant_product:
+                    new_products.append({
+                        'product': product,
+                        'variant_product': variant_product,
+                        'variant': "yes"
+                    })
 
         context = {
             'categories': categories,
@@ -47,13 +76,7 @@ class HomeView(View):
             'MEDIA_URL': settings.MEDIA_URL,
         }
         return render(request, self.template, context)
-class AboutUs(View):
-    template = app + "about_us.html"
-
-    def get(self, request):
-       
-        return render(request, self.template)
-
+    
 
 class ContactSupport(View):
     contact_template = app + 'contact_us.html'
@@ -115,6 +138,14 @@ class ContactSupport(View):
 
         template = self.support_template if request.user.is_authenticated else self.contact_template
         return render(request, template, {'form': form})
+
+class AboutUs(View):
+    template = app + "about_us.html"
+
+    def get(self, request):
+       
+        return render(request, self.template)
+
 class TermsConditions(View):
     template = app + "terms_conditions.html"
 

@@ -107,7 +107,7 @@ class AddressForm(forms.Form):
     Address2 = forms.CharField(max_length=255)
     Address2.widget.attrs.update({'class': 'form-control','type':'text',"required":"required"})
 
-    contact = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
+    mobile_no = forms.CharField(max_length=10,help_text='Required. Enter Mobile Number',
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     country = forms.CharField(max_length=255)

@@ -12,8 +12,15 @@ path('api/logout/', api_views_users.LogoutApi.as_view(), name='api_logout'),
 
 path('api/forgot-password/', api_views_users.ForgotPasswordAPIView.as_view(), name='forgot-password-api'),
 path('api/reset-password/<str:token>/', api_views_users.ResetPasswordAPIView.as_view(), name='reset_password_api'),
+
 path('api/profile/', api_views_users.ProfileApiView.as_view(), name='profile_api'),
 path('api/update-profile/', api_views_users.UpdateProfileApiView.as_view(), name='update-profile'),
+path('api/add_address/', api_views_users.AddAddressAPIView.as_view(), name='add_address'),
+path('api/all_address/', api_views_users.AllAddressAPIView.as_view(), name='all_address'),
+path('api/update_address/<str:address_id>/', api_views_users.ProfileUpdateAddressAPIView.as_view(), name='update_address'),
+path('api/delete_address/<str:address_id>/', api_views_users.ProfileDeleteAddressAPIView.as_view(), name='delete_address'),
+
+
 
 
 

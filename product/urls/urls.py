@@ -38,7 +38,7 @@ urlpatterns = [
     path('redirect-to-variant/', user_product_views.VariantRedirectView.as_view(), name='redirect_to_variant'),
     path('search_products/', user_product_views.search_product_names, name='search_product_names'),
     path('search/', user_product_views.SearchItems.as_view(), name='search_items'),
-    path('filter/', user_product_views.FilterItems.as_view(), name='filter_items'),
+    path('submit-review/<str:product_type>/<int:product_id>/', user_product_views.submit_review, name='submit_review'),
 
     # delivery charge settings
     path('UpdateDeliverySettings/', admin_product_views.DeliverySettingsUpdateView.as_view(), name='update_delivery_settings'),

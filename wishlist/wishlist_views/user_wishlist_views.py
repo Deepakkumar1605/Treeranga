@@ -10,42 +10,55 @@ from django.views import View
 def add_to_wishlist(request):
     if request.method == 'GET':
         user = request.user
-        product_id = request.GET.get('product_id')  # Use the product id to fetch the product
-        is_variant = request.GET.get('is_variant', 'false')  # Check if the product is a variant
-        
-        # Get the correct product (SimpleProduct or VariantProduct)
-        if is_variant == 'true':
-            product = get_object_or_404(VariantProduct, pk=product_id)
-        else:
-            product = get_object_or_404(SimpleProduct, pk=product_id)
-        
+        product_id = request.GET.get('product_id')
+        is_variant = request.GET.get('is_variant', 'false') == 'true'
+
         # Fetch or create the wishlist for the user
         wishlist, created = WishList.objects.get_or_create(user=user)
-        
+
+        # Handle variant products
+        if is_variant:
+            product = VariantProduct.objects.filter(pk=product_id).first()
+            if not product:
+                return JsonResponse({'status': 'VariantProduct not found'}, status=404)
+            # Store VariantProduct ID
+            stored_product_id = product.id
+        else:
+            # Handle simple products
+            product = SimpleProduct.objects.filter(pk=product_id).first()
+            if not product:
+                return JsonResponse({'status': 'SimpleProduct not found'}, status=404)
+            # Store SimpleProduct ID
+            stored_product_id = product.id
+
         # Ensure products field is a dictionary
         if not isinstance(wishlist.products, dict):
             wishlist.products = {}
 
-        # Add product details to the wishlist (JSON structure)
-        wishlist.products[product_id] = {
-            "name": product.product.name,
+        # Add product details to the wishlist using the correct product type ID
+        wishlist.products[stored_product_id] = {
+            "name": product.product.name if hasattr(product, 'product') else product.name,
             "discount_price": product.product_discount_price,
             "is_variant": is_variant,
         }
         wishlist.save()
 
-        return redirect("wishlist:wishlist_products")
+        return JsonResponse({'status': 'Product added to wishlist'}, status=200)
 
 
 def remove_from_wishlist(request):
     if request.method == 'GET':
         user = request.user
-        product_id = request.GET.get('product_id')  # Product id to remove
-        
+        product_id = request.GET.get('product_id')
+        is_variant = request.GET.get('is_variant', 'false') == 'true'
+
         try:
             wishlist = WishList.objects.get(user=user)
+
+            # Check if the product exists in the wishlist
             if product_id in wishlist.products:
-                del wishlist.products[product_id]  # Remove the product from the wishlist
+                # Remove the product from the wishlist
+                del wishlist.products[product_id]
                 wishlist.save()
 
                 return JsonResponse({'status': 'Product removed from wishlist'}, status=200)
@@ -54,7 +67,6 @@ def remove_from_wishlist(request):
 
         except WishList.DoesNotExist:
             return JsonResponse({'status': 'Wishlist does not exist'}, status=404)
-
 
 
 class AllWishListProducts(View):
@@ -66,7 +78,7 @@ class AllWishListProducts(View):
             prd_objs = []
             prd_is_variant = []
 
-            # Retrieve products from both SimpleProduct and VariantProduct models
+            # Fetch both SimpleProduct and VariantProduct
             for product_id in product_ids:
                 product_data = wishlist.products[product_id]
                 is_variant = product_data.get('is_variant', 'false') == 'true'
@@ -91,4 +103,3 @@ class AllWishListProducts(View):
                 "wishlist_items": [],
                 "MEDIA_URL": settings.MEDIA_URL
             })
-
