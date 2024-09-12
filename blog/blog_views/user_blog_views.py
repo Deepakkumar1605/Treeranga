@@ -7,6 +7,7 @@ from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+from app_common.error import render_error_page
 from blog.models import Blogs
 
 from uuid import uuid4
@@ -32,29 +33,40 @@ class BlogView(View):
     template_name = app + 'user/user_blog_list.html'
 
     def get(self, request):
-        return render(request, self.template_name)
-    
+        try:
+            return render(request, self.template_name)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 
 class BlogCategory(View):
     template_name = app + 'user/user_blog_list.html'
 
     def get(self, request):
+        try:
+            blogs = Blogs.objects.all()
+            # highlighted_blogs = Blogs.objects.filter(is_highlight=True)
+            context = {
+                'blogs': blogs,
+                # 'highlighted_blogs': highlighted_blogs,
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
-        blogs = Blogs.objects.all()
-        # highlighted_blogs = Blogs.objects.filter(is_highlight=True)
-        context = {
-            'blogs': blogs,
-            # 'highlighted_blogs': highlighted_blogs,
-        }
-        return render(request, self.template_name, context)
 
 class BlogDetails(View):
     template_name = app + 'user/user_blog_single.html'
 
     def get(self, request, slug):
-        blogdetail = get_object_or_404(Blogs, slug=slug)
-        context = {
-            'blogdetail': blogdetail,
-        }
-        return render(request, self.template_name, context)
-    
+        try:
+            blogdetail = get_object_or_404(Blogs, slug=slug)
+            context = {
+                'blogdetail': blogdetail,
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)

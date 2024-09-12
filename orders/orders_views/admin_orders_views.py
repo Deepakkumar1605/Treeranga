@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from app_common.error import render_error_page
 from helpers import utils, api_permission
 from django.forms.models import model_to_dict
 import json
@@ -27,41 +28,52 @@ class OrderList(View):
     template = app + "order_list.html"
 
     def get(self, request):
-        order_list = self.model.objects.all().order_by('-id')
-        order_status_options = Order.ORDER_STATUS
-        
-        # Pagination logic
-        page = request.GET.get('page', 1)
-        paginator = Paginator(order_list, 50)  # Show 50 orders per page
-
         try:
-            orders = paginator.page(page)
-        except PageNotAnInteger:
-            orders = paginator.page(1)
-        except EmptyPage:
-            orders = paginator.page(paginator.num_pages)
+            order_list = self.model.objects.all().order_by('-id')
+            order_status_options = Order.ORDER_STATUS
+
+            # Pagination logic
+            page = request.GET.get('page', 1)
+            paginator = Paginator(order_list, 50)  # Show 50 orders per page
+
+            try:
+                orders = paginator.page(page)
+            except PageNotAnInteger:
+                orders = paginator.page(1)
+            except EmptyPage:
+                orders = paginator.page(paginator.num_pages)
+
+            context = {
+                "order_list": orders,  # Paginated order list
+                "order_status_options": order_status_options,
+            }
+            return render(request, self.template, context)
         
-        context = {
-            "order_list": orders,  # Paginated order list
-            "order_status_options": order_status_options,
-        }
-        return render(request, self.template, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 @method_decorator(utils.super_admin_only, name='dispatch')
 class OrderStatusSearch(View):
     model = Order
     template = app + "order_list.html"
 
-    def get(self,request):
-        filter_by = request.GET.get('filter_by')
-        order_list = self.model.objects.filter(order_status = filter_by)
-        paginated_data = utils.paginate(request, order_list, 50)
-        order_status_options = Order.ORDER_STATUS
+    def get(self, request):
+        try:
+            filter_by = request.GET.get('filter_by')
+            order_list = self.model.objects.filter(order_status=filter_by)
+            paginated_data = utils.paginate(request, order_list, 50)
+            order_status_options = Order.ORDER_STATUS
+
+            context = {
+                "order_list": paginated_data,
+                "order_status_options": order_status_options,
+            }
+            return render(request, self.template, context)
         
-        context = {
-            "order_list":paginated_data,
-            "order_status_options":order_status_options,
-        }
-        return render(request, self.template,context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
@@ -69,16 +81,22 @@ class OrderSearch(View):
     model = Order
     template = app + "order_list.html"
 
-    def get(self,request):
-        query = request.GET.get('query')
-        order_list = self.model.objects.filter(uid__icontains = query)
-        order_status_options = Order.ORDER_STATUS
+    def get(self, request):
+        try:
+            query = request.GET.get('query')
+            order_list = self.model.objects.filter(uid__icontains=query)
+            order_status_options = Order.ORDER_STATUS
 
-        context = {
-            "order_list":order_list,
-            "order_status_options":order_status_options,
-        }
-        return render(request, self.template,context)
+            context = {
+                "order_list": order_list,
+                "order_status_options": order_status_options,
+            }
+            return render(request, self.template, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')

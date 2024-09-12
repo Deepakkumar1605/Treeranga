@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.conf import settings
+from app_common.error import render_error_page
 from cart.models import Cart
 from orders.models import Order
 from users.models import User
@@ -26,37 +27,33 @@ class PaymentSuccess(View):
         try:
             cart = Cart.objects.get(user=user)
         except Cart.DoesNotExist:
-            messages.error(request, "Cart not found.")
-            return redirect("cart:checkout")
-
-        data = json.loads(request.body)
-        address_id = data.get('address_id')
-        payment_method = data.get('payment_method')
-        
-
-        # Fetch order details
-        order_details = CartSerializer(cart).data
-        ord_meta_data = {k: v for d in order_details.values() for k, v in d.items()}
-        t_price = float(ord_meta_data.get('final_cart_value', 0))
-
-        user_addresses = user.address
-        selected_address = next((addr for addr in user_addresses if addr['id'] == address_id), None)
-        if not selected_address:
-            messages.error(request, "Address not found.")
-            return redirect("cart:checkout")
+            error_message = "Cart not found."
+            return render_error_page(request, error_message, status_code=400)
 
         try:
+            data = json.loads(request.body)
+            address_id = data.get('address_id')
+            payment_method = data.get('payment_method')
+
+            # Fetch order details
+            order_details = CartSerializer(cart).data
+            ord_meta_data = {k: v for d in order_details.values() for k, v in d.items()}
+            t_price = float(ord_meta_data.get('final_cart_value', 0))
+
+            user_addresses = user.address
+            selected_address = next((addr for addr in user_addresses if addr['id'] == address_id), None)
+            if not selected_address:
+                error_message = "Address not found."
+                return render_error_page(request, error_message, status_code=400)
+
             if payment_method == 'razorpay':
-
-
                 razorpay_payment_id = data.get('razorpay_payment_id')
                 razorpay_order_id = data.get('razorpay_order_id')
                 razorpay_signature = data.get('razorpay_signature')
 
                 if not verify_signature(data):
-                    
-                    messages.error(request, "Payment verification failed.")
-                    return redirect("cart:checkout")
+                    error_message = "Payment verification failed."
+                    return render_error_page(request, error_message, status_code=400)
 
                 # Create and save the order
                 order = self.model(
@@ -128,15 +125,20 @@ class PaymentSuccess(View):
                 return redirect("app_common:home")
 
             else:
-                messages.error(request, "Invalid payment method.")
-                return redirect("cart:checkout")
+                error_message = "Invalid payment method."
+                return render_error_page(request, error_message, status_code=400)
 
         except Exception as e:
-            print(f"Error while placing Order: {e}")
-            messages.error(request, "Error while placing Order.")
-            return redirect("cart:checkout")
+            error_message = f"An unexpected error occurred while processing your order: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 
 class SuccessPage(View):
     template = app + "payment_success.html"
+
     def get(self, request):
-        return render(request, self.template)
+        try:
+            return render(request, self.template)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)

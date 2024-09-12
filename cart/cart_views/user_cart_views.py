@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from app_common.error import render_error_page
 from users.models import User
 from product.models import DeliverySettings, Products, SimpleProduct, Category
 from orders.models import Order
@@ -20,87 +21,95 @@ from product_variations.models import VariantProduct
 
 class ShowCart(View):
     def get(self, request):
-        # Get categories for the view
-        category_obj = Category.objects.all()
-
-        # Get user and cart items
-        user = request.user
-        if user.is_authenticated:
-            cart_items = Cart.objects.filter(user=user).first()
-            products = cart_items.products if cart_items and cart_items.products else {}
-        else:
-            cart_items = None
-            products = request.session.get('cart', {}).get('products', {})
-
-        # Fetch delivery settings
         try:
+            # Get categories for the view
+            category_obj = Category.objects.all()
+
+            # Get user and cart items
+            user = request.user
+            if user.is_authenticated:
+                cart_items = Cart.objects.filter(user=user).first()
+                products = cart_items.products if cart_items and cart_items.products else {}
+            else:
+                cart_items = None
+                products = request.session.get('cart', {}).get('products', {})
+
+            # Fetch delivery settings
+            delivery_charge_per_bag = Decimal('0.00')
+            delivery_free_order_amount = Decimal('0.00')
             delivery_settings = DeliverySettings.objects.first()
-            delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
-            delivery_free_order_amount = delivery_settings.delivery_free_order_amount 
-        except Exception:
-            delivery_charge_per_bag = 0
-            delivery_free_order_amount = 0
 
-        total_original_price = Decimal('0.00')
-        total_price = Decimal('0.00')
-        delivery = Decimal('0.00')
-        final_cart_value = Decimal('0.00')
-        has_flat_delivery_product = False
-        has_non_flat_delivery_product = False
+            if delivery_settings:
+                delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
+                delivery_free_order_amount = delivery_settings.delivery_free_order_amount
 
-        for product_key, product_info in products.items():
-            max_price = Decimal(product_info['info'].get('max_price', '0.00'))
-            discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
-            quantity = product_info.get('quantity', 0)
+            total_original_price = Decimal('0.00')
+            total_price = Decimal('0.00')
+            delivery = Decimal('0.00')
+            final_cart_value = Decimal('0.00')
+            has_virtual_or_flat_delivery_product = False
+            has_non_flat_delivery_product = False
 
-            total_original_price += max_price * quantity
-            total_price += discount_price * quantity
+            for product_key, product_info in products.items():
+                max_price = Decimal(product_info['info'].get('max_price', '0.00'))
+                discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
+                quantity = product_info.get('quantity', 0)
 
-            product_id = product_info['info'].get('product_id')
-            if product_id:
-                try:
-                    product = Products.objects.get(id=product_id)
-                    if product.virtual_product:
-                        # Product is virtual; no delivery fee
-                        has_flat_delivery_product = True
-                    elif product.flat_delivery_fee:
-                        # Product has a flat delivery fee; set flag
-                        has_flat_delivery_product = True
-                    else:
-                        # Product is a normal product; requires delivery fee
-                        has_non_flat_delivery_product = True
-                except Products.DoesNotExist:
-                    pass
-        if total_price > 0:
-            final_cart_value = total_price
-            discount_price = total_original_price - total_price
+                total_original_price += max_price * quantity
+                total_price += discount_price * quantity
 
-            if has_flat_delivery_product and not has_non_flat_delivery_product:
-                # All products are virtual or have flat delivery fee, so no delivery charge
-                delivery = Decimal('0.00')
-            elif final_cart_value < delivery_free_order_amount:
-                # Normal delivery charge applies
-                delivery = delivery_charge_per_bag
-            final_cart_value += delivery
-        else:
-            discount_price = Decimal('0.00')
+                product_id = product_info['info'].get('product_id')
+                if product_id:
+                    try:
+                        product = Products.objects.get(id=product_id)
+                        if product.virtual_product or product.flat_delivery_fee:
+                            # Product is virtual or has a flat delivery fee
+                            has_virtual_or_flat_delivery_product = True
+                        else:
+                            # Normal product, requires delivery fee
+                            has_non_flat_delivery_product = True
+                    except Products.DoesNotExist:
+                        continue
 
-        if user.is_authenticated and cart_items:
-            cart_items.total_price = float(total_price)
-            cart_items.save()
-        context = {
-            'category_obj': category_obj,
-            'cartItems': cart_items,
-            'products': products,
-            'totaloriginalprice': float(total_original_price),
-            'totalPrice': float(total_price),
-            'Delivery': float(delivery),
-            'final_cart_value': float(final_cart_value),
-            'discount_price': float(discount_price),
-            'MEDIA_URL': settings.MEDIA_URL,
-        }
+            # Calculate discount and delivery
+            if total_price > 0:
+                final_cart_value = total_price
+                discount_price = total_original_price - total_price
 
-        return render(request, "cart/user/cartpage.html", context)
+                if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
+                    # No delivery charge for virtual or flat fee products
+                    delivery = Decimal('0.00')
+                elif final_cart_value < delivery_free_order_amount:
+                    # Normal delivery charge applies
+                    delivery = delivery_charge_per_bag
+                final_cart_value += delivery
+            else:
+                discount_price = Decimal('0.00')
+
+            # Save the updated cart total if the user is authenticated
+            if user.is_authenticated and cart_items:
+                cart_items.total_price = float(total_price)
+                cart_items.save()
+
+            # Prepare the context for the template
+            context = {
+                'category_obj': category_obj,
+                'cartItems': cart_items,
+                'products': products,
+                'totaloriginalprice': float(total_original_price),
+                'totalPrice': float(total_price),
+                'Delivery': float(delivery),
+                'final_cart_value': float(final_cart_value),
+                'discount_price': float(discount_price),
+                'MEDIA_URL': settings.MEDIA_URL,
+            }
+
+            # Render the cart page template
+            return render(request, "cart/user/cartpage.html", context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 
 
 class AddToCartView(View):
@@ -115,10 +124,12 @@ class AddToCartView(View):
             else:
                 cart = request.session.get('cart', {'products': {}})
                 is_user_authenticated = False
+
             if variant == "yes":
                 product_obj = get_object_or_404(VariantProduct, id=product_id)
             else:
                 product_obj = get_object_or_404(SimpleProduct, id=product_id)
+
             # Ensure quantity is within valid range
             if quantity <= 0:
                 messages.error(request, "Quantity must be at least 1.")
@@ -126,7 +137,7 @@ class AddToCartView(View):
             elif quantity > 6:
                 quantity = 6
                 messages.warning(request, "Maximum quantity allowed is 6. Adjusting quantity to 6.")
-            
+
             product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_key = str(product_obj.id)
             product_info = {
@@ -140,7 +151,7 @@ class AddToCartView(View):
             }
 
             products = cart.products if is_user_authenticated else cart.get('products', {})
-            
+
             if product_key in products:
                 new_quantity = products[product_key]['quantity'] + quantity
                 if new_quantity > 6:
@@ -167,94 +178,110 @@ class AddToCartView(View):
 
             messages.success(request, f"{product_obj.product.name} added to cart.")
             return redirect("app_common:home")
+
         except Exception as e:
-            print(f"Add to cart error: {e}")
-            return HttpResponse(f"An error occurred: {e}", status=500)
-
-
-
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 class ManageCart(View):
     def get(self, request, c_p_uid):
         operation_type = request.GET.get('operation')
 
-        if request.user.is_authenticated:
-            cart = Cart.objects.get(user=request.user)
-            products = cart.products or {}
-        else:
-            cart = request.session.get('cart', {'products': {}})
-            products = cart.get('products', {})
+        try:
+            if request.user.is_authenticated:
+                cart = Cart.objects.get(user=request.user)
+                products = cart.products or {}
+            else:
+                cart = request.session.get('cart', {'products': {}})
+                products = cart.get('products', {})
 
-        product_found = False
-        max_quantity = 6  # Define the maximum quantity allowed
+            product_found = False
+            max_quantity = 6  # Define the maximum quantity allowed
 
-        for product_key, product_info in products.items():
-            if c_p_uid == product_info['info']['uid']:
-                product_found = True
-                if operation_type == 'plus':
-                    if product_info['quantity'] < max_quantity:
-                        product_info['quantity'] += 1
-                        product_info['total_price'] += product_info['info']['discount_price']
-                    else:
-                        return HttpResponse(f"Cannot add more than {max_quantity} of this product.", status=400)
-                elif operation_type == 'min':
-                    if product_info['quantity'] > 1:
-                        product_info['quantity'] -= 1
-                        product_info['total_price'] -= product_info['info']['discount_price']
-                    else:
-                        products.pop(product_key)
-                break
+            for product_key, product_info in products.items():
+                if c_p_uid == product_info['info']['uid']:
+                    product_found = True
+                    if operation_type == 'plus':
+                        if product_info['quantity'] < max_quantity:
+                            product_info['quantity'] += 1
+                            product_info['total_price'] += product_info['info']['discount_price']
+                        else:
+                            return HttpResponse(f"Cannot add more than {max_quantity} of this product.", status=400)
+                    elif operation_type == 'min':
+                        if product_info['quantity'] > 1:
+                            product_info['quantity'] -= 1
+                            product_info['total_price'] -= product_info['info']['discount_price']
+                        else:
+                            products.pop(product_key)
+                    break
 
-        if not product_found:
-            return HttpResponse(f"Product with UID {c_p_uid} not found in cart.", status=404)
+            if not product_found:
+                return HttpResponse(f"Product with UID {c_p_uid} not found in cart.", status=404)
 
-        if request.user.is_authenticated:
-            cart.products = products
-            cart.total_price = sum(item['total_price'] for item in products.values())
-            cart.save()
-        else:
-            cart['products'] = products
-            cart['total_price'] = sum(item['total_price'] for item in products.values())
-            request.session['cart'] = cart
-            request.session.modified = True
+            if request.user.is_authenticated:
+                cart.products = products
+                cart.total_price = sum(item['total_price'] for item in products.values())
+                cart.save()
+            else:
+                cart['products'] = products
+                cart['total_price'] = sum(item['total_price'] for item in products.values())
+                request.session['cart'] = cart
+                request.session.modified = True
 
-        return redirect('cart:showcart')
+            return redirect('cart:showcart')
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 
 
 
 def RemoveFromCart(request, cp_uid):
-    if request.user.is_authenticated:
-        cart = get_object_or_404(Cart, user=request.user)
-        if cp_uid in cart.products:
-            cart.products.pop(cp_uid)
-            cart.total_price = sum(item['total_price'] for item in cart.products.values())
-            cart.save()
-    else:
-        cart = request.session.get('cart', {'products': {}})
-        products = cart.get('products', {})
-        if cp_uid in products:
-            products.pop(cp_uid)
-            cart['total_price'] = sum(item['total_price'] for item in products.values())
-            cart['products'] = products
-            request.session['cart'] = cart
-            request.session.modified = True
+    try:
+        if request.user.is_authenticated:
+            cart = get_object_or_404(Cart, user=request.user)
+            if cp_uid in cart.products:
+                cart.products.pop(cp_uid)
+                cart.total_price = sum(item['total_price'] for item in cart.products.values())
+                cart.save()
+        else:
+            cart = request.session.get('cart', {'products': {}})
+            products = cart.get('products', {})
+            if cp_uid in products:
+                products.pop(cp_uid)
+                cart['total_price'] = sum(item['total_price'] for item in products.values())
+                cart['products'] = products
+                request.session['cart'] = cart
+                request.session.modified = True
 
-    return redirect("cart:showcart")
+        return redirect("cart:showcart")
+
+    except Exception as e:
+        error_message = f"An unexpected error occurred: {str(e)}"
+        return render_error_page(request, error_message, status_code=400)
+
 
 
 def cart_count_processor(request):
-    cart_count = 0
-    if request.user.is_authenticated:
-        cart = Cart.objects.filter(user=request.user).first()
-        if cart and cart.products:
-            cart_count = len(cart.products)  # Count the number of distinct products
-    else:
-        cart = request.session.get('cart', {})
-        if cart and 'products' in cart:
-            cart_products = cart.get('products', {})
-            cart_count = len(cart_products)  # Count the number of distinct products
-    
-    return {'cart_count': cart_count}
+    try:
+        cart_count = 0
+        if request.user.is_authenticated:
+            cart = Cart.objects.filter(user=request.user).first()
+            if cart and cart.products:
+                cart_count = len(cart.products)
+        else:
+            cart = request.session.get('cart', {})
+            if cart and 'products' in cart:
+                cart_products = cart.get('products', {})
+                cart_count = len(cart_products)
+                
+        return {'cart_count': cart_count}
+
+    except Exception as e:
+        error_message = f"An unexpected error occurred: {str(e)}"
+        return render_error_page(request, error_message, status_code=400)
+
 
 
 @method_decorator(login_required(login_url='users:login'), name='dispatch')
@@ -263,9 +290,9 @@ class Checkout(View):
     model = Order
 
     def get(self, request):
-        user = request.user
-
         try:
+            user = request.user
+
             # Merge session cart with user cart if available
             session_cart = request.session.get('cart', {}).get('products', {})
             if session_cart:
@@ -284,53 +311,51 @@ class Checkout(View):
                     for item in user_cart_products.values()
                 )
                 user_cart.save()
-
                 request.session.pop('cart', None)
 
             cart = Cart.objects.get(user=user)
+            order_details = CartSerializer(cart).data
+
+            # Extract necessary details
+            final_cart_value = Decimal(order_details['products_data']['final_cart_value'])
+            totaloriginalprice = Decimal(order_details['products_data']['gross_cart_value'])
+            totalPrice = Decimal(order_details['products_data']['our_price'])
+            Delivery = Decimal(order_details['products_data']['charges']['Delivery'])
+            discount_price = totaloriginalprice - totalPrice
+            addresses = user.address or []
+
+            # Razorpay order creation
+            status, rz_order_id = razorpay.create_order_in_razPay(
+                amount=int(final_cart_value * 100)
+            )
+
+            context = {
+                "cart": cart.products,
+                "rz_order_id": rz_order_id,
+                "api_key": settings.RAZORPAY_API_KEY,
+                "addresses": addresses,
+                'totaloriginalprice': totaloriginalprice,
+                'totalPrice': totalPrice,
+                'Delivery': Delivery,
+                'final_cart_value': final_cart_value,
+                'discount_price': discount_price,
+                "MEDIA_URL": settings.MEDIA_URL
+            }
+            return render(request, self.template, context)
+
         except Cart.DoesNotExist:
             return redirect("cart:showcart")
         except Exception as e:
-            print(f"Error in checkout process: {e}")
-            return redirect("cart:showcart")
+            error_message = f"An unexpected error occurred during checkout: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
-        # Serialize cart details
-        order_details = CartSerializer(cart).data
-
-        # Extract necessary details
-        final_cart_value = Decimal(order_details['products_data']['final_cart_value'])
-        totaloriginalprice = Decimal(order_details['products_data']['gross_cart_value'])
-        totalPrice = Decimal(order_details['products_data']['our_price'])
-        Delivery = Decimal(order_details['products_data']['charges']['Delivery'])
-        discount_price = totaloriginalprice - totalPrice
-        addresses = user.address or []
-
-        # Razorpay order creation
-        status, rz_order_id = razorpay.create_order_in_razPay(
-            amount=int(final_cart_value * 100)  # Amount in paise
-        )
-
-        context = {
-            "cart": cart.products,
-            "rz_order_id": rz_order_id,
-            "api_key": settings.RAZORPAY_API_KEY,
-            "addresses": addresses,
-            'totaloriginalprice': totaloriginalprice,
-            'totalPrice': totalPrice,
-            'Delivery': Delivery,
-            'final_cart_value': final_cart_value,
-            'discount_price': discount_price,
-            "MEDIA_URL": settings.MEDIA_URL
-        }
-
-        return render(request, self.template, context)
 
 
 # checkout address
 
 class AddAddress(View):
     def post(self, request):
-        if request.method == 'POST':
+        try:
             Address1 = request.POST["Address1"]
             Address2 = request.POST["Address2"]
             country = request.POST["country"]
@@ -340,7 +365,6 @@ class AddAddress(View):
             pincode = request.POST["pincode"]
 
             address_id = str(uuid4())
-
             address_data = {
                 "id": address_id,
                 "Address1": Address1,
@@ -351,6 +375,7 @@ class AddAddress(View):
                 "mobile_no": mobile_no,
                 "pincode": pincode,
             }
+
             user = request.user
             addresses = user.address or []
             addresses.append(address_data)
@@ -358,28 +383,27 @@ class AddAddress(View):
             user.save()
 
             return redirect('cart:checkout')
-        else:
-            return redirect('app_common:home')
 
-
-
+        except Exception as e:
+            error_message = f"An unexpected error occurred while adding address: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 def update_address_view(request):
-    if request.method == 'POST':
-        user = request.user
-        user_obj = get_object_or_404(User, id=user.id)
-        a_id = request.POST.get('a_id')
-        Address1 = request.POST.get('Address1')
-        Address2 = request.POST.get('Address2')
-        country = request.POST.get('country')
-        state = request.POST.get('state')
-        city = request.POST.get('city')
-        mobile_no = request.POST.get('mobile_no')
-        pincode = request.POST.get('pincode')
+    try:
+        if request.method == 'POST':
+            user = request.user
+            user_obj = get_object_or_404(User, id=user.id)
+            a_id = request.POST.get('a_id')
+            Address1 = request.POST.get('Address1')
+            Address2 = request.POST.get('Address2')
+            country = request.POST.get('country')
+            state = request.POST.get('state')
+            city = request.POST.get('city')
+            mobile_no = request.POST.get('mobile_no')
+            pincode = request.POST.get('pincode')
 
-        addresses = user_obj.address or []
+            addresses = user_obj.address or []
 
-        try:
             # Find and update the address with the specified id
             for address in addresses:
                 if address['id'] == a_id:
@@ -394,39 +418,34 @@ def update_address_view(request):
                     })
                     break
 
-            # Save the updated addresses back to the user model
             user_obj.address = addresses
             user_obj.save()
             messages.success(request, 'Address updated successfully.')
 
-            # Redirect to the checkout page
             return redirect('cart:checkout')
 
-        except Exception as e:
-            messages.error(request, f'Failed to update address: {str(e)}')
-            return redirect('app_common:home')
-    else:
-        return redirect('app_common:home')
-
-
-
+    except Exception as e:
+        error_message = f"Failed to update address: {str(e)}"
+        return render_error_page(request, error_message, status_code=400)
 
 class DeleteAddress(View):
     def get(self, request, address_id):
-        user = request.user
-        addresses = user.address or []
+        try:
+            user = request.user
+            addresses = user.address or []
 
-        # Remove the address with the specified ID
-        addresses = [address for address in addresses if address.get('id') != address_id]
+            # Remove the address with the specified ID
+            addresses = [address for address in addresses if address.get('id') != address_id]
 
-        # Save the updated list of addresses back to the user model
-        user.address = addresses
-        user.save()
+            # Save the updated list of addresses back to the user model
+            user.address = addresses
+            user.save()
 
-        # Redirect to the checkout page
-        return redirect('cart:checkout')
+            return redirect('cart:checkout')
 
-
+        except Exception as e:
+            error_message = f"An unexpected error occurred while deleting address: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 def transfer_session_cart_to_user(request, user):
     session_cart = request.session.get('cart', {}).get('products', {})
@@ -444,8 +463,10 @@ def transfer_session_cart_to_user(request, user):
             user_cart.products = user_cart_products
             user_cart.total_price = sum(item['total_price'] for item in user_cart_products.values())
             user_cart.save()
+
             request.session.pop('cart', None)
             request.session.modified = True
+
         except Exception as e:
-            print(f"Error transferring session cart: {e}")
-            messages.error(request, "There was an issue transferring your cart items.")
+            error_message = f"Error transferring session cart: {str(e)}"
+            messages.error(request, error_message)

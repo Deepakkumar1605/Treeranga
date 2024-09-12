@@ -5,6 +5,7 @@ from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.conf import settings
+from app_common.error import render_error_page
 from helpers import utils
 from os.path import join
 import json
@@ -25,12 +26,18 @@ app = "product/"
 class CategoryList(View):
     model = Category
     template = app + "admin/category_list.html"
+
     def get(self, request):
-        catagory_list = self.model.objects.all().order_by('-id')
-        context = {
-            "catagory_list":catagory_list,
-        }
-        return render(request, self.template, context)
+        try:
+            catagory_list = self.model.objects.all().order_by('-id')
+            context = {
+                "catagory_list": catagory_list,
+            }
+            return render(request, self.template, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CatagoryAdd(View):
@@ -39,47 +46,62 @@ class CatagoryAdd(View):
     template = app + "admin/category_add.html"
 
     def get(self, request):
-        category_list = self.model.objects.all().order_by('-id')
-        context = {
-            "category_list": category_list,
-            "form": self.form_class,
-        }
-        return render(request, self.template, context)
+        try:
+            category_list = self.model.objects.all().order_by('-id')
+            context = {
+                "category_list": category_list,
+                "form": self.form_class,
+            }
+            return render(request, self.template, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
     def post(self, request):
-        form = self.form_class(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"Category added successfully.")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
-
-        return redirect("product:category_list")
+        try:
+            form = self.form_class(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f"Category added successfully.")
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+            return redirect("product:category_list")
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CategoryUpdate(View):
     model = Category
     form_class = forms.CategoryEntryForm
-    template = app + "admin/category_update.html"  # Adjust template path as needed
+    template = app + "admin/category_update.html"
 
     def get(self, request, category_id):
-        category = get_object_or_404(self.model, id=category_id)
-        form = self.form_class(instance=category)
-        return render(request, self.template, {'form': form})
+        try:
+            category = get_object_or_404(self.model, id=category_id)
+            form = self.form_class(instance=category)
+            return render(request, self.template, {'form': form})
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
     def post(self, request, category_id):
-        category = get_object_or_404(self.model, id=category_id)
-        form = self.form_class(request.POST, request.FILES, instance=category)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"{category.title} updated successfully.")
-            return redirect("product:category_list")
-        else:
-            messages.error(request, "Form is not valid. Please check the errors.")
-            return render(request, self.template, {'form': form})
+        try:
+            category = get_object_or_404(self.model, id=category_id)
+            form = self.form_class(request.POST, request.FILES, instance=category)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f"{category.title} updated successfully.")
+                return redirect("product:category_list")
+            else:
+                messages.error(request, "Form is not valid. Please check the errors.")
+                return render(request, self.template, {'form': form})
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
@@ -88,11 +110,14 @@ class CatagotyDelete(View):
     form_class = forms.CategoryEntryForm
     template = app + "admin/category_update.html"
 
-    def get(self,request, catagory_id):
-        catagory = self.model.objects.get(id= catagory_id).delete()
-        messages.info(request, "Catagory is deleted successfully....")
-        return redirect("product:category_list")
-
+    def get(self, request, catagory_id):
+        try:
+            catagory = self.model.objects.get(id=catagory_id).delete()
+            messages.info(request, "Category is deleted successfully....")
+            return redirect("product:category_list")
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductAdd(View):
@@ -116,59 +141,60 @@ class ProductAdd(View):
                 if not product.uid:
                     product.uid = utils.get_rand_number(5)
                 product.save()
+
                 if product.product_type == "simple":
                     simple_product_obj = SimpleProduct(product=product, is_visible=False)
                     simple_product_obj.save()
                     messages.success(request, "Product added successfully.")
-                    # Return JSON response with variant types
                     return JsonResponse({
                         'variant_types': None,
-                        'product_id':product.id,
-                    })                
+                        'product_id': product.id,
+                    })
                 elif product.product_type == "variant":
-                    # Fetch variant types
                     variant_types = Variant.objects.all().values('id', 'name')
-
-                    # Return JSON response with variant types
                     return JsonResponse({
                         'variant_types': list(variant_types),
-                        'product_id':product.id,
+                        'product_id': product.id,
                     })
-
             except Exception as e:
-                print("Error saving product:", e)
-                messages.error(request, f"Error saving product: {str(e)}")
+                error_message = f"An unexpected error occurred: {str(e)}"
+                print(error_message)
+                return render_error_page(request, error_message, status_code=400)
         else:
-            # Handle form errors
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
-        
+
         context = {
             "form": form,
         }
         return render(request, self.template_name, context)
 
+
 def get_attributes(request, variant_type_id):
-    attributes = Attribute.objects.filter(variant_type=variant_type_id)
-    attributes_map = {}
+    try:
+        attributes = Attribute.objects.filter(variant_type=variant_type_id)
+        attributes_map = {}
 
-    for attribute in attributes:
-        attr_name = attribute.name.lower()  # Adjust if needed
-        attr_value = attribute.code
-        variant_name = attribute.variant_type.name
+        for attribute in attributes:
+            attr_name = attribute.name.lower()  # Adjust if needed
+            attr_value = attribute.code
+            variant_name = attribute.variant_type.name
 
-        if attr_name not in attributes_map:
-            attributes_map[attr_name] = {
-                'values': [],
-                'variant_name': variant_name
-            }
+            if attr_name not in attributes_map:
+                attributes_map[attr_name] = {
+                    'values': [],
+                    'variant_name': variant_name
+                }
 
-        if attr_value not in attributes_map[attr_name]['values']:
-            attributes_map[attr_name]['values'].append(attr_value)
-        print(attributes)
-    # Ensure attributes are returned in the correct format
-    return JsonResponse({'attributes': attributes_map})
+            if attr_value not in attributes_map[attr_name]['values']:
+                attributes_map[attr_name]['values'].append(attr_value)
+
+        # Ensure attributes are returned in the correct format
+        return JsonResponse({'attributes': attributes_map})
+    except Exception as e:
+        error_message = f"An unexpected error occurred: {str(e)}"
+        return render_error_page(request, error_message, status_code=400)
 
 def generate_combinations(request):
     if request.method == 'POST':
@@ -185,26 +211,22 @@ def generate_combinations(request):
             attribute_names = list(data.keys())
             attribute_values = [data[name] for name in attribute_names]
 
-            # Print extracted attributes for debugging
-            print("Attribute Names:", attribute_names)
-            print("Attribute Values:", attribute_values)
-            
             # Generate combinations using Cartesian product
             combinations = []
             for combination in product(*attribute_values):
                 combination_str = ', '.join(f'{attribute_names[i]}: {combination[i]}' for i in range(len(attribute_names)))
                 combinations.append(combination_str)
-            
-            # Print generated combinations for debugging
-            print("Generated Combinations:", combinations)
-            
+
             return JsonResponse({'combinations': combinations})
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-        
+
 def save_combination(request):
     if request.method == 'POST':
         try:
@@ -225,7 +247,7 @@ def save_combination(request):
                     'product_max_price': product_max_price,
                     'product_discount_price': product_discount_price,
                     'stock': stock,
-                    'is_visible':True
+                    'is_visible': True
                 }
             )
 
@@ -270,7 +292,8 @@ def save_combination(request):
 
             return JsonResponse({'success': True})
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -330,57 +353,55 @@ class ProductList(View):
     template_name = app + "admin/product_list.html"
 
     def get(self, request):
-        products = Products.objects.all().order_by('pk')
-        
-        # Pagination logic
-        page = request.GET.get('page', 1)
-        paginator = Paginator(products, 20)  # Show 20 products per page
-
         try:
+            products = Products.objects.all().order_by('pk')
+            paginator = Paginator(products, 20)  # Show 20 products per page
+            page = request.GET.get('page', 1)
             paginated_products = paginator.page(page)
         except PageNotAnInteger:
             paginated_products = paginator.page(1)
         except EmptyPage:
             paginated_products = paginator.page(paginator.num_pages)
-        
-        context = {
-            'products': paginated_products,  # Paginated products
-        }
+        except Exception as e:
+            error_message = f"An error occurred while loading the products: {str(e)}"
+            return render_error_page(request, error_message)
+
+        context = {'products': paginated_products}
         return render(request, self.template_name, context)
+
+
 @method_decorator(utils.super_admin_only, name='dispatch')
 class SimpleProductUpdate(View):
     form_class = forms.SimpleProductForm
     template = app + "admin/simple_product_update.html"
 
     def get(self, request, pk):
-        product = get_object_or_404(SimpleProduct, pk=pk)
-        form = self.form_class(instance=product)
-        product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
+        try:
+            product = get_object_or_404(SimpleProduct, pk=pk)
+            form = self.form_class(instance=product)
+            product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
+            images = product_images_videos.images or []
+            videos = product_images_videos.video or []
+        except Exception as e:
+            error_message = f"An error occurred while retrieving the product: {str(e)}"
+            return render_error_page(request, error_message)
 
-        images = product_images_videos.images if product_images_videos.images else []
-        videos = product_images_videos.video if product_images_videos.video else []
-
-        context = {
-            "form": form,
-            "product": product,
-            "images": images,
-            "videos": videos
-        }
+        context = {"form": form, "product": product, "images": images, "videos": videos}
         return render(request, self.template, context)
 
     def post(self, request, pk):
-        product = get_object_or_404(SimpleProduct, pk=pk)
-        form = self.form_class(request.POST, request.FILES, instance=product)
-        product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
+        try:
+            product = get_object_or_404(SimpleProduct, pk=pk)
+            form = self.form_class(request.POST, request.FILES, instance=product)
+            product_images_videos, created = ImageGallery.objects.get_or_create(simple_product=product)
 
-        if form.is_valid():
-            try:
+            if form.is_valid():
                 product = form.save(commit=False)
 
                 remove_images = request.POST.getlist('remove_images')
                 new_uploaded_images = request.FILES.getlist('new_images')
 
-                current_images = list(product_images_videos.images) if product_images_videos.images else []
+                current_images = list(product_images_videos.images or [])
                 updated_images = [img for img in current_images if img not in remove_images]
 
                 for file in new_uploaded_images:
@@ -389,20 +410,14 @@ class SimpleProductUpdate(View):
 
                 if not updated_images:
                     messages.error(request, "At least one image is required.")
-                    context = {
-                        "form": form,
-                        "product": product,
-                        "images": updated_images,
-                        "videos": product_images_videos.video if product_images_videos.video else []
-                    }
-                    return render(request, self.template, context)
+                    return self.render_update_form(request, form, product, updated_images, product_images_videos.video)
 
                 product_images_videos.images = updated_images
 
                 remove_videos = request.POST.getlist('remove_videos')
                 new_uploaded_videos = request.FILES.getlist('new_videos')
 
-                current_videos = list(product_images_videos.video) if product_images_videos.video else []
+                current_videos = list(product_images_videos.video or [])
                 updated_videos = [video for video in current_videos if video not in remove_videos]
 
                 for file in new_uploaded_videos:
@@ -417,28 +432,24 @@ class SimpleProductUpdate(View):
 
                 messages.success(request, "Product updated successfully.")
                 return redirect("product:simple_product_list")
+        except Exception as e:
+            error_message = f"An error occurred while updating the product: {str(e)}"
+            return render_error_page(request, error_message)
 
-            except Exception as e:
-                print("Error updating product:", e)
-                messages.error(request, f"Error updating product: {str(e)}")
+        return self.render_update_form(request, form, product, product_images_videos.images, product_images_videos.video)
 
-        context = {
-            "form": form,
-            "product": product,
-            "images": product_images_videos.images if product_images_videos.images else [],
-            "videos": product_images_videos.video if product_images_videos.video else []
-        }
+    def render_update_form(self, request, form, product, images, videos):
+        context = {"form": form, "product": product, "images": images, "videos": videos}
         return render(request, self.template, context)
 
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class SimpleProductDelete(View):
-
     def get(self, request, pk):
-        simple_product = get_object_or_404(SimpleProduct, pk=pk)
-        product = simple_product.product  # Get the parent product
-
         try:
+            simple_product = get_object_or_404(SimpleProduct, pk=pk)
+            product = simple_product.product  # Get the parent product
+
             simple_product.delete()
             messages.success(request, "Simple product deleted successfully.")
             
@@ -446,160 +457,47 @@ class SimpleProductDelete(View):
             if not remaining_simple_products:
                 product.delete()
                 messages.success(request, "Parent product deleted successfully.")
-                
         except Exception as e:
-            print("Error deleting product:", e)
-            messages.error(request, f"Error deleting product: {str(e)}")
+            error_message = f"An error occurred while deleting the product: {str(e)}"
+            return render_error_page(request, error_message)
 
         return redirect("product:simple_product_list")
 
 
-@method_decorator(utils.super_admin_only, name='dispatch')
-class SimpleProductList(View):
-    template_name = app + "admin/simple_product_list.html"
-
-    def get(self, request):
-        products = SimpleProduct.objects.all()
-
-        paginator = Paginator(products, 10)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        context = {
-            'page_obj': page_obj
-        }
-        return render(request, self.template_name, context)
-
-@method_decorator(utils.super_admin_only, name='dispatch')
-class ProductSearch(View):
-    model = Products
-    form_class = forms.ProductForm
-    template = app + "admin/product_list.html"  
-
-    def post(self, request):
-        filter_by = request.POST.get("filter_by")
-        query = request.POST.get("query")
-        
-        if filter_by == "pk":
-            product_list = self.model.objects.filter(pk=query)
-        else:
-            product_list = self.model.objects.filter(name__icontains=query)
-
-        paginated_data = utils.paginate(request, product_list, 10)
-
-        context = {
-            "form": self.form_class,
-            "products": product_list,
-            "data_list": paginated_data,
-            "MEDIA_URL": settings.MEDIA_URL
-        }
-        return render(request, self.template, context)
-
-@method_decorator(utils.super_admin_only, name='dispatch')
-class SimpleProductSearch(View):
-    model = SimpleProduct
-    form_class = forms.SimpleProductForm
-    template = app + "admin/simple_product_list.html"  
-
-    def post(self, request):
-        filter_by = request.POST.get("filter_by")
-        query = request.POST.get("query")
-        
-        if filter_by == "pk":
-            simple_product_list = self.model.objects.filter(pk=query)
-        else:
-            product_list = Products.objects.filter(name__icontains=query)
-            simple_product_list = self.model.objects.filter(product__in=product_list)
-
-
-        paginated_data = utils.paginate(request, simple_product_list, 10)
-
-        context = {
-            "form": self.form_class,
-            "products": simple_product_list,
-            "data_list": paginated_data,
-            "MEDIA_URL": settings.MEDIA_URL
-        }
-        return render(request, self.template, context)
-
-@method_decorator(utils.super_admin_only, name='dispatch')
-class ProductFilter(View):
-    model = Products
-    template = app + "admin/product_list.html"
-
-    def get(self,request):
-        filter_by = request.GET.get("filter_by")
-        print(filter_by)
-        if filter_by == "trending":
-            product_list = self.model.objects.filter(trending="yes").order_by('-id')
-            print(product_list)
-
-        elif filter_by == "show_as_new":
-            product_list = self.model.objects.filter(show_as_new="yes").order_by('-id')
-
-        elif filter_by == "display_as_bestseller":
-            product_list = self.model.objects.filter(display_as_bestseller="yes").order_by('-id')
-
-        elif filter_by == "hide":
-            product_list = self.model.objects.filter(hide="yes").order_by('-id')        
-
-        else:
-            product_list = self.model.objects.filter().order_by('-id')
-
-        paginated_data = utils.paginate(
-            request, product_list, 50
-        )
-        for product in product_list:
-            print(product.images)
-        context = {
-            "product_list":product_list,
-            "data_list":paginated_data,
-            "MEDIA_URL":settings.MEDIA_URL
-        }
-        return render(request, self.template, context)
-    
 class DeliverySettingsUpdateView(View):
     form_class = forms.DeliverySettingsForm
-    template_name = app + "admin/delivery_setting.html"  
+    template_name = app + "admin/delivery_setting.html"
 
     def get(self, request):
-        delivery_settings = DeliverySettings.objects.first()
-        
-        form = self.form_class(instance=delivery_settings)
-        
-        context = {
-            'form': form,
-        }
+        try:
+            delivery_settings = DeliverySettings.objects.first()
+            form = self.form_class(instance=delivery_settings)
+        except Exception as e:
+            error_message = f"An error occurred while retrieving the delivery settings: {str(e)}"
+            return render_error_page(request, error_message)
+
+        context = {'form': form}
         return render(request, self.template_name, context)
 
     def post(self, request):
-        delivery_settings = DeliverySettings.objects.first()
-        
-        form = self.form_class(request.POST, instance=delivery_settings)
-        
-        if form.is_valid():
-            try:
+        try:
+            delivery_settings = DeliverySettings.objects.first()
+            form = self.form_class(request.POST, instance=delivery_settings)
+
+            if form.is_valid():
                 form.save()
-                
                 messages.success(request, "Delivery settings updated successfully.")
-                return redirect('users:admin_dashboard')  # Redirect to a success page
-            except Exception as e:
-                print("Error updating delivery settings:", e)
-                messages.error(request, f"Error updating delivery settings: {str(e)}")
-        else:
-            # Handle form errors
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
-        
-        context = {
-            'form': form,
-        }
+                return redirect('users:admin_dashboard')
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+        except Exception as e:
+            error_message = f"An error occurred while updating the delivery settings: {str(e)}"
+            return render_error_page(request, error_message)
+
+        context = {'form': form}
         return render(request, self.template_name, context)
-
-
-
-
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class AdminReviewManagementView(View):
@@ -607,41 +505,193 @@ class AdminReviewManagementView(View):
     paginate_by = 20  # Set the number of reviews per page
 
     def get(self, request):
-        user = request.user
-        category_obj = Category.objects.all()
-
-        reviews = ProductReview.objects.select_related('user').order_by('-id')
-
-        # Django's built-in paginator
-        paginator = Paginator(reviews, self.paginate_by)
-        page_number = request.GET.get('page')
         try:
-            paginated_reviews = paginator.page(page_number)
-        except PageNotAnInteger:
-            paginated_reviews = paginator.page(1)
-        except EmptyPage:
-            paginated_reviews = paginator.page(paginator.num_pages)
+            user = request.user
+            category_obj = Category.objects.all()
 
-        context = {
-            'user': user,
-            'category_obj': category_obj,
-            'reviews': paginated_reviews,  # Paginated reviews
-            'page_obj': paginated_reviews,  # Page object for pagination controls
-            'star_range': range(1, 6),  # Star range for rendering star ratings
-            'MEDIA_URL': settings.MEDIA_URL,
-        }
+            reviews = ProductReview.objects.select_related('user').order_by('-id')
 
-        return render(request, self.template_name, context)
+            # Django's built-in paginator
+            paginator = Paginator(reviews, self.paginate_by)
+            page_number = request.GET.get('page')
+            try:
+                paginated_reviews = paginator.page(page_number)
+            except PageNotAnInteger:
+                paginated_reviews = paginator.page(1)
+            except EmptyPage:
+                paginated_reviews = paginator.page(paginator.num_pages)
+
+            context = {
+                'user': user,
+                'category_obj': category_obj,
+                'reviews': paginated_reviews,  # Paginated reviews
+                'page_obj': paginated_reviews,  # Page object for pagination controls
+                'star_range': range(1, 6),  # Star range for rendering star ratings
+                'MEDIA_URL': settings.MEDIA_URL,
+            }
+
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
 
     def post(self, request, p_id):
-        review_ids = request.POST.getlist('reviews')
+        try:
+            review_ids = request.POST.getlist('reviews')
 
-        if not review_ids:
-            messages.warning(request, "No reviews selected.")
+            if not review_ids:
+                messages.warning(request, "No reviews selected.")
+                return redirect('product:admin_review_management')
+
+            # Delete selected reviews
+            ProductReview.objects.filter(id__in=review_ids).delete()
+            messages.success(request, "Selected reviews have been deleted.")
+
             return redirect('product:admin_review_management')
 
-        # Delete selected reviews
-        ProductReview.objects.filter(id__in=review_ids).delete()
-        messages.success(request, "Selected reviews have been deleted.")
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+@method_decorator(utils.super_admin_only, name='dispatch')
+class ProductSearch(View):
+    model = Products
+    form_class = forms.ProductForm
+    template = app + "admin/product_list.html"
 
-        return redirect('product:admin_review_management')
+    def post(self, request):
+        try:
+            filter_by = request.POST.get("filter_by")
+            query = request.POST.get("query")
+
+            if filter_by == "pk":
+                product_list = self.model.objects.filter(pk=query)
+            else:
+                product_list = self.model.objects.filter(name__icontains=query)
+
+            paginated_data = utils.paginate(request, product_list, 10)
+
+            context = {
+                "form": self.form_class,
+                "products": product_list,
+                "data_list": paginated_data,
+                "MEDIA_URL": settings.MEDIA_URL
+            }
+            return render(request, self.template, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+@method_decorator(utils.super_admin_only, name='dispatch')
+class ProductSearch(View):
+    model = Products
+    form_class = forms.ProductForm
+    template = app + "admin/product_list.html"
+
+    def post(self, request):
+        try:
+            filter_by = request.POST.get("filter_by")
+            query = request.POST.get("query")
+
+            if filter_by == "pk":
+                product_list = self.model.objects.filter(pk=query)
+            else:
+                product_list = self.model.objects.filter(name__icontains=query)
+
+            paginated_data = utils.paginate(request, product_list, 10)
+
+            context = {
+                "form": self.form_class,
+                "products": product_list,
+                "data_list": paginated_data,
+                "MEDIA_URL": settings.MEDIA_URL
+            }
+            return render(request, self.template, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class ProductFilter(View):
+    model = Products
+    template = app + "admin/product_list.html"
+
+    def get(self, request):
+        try:
+            filter_by = request.GET.get("filter_by")
+            if filter_by == "trending":
+                product_list = self.model.objects.filter(trending="yes").order_by('-id')
+            elif filter_by == "show_as_new":
+                product_list = self.model.objects.filter(show_as_new="yes").order_by('-id')
+            elif filter_by == "display_as_bestseller":
+                product_list = self.model.objects.filter(display_as_bestseller="yes").order_by('-id')
+            elif filter_by == "hide":
+                product_list = self.model.objects.filter(hide="yes").order_by('-id')
+            else:
+                product_list = self.model.objects.filter().order_by('-id')
+
+            paginated_data = utils.paginate(request, product_list, 50)
+
+            context = {
+                "product_list": product_list,
+                "data_list": paginated_data,
+                "MEDIA_URL": settings.MEDIA_URL
+            }
+            return render(request, self.template, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class SimpleProductList(View):
+    template_name = app + "admin/simple_product_list.html"
+
+    def get(self, request):
+        try:
+            products = SimpleProduct.objects.all()
+
+            paginator = Paginator(products, 10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
+            context = {
+                'page_obj': page_obj
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class SimpleProductSearch(View):
+    model = SimpleProduct
+    form_class = forms.SimpleProductForm
+    template = app + "admin/simple_product_list.html"
+
+    def post(self, request):
+        try:
+            filter_by = request.POST.get("filter_by")
+            query = request.POST.get("query")
+
+            if filter_by == "pk":
+                simple_product_list = self.model.objects.filter(pk=query)
+            else:
+                product_list = Products.objects.filter(name__icontains=query)
+                simple_product_list = self.model.objects.filter(product__in=product_list)
+
+            paginated_data = utils.paginate(request, simple_product_list, 10)
+
+            context = {
+                "form": self.form_class,
+                "products": simple_product_list,
+                "data_list": paginated_data,
+                "MEDIA_URL": settings.MEDIA_URL
+            }
+            return render(request, self.template, context)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)

@@ -18,8 +18,14 @@ class CartSerializer(serializers.ModelSerializer):
 
         # Fetch delivery settings from the database
         delivery_settings = DeliverySettings.objects.first()
-        delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
-        delivery_free_order_amount = delivery_settings.delivery_free_order_amount
+        
+        # Set default values if no delivery settings are found
+        if delivery_settings is None:
+            delivery_charge_per_bag = Decimal('0.00')  # Default value
+            delivery_free_order_amount = Decimal('0.00')  # Default value
+        else:
+            delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
+            delivery_free_order_amount = delivery_settings.delivery_free_order_amount
 
         # Initialize flags and values for delivery calculations
         has_virtual_or_flat_delivery_product = False
@@ -31,10 +37,8 @@ class CartSerializer(serializers.ModelSerializer):
 
             try:
                 if value['info']['variant'] == "yes":
-                    print("yes")
                     product_obj = VariantProduct.objects.get(id=product_id)
                 else:
-                    print("no")
                     product_obj = SimpleProduct.objects.get(id=product_id)
 
                 product = product_obj.product
@@ -54,10 +58,8 @@ class CartSerializer(serializers.ModelSerializer):
 
                 # Check for virtual product and delivery fee applicability
                 if product.virtual_product or product.flat_delivery_fee:
-                    # Virtual products and those with a flat delivery fee have no delivery charge
                     has_virtual_or_flat_delivery_product = True
                 else:
-                    # Normal products that may require a delivery fee
                     has_non_flat_delivery_product = True
 
                 product_data = {
@@ -89,7 +91,6 @@ class CartSerializer(serializers.ModelSerializer):
 
         # Apply delivery charges based on product types and total price
         if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
-            # All products are virtual or have a flat delivery fee, so no delivery charge
             charges['Delivery'] = Decimal('0.00')
         elif final_cart_value < delivery_free_order_amount:
             charges['Delivery'] = delivery_charge_per_bag
@@ -115,4 +116,3 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ["products_data"]
-
