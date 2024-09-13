@@ -1393,15 +1393,47 @@ video {
 	font-size: 17px;
 }
 
-#addToCartButton {
+.variant-link {
+	text-decoration: none;
+	margin:5px 10px;
+	padding: 5px 10px;
+	border: 2px solid rgba(133, 133, 133, 0.226);
+	border-radius: 2px;
+	color:rgb(0, 0, 0);
+	font-family: "Poppins",sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 20px;
+	word-spacing: 2px;
+	transition: transform 0.3s ease;
+}
+.variant-link:hover{
+	color:rgb(0, 0, 0);
+}
+
+
+.variant-link.highlighted{
+	border: 1px solid rgb(36, 36, 190);
+	background-color: transparent;
+	color: rgb(36, 36, 190);
+	transform: scale(1.05); 
+	font-family: "Poppins",sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	box-shadow: var(--sm-shadow);
+}
+
+#addToCartButton.cart-btn {
 	background-color: var(--secondary);
 	color: var(--para);
 	padding: 10px 50px;
-	font-family: "Inter", sans-serif;
+	border: 1px solid var(--secondary);
+	font-family: "Poppins", sans-serif;
 	font-style: normal;
-	font-weight: 500;
+	font-weight: 600;
 	line-height: 28px;
 	font-size: 17px;
+	box-shadow: var(--box1-box-shadow);
 }
 
 .wishlist-btn {
@@ -1552,6 +1584,8 @@ video {
 .review-rating label.gold {
 	color: #ffcc00;     /* Gold color for selected stars */
 }
+
+
 
 /*---------------------------- new products------------------------------- */
 

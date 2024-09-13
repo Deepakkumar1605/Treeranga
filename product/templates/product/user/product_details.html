@@ -165,7 +165,7 @@ Product Details - {{ product_obj.name }}
                                 <strong>{{ attribute }} : </strong>
                                 <span class="d-inline-flex flex-wrap">
                                     {% for value in values %}
-                                        <a href="#" class="vbtn py-0 variant-link {% if active_variant_attributes %}
+                                        <a href="#" class="vbtn variant-link text-capitalize {% if active_variant_attributes %}
                                             {% for key, val in active_variant_attributes.items %}
                                                 {% if key == attribute and val == value %}
                                                     highlighted
@@ -212,7 +212,7 @@ Product Details - {{ product_obj.name }}
 
                     <!-- Add to Cart Button -->
                     <div class="buttons mt-4">
-                        <a href="#" id="addToCartButton" class="btn btn-warning btn-lg fs-6 fw-bold mt-2 mx-1 cart-btn">
+                        <a href="#" id="addToCartButton" class=" cart-btn">
                             Add To Cart
                         </a>
                     </div>

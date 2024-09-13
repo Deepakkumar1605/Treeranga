@@ -537,7 +537,9 @@ padding: 18px 10px;
 
 
 /* ---------------------Admin Simple Product List CSS----------------------- */
-
+#test_table_tbody .delete_edit_button{
+  padding: 18px;
+}
 
 
 

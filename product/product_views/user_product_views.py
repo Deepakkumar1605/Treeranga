@@ -18,6 +18,7 @@ from wishlist.models import WishList
 from product.forms import ProductReviewForm
 from django.conf import settings
 from django.db.models import Q
+from orders.models import Order
 
 
 app = 'product/'
