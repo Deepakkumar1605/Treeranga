@@ -146,7 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-SITE_URL = 'http://127.0.0.1:8000'
+SITE_URL = 'http://127.0.0.1:8000/users'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
 if PRODUCTION == 'True':

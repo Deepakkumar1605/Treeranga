@@ -116,8 +116,8 @@ class ImageGallery(models.Model):
 
 
 class DeliverySettings(models.Model):
-    delivery_charge_per_bag = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    delivery_free_order_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    delivery_charge_per_bag = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    delivery_free_order_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return "Delivery Settings"
