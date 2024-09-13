@@ -80,8 +80,6 @@ class ProductDetailsView(View):
         variant_param = request.GET.get('variant', '')
 
         # Check if the product is a SimpleProduct or VariantProduct
-        print(f'p_id: {p_id}, variant_param: {variant_param}')
-        
         product_obj = None
         product_type = None
 
@@ -140,7 +138,7 @@ class ProductDetailsView(View):
                         attributes[attribute].add(value)
                 
                 active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
-            
+
             for attribute in attributes:
                 attributes[attribute] = sorted(attributes[attribute])
 
@@ -174,15 +172,13 @@ class ProductDetailsView(View):
                     })
 
         wishlist_items = []
-        is_in_wishlist = False
+        is_added = False  # Initialize is_added to False by default
+
         if user.is_authenticated:
             wishlist = WishList.objects.filter(user=user).first()
-            if wishlist:
-                wishlist_items = wishlist.products  # Inspect the structure of this variable
-                print(f"wishlist_items: {wishlist_items}")  # Print to debug
-                
-                # Adjust this part based on the structure of wishlist_items
-                is_in_wishlist = str(product_obj.id) in [str(item['id']) for item in wishlist_items] if isinstance(wishlist_items, list) else False
+            products = wishlist.products.get('items', [])
+            if any(str(item['id']) == str(p_id) and item['is_variant'] == variant_param for item in products):
+                is_added = True
 
         has_ordered_product = False
         if user.is_authenticated:
@@ -194,7 +190,6 @@ class ProductDetailsView(View):
                     break
 
         form = ProductReviewForm()
-
         context = {
             'user': user,
             'category_obj': category_obj,
@@ -209,7 +204,9 @@ class ProductDetailsView(View):
             'variant_combination': product_obj.variant_combination if product_type == "variant" else None,
             'attributes': attributes,
             'active_variant_attributes': active_variant_attributes,
-            'variant_param': variant_param
+            'variant_param': variant_param,
+            'wishlist_items': wishlist_items,
+            'is_added': is_added 
         }
 
         return render(request, self.template_name, context)

@@ -62,47 +62,100 @@
         <div class="row d-flex justify-content-center my-4">
             <div class="col-md-12 bg-white wish_container pt-4 pb-5 px-0">
                 <h5 class="wish_header pb-2 ps-4">My Wishlist</h5>
-                {% for product_data in wishlist_items %}
-                <div class="card">
-                    <div class="card-body mx-2">
-                        <div class="row mx-0 my-0 px-0 py-0">
-                            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                    <a href="">
-                                        {% if product_data.images %}
-                                            <img src="{{ MEDIA_URL }}{{ product_data.images.0 }}" class="w-50 h-50" alt="Product Image" />
-                                        {% else %}
-                                            <img src="{% static 'default-product-image.jpg' %}" class="w-50 h-50" alt="Default Image" />
-                                        {% endif %}
-                                    </a>
+                {% if wishlist_items %}
+                    {% for product in wishlist_items %}
+                    <div class="card">
+                        <div class="card-body mx-2">
+                            <div class="row mx-0 my-0 px-0 py-0">
+                                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                                    <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                        <a href="#">
+                                            {% if product.image %}
+                                                <img src="{{ product.image }}" class="w-50 h-50" alt="Product Image" />
+                                            {% else %}
+                                                No image
+                                            {% endif %}
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-lg-6 col-md-6 mb-4 mb-lg-0 wish_details">
-                                <!-- Data -->
-                                <p>{{ product_data.product.name }}</p>
-                                <p>Price: {{ product_data.price }}</p>
-                                <p>Stock: {{ product_data.stock }}</p>
-                            </div>
+                                <div class="col-lg-6 col-md-6 mb-4 mb-lg-0 wish_details">
+                                    <p>{{ product.name }}</p>
+                                    <div class="discount-price mt-lg-3">
+                                        ₹{{ product.price }}
+                                        {% if product.max_price %}
+                                        <span class="original-price"><s>₹{{ product.max_price }}</s></span>
+                                        {% endif %}
+                                    </div>
+                                </div>
 
-                            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                                <!-- Actions -->
-                                <a href="" class="btn btn-lg fs-6 mt-2 cart-btn">
-                                    Add To Cart
-                                </a>
-                                <a href="" class="btn btn-lg fs-6 mt-2 buy-btn">
-                                    Buy Now
-                                </a>
-                                <a href="{% url 'wishlist:remove_from_wishlist' %}?prod_name={{ product_data.product.name }}" class="btn btn-lg fs-6 mt-2 rwl-btn">
-                                    Remove
-                                </a>
+                                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                                    <a href="" class="btn btn-lg fs-6 mt-2 cart-btn">Add To Cart</a>
+                                    <a href="" class="btn btn-lg fs-6 mt-2 buy-btn">Buy Now</a>
+                                    <button class="btn btn-lg fs-6 mt-2 rwl-btn" data-product-id="{{ product.id }}" id="remove-wishlist-btn-{{ product.id }}">Remove from Wishlist</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center">Your wishlist is empty!</p>
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
+<script>
+    document.querySelectorAll('[id^="remove-wishlist-btn-"]').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default button behavior
+            const productId = this.getAttribute('data-product-id');
+            console.log(productId, "Removing from wishlist");
+
+            fetch('{% url "wishlist:remove_from_wishlist" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',  // Ensure CSRF token is passed
+                    'Content-Type': 'application/json',  // Sending JSON data
+                },
+                body: JSON.stringify({
+                    product_id: productId
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.message) {
+                    // Remove the item from the page
+                    const card = this.closest('.card');
+                    card.remove();
+                    
+                    // Check if the wishlist is now empty
+                    const remainingCards = document.querySelectorAll('.card');
+                    if (remainingCards.length === 0) {
+                        const emptyMessage = document.querySelector('.text-center');
+                        if (emptyMessage) {
+                            emptyMessage.innerText = 'Your wishlist is empty!';
+                        } else {
+                            const messageElement = document.createElement('p');
+                            messageElement.className = 'text-center';
+                            messageElement.innerText = 'Your wishlist is empty!';
+                            document.querySelector('.wish_container').appendChild(messageElement);
+                        }
+                    }
+                } else {
+                    console.error('Unexpected response:', data);
+                }
+                window.location.reload();
+
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
 {% endblock content %}

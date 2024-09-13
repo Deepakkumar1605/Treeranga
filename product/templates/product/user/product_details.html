@@ -54,6 +54,38 @@ Product Details - {{ product_obj.name }}
         color: white;
         font-weight: bold;
     }
+
+    .btn-wishlist {
+    background-color: #ff0000; /* Red background for visibility */
+    color: #ffffff; /* White text */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Add padding */
+    font-size: 16px; /* Increase font size */
+    font-weight: bold; /* Make text bold */
+    border-radius: 5px; /* Round corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    z-index: 10; /* Ensure button is above the image */
+}
+
+.btn-wishlist:hover {
+    background-color: #cc0000; /* Darker red on hover */
+}
+
+.position-absolute {
+    position: absolute; /* Position button absolutely within container */
+}
+
+.top-0 {
+    top: 10px; /* Adjust top position */
+}
+
+.end-0 {
+    right: 10px; /* Adjust right position */
+}
+
+.m-2 {
+    margin: 5px; /* Add margin around the button */
+}
 </style>
 
 <section id="products_of_category">
@@ -95,6 +127,19 @@ Product Details - {{ product_obj.name }}
                     {% else %}
                         <p>No main image available.</p>
                     {% endif %}
+                    {% if user.is_authenticated %}
+                        <button id="wishlist-btn" class="btn-wishlist position-absolute top-0 end-0 m-2" data-product-id="{{ product_obj.id }}" data-is-variant="{{ variant_param }}">
+                            {% if is_added %}
+                                Remove from Wishlist
+                            {% else %}
+                                Add to Wishlist
+                            {% endif %}
+                        </button>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn-wishlist position-absolute top-0 end-0 m-2">
+                            Add to Wishlist
+                        </a>
+                    {% endif %}
                 </div>
             </div>
 
@@ -108,10 +153,6 @@ Product Details - {{ product_obj.name }}
                         <span class="original-price"><s>₹{{ product_obj.product_max_price }}</s></span>
                         {% endif %}
                     </div>
-                    <button id="wishlist-btn" data-product-id="{{ simple_product.id }}" data-is-variant="{{ is_variant }}">Add to Wishlist</button>
-
-                
-
                     <!-- Product Description -->
                     <div class="description mt-3">
                         <h5>Description:</h5>
@@ -389,41 +430,42 @@ Product Details - {{ product_obj.name }}
     });
 </script>
 <script>
-     document.getElementById('wishlist-btn').addEventListener('click', function() {
-        let button = document.getElementById('wishlist-btn');
-        let productId = button.getAttribute('data-product-id');
-        let isVariant = button.getAttribute('data-is-variant');
-        let inWishlist = button.classList.contains('in-wishlist');
-        let url = inWishlist ? "{% url 'wishlist:remove_from_wishlist' %}" : "{% url 'wishlist:add_to_wishlist' %}";
-
-        // AJAX request to add or remove from wishlist
+    document.getElementById('wishlist-btn').addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        const isVariant = this.getAttribute('data-is-variant');
+        console.log(productId,isVariant,"jhgfdsdfghj")
+        const action = this.innerText.includes('Add') ? 'add' : 'remove';
+    
+        const url = action === 'add' ? '{% url "wishlist:add_to_wishlist" %}' : '{% url "wishlist:remove_from_wishlist" %}';
+    
         fetch(url, {
-            method: 'GET',
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'X-CSRFToken': '{{ csrf_token }}',  // Ensure CSRF token is passed
+                'Content-Type': 'application/json',  // Sending JSON data
             },
-            params: {
+            body: JSON.stringify({
                 product_id: productId,
-                is_variant: isVariant
-            }
+                is_variant: isVariant,
+            }),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            if (inWishlist) {
-                // Product was removed from wishlist
-                button.classList.remove('in-wishlist');
-                button.innerHTML = '<i class="fa-regular fa-heart"></i> Add to Wishlist';
+            if (data.message) {
+                // Update button text based on the action
+                this.innerText = action === 'add' ? 'Remove from Wishlist' : 'Add to Wishlist';
             } else {
-                // Product was added to wishlist
-                button.classList.add('in-wishlist');
-                button.innerHTML = 'In Wishlist';
+                console.error('Unexpected response:', data);
             }
         })
-        .catch(error => {
-            console.log('Error:', error);
-            alert('An error occurred while updating the wishlist. Please try again.');
-        });
+        .catch(error => console.error('Error:', error));
     });
 </script>
-
+    
+    
 {% endblock content %}
