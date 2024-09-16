@@ -111,7 +111,6 @@ class ShowCart(View):
             return render_error_page(request, error_message, status_code=400)
 
 
-
 class AddToCartView(View):
     def get(self, request, product_id):
         quantity = int(request.GET.get('quantity', 1))
@@ -141,7 +140,7 @@ class AddToCartView(View):
             product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_key = str(product_obj.id)
             product_info = {
-                'product_id': product_obj.product.id,
+                'product_id': product_obj.id,
                 'uid': product_uid,
                 'name': product_obj.product.name,
                 'image': product_obj.product.image.url if product_obj.product.image else None,
@@ -182,6 +181,7 @@ class AddToCartView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
 
 class ManageCart(View):
     def get(self, request, c_p_uid):
