@@ -11,5 +11,6 @@ urlpatterns = [
     path('api/trending-products/', api_product_views.AllTrendingProductsAPIView.as_view(), name='all-trending-products-api'),
     path('api/new-products/', api_product_views.AllNewProductsAPIView.as_view(), name='all-new-products-api'),
     path('api/products/<str:category_name>/', api_product_views.ShowProductsAPIView.as_view(), name='show_products_api'),
-
+    path('api/search-product-names/', api_product_views.SearchProductNamesAPIView.as_view(), name='search-product-names'),
+    path('api/search-items/', api_product_views.SearchItemsAPIView.as_view(), name='search-items'),   
 ]

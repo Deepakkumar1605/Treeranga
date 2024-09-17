@@ -58,8 +58,6 @@ class SimpleProductSerializer(serializers.ModelSerializer):
             'product_discount_price', 
             'stock', 
             'taxable_value', 
-            'flat_delivery_fee', 
-            'virtual_product', 
             'is_visible',
             'images',   # Add images to the fields
             'videos'    # Add videos to the fields

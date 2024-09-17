@@ -13,6 +13,9 @@ orderlist_post = [
         'order_uid', openapi.IN_PATH, description="Unique ID of the order", type=openapi.TYPE_STRING, required=True
     )
 ]
+search_term_param = openapi.Parameter(
+    'search_term', openapi.IN_QUERY, description="Term used to search product names", type=openapi.TYPE_STRING, required=True
+)
 
 login_post = [
     openapi.Parameter(

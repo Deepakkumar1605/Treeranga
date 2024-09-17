@@ -3,10 +3,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
+from helpers import swagger_documentation
 from product import models
 from rest_framework import status
 from product.serializers import CategorySerializer, ImageGallerySerializer, ProductSerializer, ProductsSerializer, SimpleProductSerializer, VariantImageGallerySerializer, VariantProductSerializer
-
+from django.db.models import Q
 from rest_framework.views import APIView
 
 from product_variations.models import VariantImageGallery, VariantProduct
@@ -316,4 +317,105 @@ class AllNewProductsAPIView(APIView):
 
         return Response({
             'new_products': updated_new_products
+        }, status=status.HTTP_200_OK)
+    
+
+class SearchProductNamesAPIView(APIView):
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="Search Product Names",
+        manual_parameters=[swagger_documentation.search_term_param],  # Add search_term as a body parameter
+        responses={
+            200: 'Successfully retrieved Search Product Names',
+            401: 'Unauthorized'
+        }
+    )
+    def post(self, request, *args, **kwargs):
+        search_term = request.data.get('search_term', '').strip()  # Read from request body
+        if search_term:
+            products = models.Products.objects.filter(name__icontains=search_term).distinct('name')
+            serializer = ProductSerializer(products, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response([], status=status.HTTP_200_OK)
+class SearchItemsAPIView(APIView):
+    
+    serializer_class = ProductSerializer
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="Search Items",
+        responses={
+            200: 'Successfully retrieved Search Items',
+            401: 'Unauthorized'
+        }
+    )
+    def get(self, request, *args, **kwargs):
+        search_title = request.GET.get("search_title", "").strip()
+        if not search_title:
+            return Response({"error": "Search title is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Initial product query based on the search title
+        products = models.Products.objects.filter(name__icontains=search_title)
+
+        # Get filter criteria from request
+        category_id = request.GET.get('category')
+        product_type = request.GET.get('product_type')
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+        in_stock = request.GET.get('in_stock')
+
+        # Apply additional filters if provided
+        if category_id:
+            products = products.filter(category_id=category_id)
+
+        # Filter by price range
+        if min_price and max_price:
+            simple_product_ids = models.SimpleProduct.objects.filter(
+                product_discount_price__gte=min_price, 
+                product_discount_price__lte=max_price
+            ).values_list('product_id', flat=True)
+
+            variant_product_ids = VariantProduct.objects.filter(
+                product_discount_price__gte=min_price, 
+                product_discount_price__lte=max_price
+            ).values_list('product_id', flat=True)
+
+            products = products.filter(
+                Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
+            )
+
+        # Filter by stock availability
+        if in_stock:
+            simple_product_ids = models.SimpleProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
+            variant_product_ids = VariantProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
+            products = products.filter(
+                Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
+            )
+
+         # Prepare data for response
+        all_search_items = []
+        for product in products:
+            if product.product_type == 'variant':
+                variants = VariantProduct.objects.filter(product=product)
+                for variant in variants:
+                    all_search_items.append({
+                        'product': VariantProductSerializer(variant).data,  # Use VariantProductSerializer
+                        'is_variant': True
+                    })
+            else:
+                simple_products = models.SimpleProduct.objects.filter(product=product)
+                for simple_product in simple_products:
+                    all_search_items.append({
+                        'product': SimpleProductSerializer(simple_product).data,  # Use SimpleProductSerializer
+                        'is_variant': False
+                    })
+
+
+        # Categories for filtering
+        categories = models.Category.objects.all()
+        category_serializer = CategorySerializer(categories, many=True)
+
+        return Response({
+            "all_search_items": all_search_items,
+            "categories": category_serializer.data,
+            "search_title": search_title,
         }, status=status.HTTP_200_OK)

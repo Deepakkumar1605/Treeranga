@@ -6,6 +6,7 @@ from django.views import View
 from app_common import models
 from django.contrib import messages
 from app_common.error import render_error_page
+from app_common.error import render_error_page
 from orders.models import Order
 from product.models import Products, Category,SimpleProduct,ImageGallery,ProductReview
 from django.db.models import Avg
@@ -29,18 +30,15 @@ class ShowProductsView(View):
 
     def get(self, request, category_name):
         try:
-            print(category_name)
             user = request.user
             category_obj = get_object_or_404(Category, title=category_name)
-            print(category_obj)
+            
             products_for_this_category = Products.objects.filter(category=category_obj)
-            print(products_for_this_category)
             products_with_variants = []
 
             for product in products_for_this_category:
                 if product.product_type == "simple":
                     simple_products_for_product = SimpleProduct.objects.filter(product=product, is_visible=True)
-                    print(simple_products_for_product,"simple")
                     for simple_product in simple_products_for_product:
                         image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
                         images = image_gallery.images if image_gallery else []
@@ -66,7 +64,6 @@ class ShowProductsView(View):
                             'videos': videos
                         })
 
-            print(products_with_variants,"all Products")
             return render(request, self.template_name, {
                 'products_with_variants': products_with_variants,
                 'category_obj': category_obj,
@@ -80,8 +77,6 @@ class ShowProductsView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
-
-
 
 
 class ProductDetailsView(View):
@@ -104,8 +99,10 @@ class ProductDetailsView(View):
                 product_obj = SimpleProduct.objects.get(id=p_id)
                 product_type = "simple"
 
+            # Fetch category data
             category_obj = Category.objects.all()
 
+            # Initialize variables
             all_variants_of_this = []
             attributes = {}
             active_variant_attributes = {}
@@ -123,32 +120,33 @@ class ProductDetailsView(View):
                     if image_gallery:
                         product_images = image_gallery.images
                         product_videos = image_gallery.video
-                    
+
                     avp = VariantProduct.objects.filter(product=product_obj.product)
                     for av in avp:
                         variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
                         variant_images = variant_image_gallery.images if variant_image_gallery else []
                         variant_videos = variant_image_gallery.video if variant_image_gallery else []
-                        
+
                         all_variants_of_this.append({
                             'product': av,
                             'variant': "yes",
                             'images': variant_images,
                             'videos': variant_videos
                         })
-                    
+
                     for variant in avp:
                         variant_combination = variant.variant_combination
                         for attribute, value in variant_combination.items():
                             if attribute not in attributes:
                                 attributes[attribute] = set()
                             attributes[attribute].add(value)
-                    
+
                     active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
 
                 for attribute in attributes:
                     attributes[attribute] = sorted(attributes[attribute])
 
+            # Fetch similar products
             product_list_category_wise = Products.objects.filter(category=product_obj.product.category)
             all_simple_and_variant_similar = []
 
@@ -178,8 +176,9 @@ class ProductDetailsView(View):
                             'videos': similar_videos
                         })
 
+            # Check wishlist status
             wishlist_items = []
-            is_added = False  # Initialize is_added to False by default
+            is_added = False
 
             if user.is_authenticated:
                 wishlist = WishList.objects.filter(user=user).first()
@@ -212,22 +211,25 @@ class ProductDetailsView(View):
                 'attributes': attributes,
                 'active_variant_attributes': active_variant_attributes,
                 'variant_param': variant_param,
-                'is_added': is_added 
+                'is_added': is_added
             }
 
             return render(request, self.template_name, context)
 
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)       
+            return render_error_page(request, error_message, status_code=400)
+
 class VariantRedirectView(View):
     def get(self, request):
         try:
+            # Retrieve and process query parameters
             attributes = request.GET.get('attributes', '{}')
             attributes = json.loads(attributes)
             product_id = request.GET.get('product_id', '')
             product_obj = get_object_or_404(Products, id=product_id)
 
+            # Find matching variants
             variants = VariantProduct.objects.filter(product=product_obj)
             matching_variants = []
             for variant in variants:
@@ -235,16 +237,17 @@ class VariantRedirectView(View):
                 if all(variant_combination.get(attr) == val for attr, val in attributes.items()):
                     matching_variants.append(variant)
 
+            # Determine redirect URL or return error
             if matching_variants:
                 first_variant = matching_variants[0]
                 variant_url = f"{reverse('product:product_detail', kwargs={'p_id': first_variant.id})}?variant=yes"
                 return JsonResponse({'redirect_url': variant_url})
             else:
                 return JsonResponse({'error': 'No matching variant found'}, status=404)
+        
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)
-
+            return JsonResponse({'error': error_message}, status=400)
 
 
 @login_required
@@ -288,7 +291,7 @@ def submit_review(request, product_type, product_id):
 
             
 class AllTrendingProductsView(View):
-    template_name = app + 'user/trending_products.html'
+    template_name = 'user/trending_products.html'
 
     def get(self, request):
         try:
@@ -328,13 +331,12 @@ class AllTrendingProductsView(View):
                 'MEDIA_URL': settings.MEDIA_URL,
             }
             return render(request, self.template_name, context)
+
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
-
-
 class AllNewProductsView(View):
-    template_name = app + "user/new_product.html"
+    template_name = 'user/new_product.html'
 
     def get(self, request):
         try:
@@ -374,104 +376,111 @@ class AllNewProductsView(View):
                 'MEDIA_URL': settings.MEDIA_URL,
             }
             return render(request, self.template_name, context)
+
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
-
-
 def search_product_names(request):
-    if request.method == 'POST':
-        search_term = request.POST.get('search_term', '').strip()
-        if search_term:
-            products = Products.objects.filter(name__icontains=search_term).distinct('name')
-            products_data = []
+    try:
+        if request.method == 'POST':
+            search_term = request.POST.get('search_term', '').strip()
+            if search_term:
+                products = Products.objects.filter(name__icontains=search_term).distinct('name')
+                products_data = []
 
-            for product in products:
-                products_data.append({
-                    'id': product.id,
-                    'title': product.name,
-                    'is_variant': "Yes" if product.product_type == 'variant' else "No"
-                })
+                for product in products:
+                    products_data.append({
+                        'id': product.id,
+                        'title': product.name,
+                        'is_variant': "Yes" if product.product_type == 'variant' else "No"
+                    })
 
-            return JsonResponse(products_data, safe=False)
-    return JsonResponse([], safe=False)
-
-
-
+                return JsonResponse(products_data, safe=False)
+        return JsonResponse([], safe=False)
+    except Exception as e:
+        error_message = f"An unexpected error occurred: {str(e)}"
+        return render_error_page(request, error_message, status_code=400)
 
 class SearchItems(View):
     template_name = 'product/user/search_items.html'
 
     def get(self, request):
-        search_title = request.GET.get("search_title", "").strip()
-        if not search_title:
-            return redirect("app_common:home")
+        try:
+            search_title = request.GET.get("search_title", "").strip()
+            if not search_title:
+                return redirect("app_common:home")
 
-        # Initial product query based on the search title
-        products = Products.objects.filter(name__icontains=search_title)
-        
-        # Get filter criteria from request
-        category_id = request.GET.get('category')
-        product_type = request.GET.get('product_type')
-        min_price = request.GET.get('min_price')
-        max_price = request.GET.get('max_price')
-        in_stock = request.GET.get('in_stock')
+            # Initial product query based on the search title
+            products = Products.objects.filter(name__icontains=search_title)
+            print(products,"kkkkk")
+            # Get filter criteria from request
+            category_id = request.GET.get('category')
+            product_type = request.GET.get('product_type')
+            min_price = request.GET.get('min_price')
+            max_price = request.GET.get('max_price')
+            in_stock = request.GET.get('in_stock')
+            filter_products = []
+            print(category_id,min_price,max_price,"llllll")
+            # Apply additional filters if provided
+            if category_id:
+                for i in products:
+                    if i.category.id == int(category_id):
+                        filter_products.append(i)
+                products = filter_products
+            print(products)
+            
 
-        # Apply additional filters if provided
-        if category_id:
-            products = products.filter(category_id=category_id)
-        
-        
-        # Filter by price range
-        if min_price and max_price:
-            simple_product_ids = SimpleProduct.objects.filter(
-                product_discount_price__gte=min_price, 
-                product_discount_price__lte=max_price
-            ).values_list('product_id', flat=True)
+                # for product in products:
+                #     for ids in product_ids:
+                #         if ids == product.id:
+                #             products.remove(product)
+                # print(products,"Price rsnge")    
+                # products = products.filter(
+                #     Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
+                # )
 
-            variant_product_ids = VariantProduct.objects.filter(
-                product_discount_price__gte=min_price, 
-                product_discount_price__lte=max_price
-            ).values_list('product_id', flat=True)
+            # Filter by stock availability
+            if in_stock:
+                simple_product_ids = SimpleProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
+                variant_product_ids = VariantProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
+                products = products.filter(
+                    Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
+                )
 
-            products = products.filter(
-                Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
-            )
+            all_search_items = []
+            for product in products:
+                if product.product_type == 'variant':
+                    variants = VariantProduct.objects.filter(product=product)
+                    for variant in variants:
+                        all_search_items.append({
+                            'product': variant,
+                            'is_variant': True
+                        })
+                else:
+                    simple_products = SimpleProduct.objects.filter(product=product)
+                    for simple_product in simple_products:
+                        all_search_items.append({
+                            'product': simple_product,
+                            'is_variant': False
+                        })
+            if min_price and max_price:
+                # Filter all_search_items based on the product's discount price
+                all_search_items = [
+                    item for item in all_search_items
+                    if float(min_price) <= float(item['product'].product_discount_price) <= float(max_price)
+                ]
+            # Categories for filtering
+            categories = Category.objects.all()
 
-        # Filter by stock availability
-        if in_stock:
-            simple_product_ids = SimpleProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
-            variant_product_ids = VariantProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
-            products = products.filter(
-                Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
-            )
-
-        all_search_items = []
-        for product in products:
-            if product.product_type == 'variant':
-                variants = VariantProduct.objects.filter(product=product)
-                for variant in variants:
-                    all_search_items.append({
-                        'product': variant,
-                        'is_variant': True
-                    })
-            else:
-                simple_products = SimpleProduct.objects.filter(product=product)
-                for simple_product in simple_products:
-                    all_search_items.append({
-                        'product': simple_product,
-                        'is_variant': False
-                    })
-
-        # Categories for filtering
-        categories = Category.objects.all()
-
-        # Pass the necessary data to the template
-        context = {
-            "all_search_items": all_search_items,
-            "MEDIA_URL": settings.MEDIA_URL,
-            "search_title": search_title,
-            'categories': categories,
-            'request': request,  # Pass request to access filters in the template
-        }
-        return render(request, self.template_name, context)
+            # Pass the necessary data to the template
+            context = {
+                "all_search_items": all_search_items,
+                "MEDIA_URL": settings.MEDIA_URL,
+                "search_title": search_title,
+                'categories': categories,
+                'request': request,  # Pass request to access filters in the template
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
