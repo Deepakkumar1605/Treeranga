@@ -258,18 +258,40 @@ class VariantProductList(View):
             return render_error_page(request, error_message, status_code=400)
 
     
+    
 @method_decorator(utils.super_admin_only, name='dispatch')
 class VariantProductUpdate(View):
     form_class = forms.ProductVariantForm
     template = app + "admin/variant_product_update.html"
 
-    def post(self, request, pk):
-        try:
-            variant_product = get_object_or_404(VariantProduct, pk=pk)
-            form = self.form_class(request.POST, request.FILES, instance=variant_product)
-            product_images_videos, created = VariantImageGallery.objects.get_or_create(variant_product=variant_product)
+    def get(self, request, pk):
+        variant_product = get_object_or_404(VariantProduct, pk=pk)
+        form = self.form_class(instance=variant_product)
+        
+        # Fetch the ImageGallery instance for the variant product
+        product_images_videos, created = VariantImageGallery.objects.get_or_create(variant_product=variant_product)
 
-            if form.is_valid():
+        # Ensure images and videos are fetched correctly as lists
+        images = product_images_videos.images if product_images_videos.images else []
+        videos = product_images_videos.video if product_images_videos.video else []
+
+        context = {
+            "form": form,
+            "variant_product": variant_product,
+            "images": images,  # Pass images to the template
+            "videos": videos    # Pass videos to the template
+        }
+        return render(request, self.template, context)
+
+
+
+    def post(self, request, pk):
+        variant_product = get_object_or_404(VariantProduct, pk=pk)
+        form = self.form_class(request.POST, request.FILES, instance=variant_product)
+        product_images_videos, created = VariantImageGallery.objects.get_or_create(variant_product=variant_product)
+
+        if form.is_valid():
+            try:
                 variant_product = form.save(commit=False)
 
                 # Handle image updates
@@ -284,18 +306,28 @@ class VariantProductUpdate(View):
                     updated_images.append(file_path.replace("\\", "/"))
 
                 product_images_videos.images = updated_images
-                # Handle video updates similarly
+
+                # Handle video updates
+                remove_videos = request.POST.getlist('remove_videos')
+                new_uploaded_videos = request.FILES.getlist('new_videos')
+
+                current_videos = list(product_images_videos.video) if product_images_videos.video else []
+                updated_videos = [video for video in current_videos if video not in remove_videos]
+
+                for file in new_uploaded_videos:
+                    file_path = default_storage.save(os.path.join('product_videos', file.name), file)
+                    updated_videos.append(file_path.replace("\\", "/"))
+
+                product_images_videos.video = updated_videos 
 
                 variant_product.save()
                 product_images_videos.save()
                 messages.success(request, "Variant product updated successfully.")
                 return redirect("product_variations:variant_product_list")
-            else:
-                messages.error(request, "Form is not valid. Please check the errors.")
 
-        except Exception as e:
-            error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)
+            except Exception as e:
+                print("Error updating variant product:", e)
+                messages.error(request, f"Error updating variant product: {str(e)}")
 
         context = {
             "form": form,

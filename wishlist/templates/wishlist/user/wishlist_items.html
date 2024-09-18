@@ -69,7 +69,7 @@
                             <div class="row mx-0 my-0 px-0 py-0">
                                 <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                                     <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                        <a href="#">
+                                        <a href="{% if product.is_variant == 'yes' %}{% url 'product:product_detail' product.id %}?variant=yes{% else %}{% url 'product:product_detail' product.id %}?variant=no{% endif %}">
                                             {% if product.image %}
                                                 <img src="{{ product.image }}" class="w-50 h-50" alt="Product Image" />
                                             {% else %}
@@ -77,10 +77,16 @@
                                             {% endif %}
                                         </a>
                                     </div>
+                                    
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 mb-4 mb-lg-0 wish_details">
-                                    <p>{{ product.name }}</p>
+                                    <p>
+                                        <a href="{% if product.is_variant == 'yes' %}{% url 'product:product_detail' product.id %}?variant=yes{% else %}{% url 'product:product_detail' product.id %}?variant=no{% endif %}" class="product-name">
+                                            {{ product.name }}
+                                        </a>
+                                    </p>
+                                    
                                     <div class="discount-price mt-lg-3">
                                         ₹{{ product.price }}
                                         {% if product.max_price %}
@@ -90,9 +96,12 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                                    <a href="" class="btn btn-lg fs-6 mt-2 cart-btn">Add To Cart</a>
-                                    <a href="" class="btn btn-lg fs-6 mt-2 buy-btn">Buy Now</a>
-                                    <button class="btn btn-lg fs-6 mt-2 rwl-btn" data-product-id="{{ product.id }}" id="remove-wishlist-btn-{{ product.id }}">Remove from Wishlist</button>
+                                        {% if product.is_variant == "no" %}
+                                            <a href="{% url 'cart:addtocart' product.id %}?variant=no" class="btn vd_button cart-btn">Add To Cart</a>
+                                        {% elif product.is_variant == "yes" %}
+                                            <a href="{% url 'cart:addtocart' product.id %}?variant=yes" class="btn vd_button cart-btn">Add To Cart</a>
+                                        {% endif %}
+                                     <button class="btn btn-lg fs-6 mt-2 rwl-btn" data-product-id="{{ product.id }}" id="remove-wishlist-btn-{{ product.id }}">Remove from Wishlist</button>
                                 </div>
                             </div>
                         </div>

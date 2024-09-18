@@ -291,7 +291,7 @@ def submit_review(request, product_type, product_id):
 
             
 class AllTrendingProductsView(View):
-    template_name = 'user/trending_products.html'
+    template_name = app +'user/trending_products.html'
 
     def get(self, request):
         try:
@@ -336,7 +336,7 @@ class AllTrendingProductsView(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
 class AllNewProductsView(View):
-    template_name = 'user/new_product.html'
+    template_name = app + 'user/new_product.html'
 
     def get(self, request):
         try:
