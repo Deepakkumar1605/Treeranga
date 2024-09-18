@@ -1,4 +1,5 @@
 from django.db import models
+from coupons.models import Coupon
 from users.models import User
 from helpers import utils
 
@@ -8,6 +9,7 @@ class Cart(models.Model):
     products = models.JSONField(default=dict, null=True, blank=True)
     quantity = models.IntegerField(default=1)
     total_price = models.IntegerField(default=0)
+    applied_coupon = models.ForeignKey(Coupon, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.uid

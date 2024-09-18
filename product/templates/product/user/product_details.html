@@ -358,12 +358,12 @@ Product Details - {{ product_obj.name }}
     function displayMedia(mediaElement) {
         const mediaContainer = document.getElementById('mediaContainer');
         if (mediaElement.tagName === 'IMG') {
-            mediaContainer.innerHTML = `<img src="${mediaElement.src}" alt="Selected Image">`;
+            mediaContainer.innerHTML = <img src="${mediaElement.src}" alt="Selected Image">;
         } else if (mediaElement.tagName === 'VIDEO') {
-            mediaContainer.innerHTML = `<video controls autoplay>
+            mediaContainer.innerHTML = <video controls autoplay>
 <source src="${mediaElement.querySelector('source').src}" type="video/mp4">
         Your browser does not support the video tag.
-</video>`;
+</video>;
         }
     }
 </script>
@@ -466,6 +466,5 @@ Product Details - {{ product_obj.name }}
         .catch(error => console.error('Error:', error));
     });
 </script>
-    
     
 {% endblock content %}

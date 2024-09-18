@@ -195,7 +195,8 @@ class ProductDetailsView(View):
                         has_ordered_product = True
                         break
 
-            form = ProductReviewForm()
+             # Initialize ProductReviewForm with the current user
+            form = ProductReviewForm(user=user)
 
             context = {
                 'user': user,
@@ -219,7 +220,26 @@ class ProductDetailsView(View):
 
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)       
+            return render_error_page(request, error_message, status_code=400) 
+    def post(self, request, p_id):
+        try:
+            user = request.user
+            form = ProductReviewForm(request.POST, user=user)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.product = SimpleProduct.objects.get(id=p_id) if request.GET.get('variant', '') != "yes" else VariantProduct.objects.get(id=p_id)
+                review.user = user
+                review.save()
+                messages.success(request, "Review submitted successfully.")
+            else:
+                messages.error(request, "There was an error in your review submission.")
+                
+            return redirect('product_details', p_id=p_id)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)  
+           
 class VariantRedirectView(View):
     def get(self, request):
         try:
@@ -246,9 +266,8 @@ class VariantRedirectView(View):
             return render_error_page(request, error_message, status_code=400)
 
 
-
 @login_required
-@csrf_exempt  # Only for simplicity; ideally, use CSRF tokens with AJAX requests
+@csrf_exempt  # For simplicity in AJAX; but ideally, CSRF tokens should be used properly.
 def submit_review(request, product_type, product_id):
     # Get the product type and the specific product
     if product_type == 'simple':
@@ -260,7 +279,7 @@ def submit_review(request, product_type, product_id):
     else:
         return JsonResponse({'error': 'Invalid product type'}, status=400)
 
-    # Check if the user has purchased this product by inspecting the products JSON in their orders
+    # Check if the user has purchased this product
     has_purchased = Order.objects.filter(
         user=request.user,
         products__contains={'product_id': product_id}
@@ -275,6 +294,7 @@ def submit_review(request, product_type, product_id):
     ).first()
 
     if request.method == 'POST':
+        # Bind the form with POST data and any existing review (if updating)
         form = ProductReviewForm(request.POST, instance=existing_review)
         if form.is_valid():
             review = form.save(commit=False)
@@ -284,7 +304,9 @@ def submit_review(request, product_type, product_id):
             review.save()
             return JsonResponse({'success': 'Your review has been submitted!'})
         else:
-            return JsonResponse({'error': 'There was an error submitting your review.'}, status=400)
+            return JsonResponse({'error': 'Form validation failed. Please ensure all fields are correctly filled out.'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
             
 class AllTrendingProductsView(View):

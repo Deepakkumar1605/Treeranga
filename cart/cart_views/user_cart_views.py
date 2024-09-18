@@ -1,4 +1,6 @@
 
+from datetime import timezone
+import json
 from django.shortcuts import get_object_or_404, redirect,render
 from django.urls import reverse
 from django.views import View
@@ -9,6 +11,7 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from app_common.error import render_error_page
+from coupons.models import Coupon
 from users.models import User
 from product.models import DeliverySettings, Products, SimpleProduct, Category
 from orders.models import Order
@@ -18,169 +21,273 @@ from decimal import Decimal, InvalidOperation,ROUND_HALF_UP
 from uuid import uuid4
 from payment import razorpay
 from product_variations.models import VariantProduct
+from django.utils import timezone
+
+# class ShowCart(View):
+#     def get(self, request):
+#         try:
+#             # Get categories for the view
+#             category_obj = Category.objects.all()
+
+#             # Get user and cart items
+#             user = request.user
+#             if user.is_authenticated:
+#                 cart_items = Cart.objects.filter(user=user).first()
+#                 products = cart_items.products if cart_items and cart_items.products else {}
+#             else:
+#                 cart_items = None
+#                 products = request.session.get('cart', {}).get('products', {})
+
+#             # Fetch delivery settings
+#             delivery_charge_per_bag = Decimal('0.00')
+#             delivery_free_order_amount = Decimal('0.00')
+#             delivery_settings = DeliverySettings.objects.first()
+
+#             if delivery_settings:
+#                 delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
+#                 delivery_free_order_amount = delivery_settings.delivery_free_order_amount
+
+#             total_original_price = Decimal('0.00')
+#             total_price = Decimal('0.00')
+#             delivery = Decimal('0.00')
+#             final_cart_value = Decimal('0.00')
+#             has_virtual_or_flat_delivery_product = False
+#             has_non_flat_delivery_product = False
+
+#             for product_key, product_info in products.items():
+#                 max_price = Decimal(product_info['info'].get('max_price', '0.00'))
+#                 discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
+#                 quantity = product_info.get('quantity', 0)
+
+#                 total_original_price += max_price * quantity
+#                 total_price += discount_price * quantity
+
+#                 product_id = product_info['info'].get('product_id')
+#                 if product_id:
+#                     try:
+#                         product = Products.objects.get(id=product_id)
+#                         if product.virtual_product or product.flat_delivery_fee:
+#                             # Product is virtual or has a flat delivery fee
+#                             has_virtual_or_flat_delivery_product = True
+#                         else:
+#                             # Normal product, requires delivery fee
+#                             has_non_flat_delivery_product = True
+#                     except Products.DoesNotExist:
+#                         continue
+
+#             # Calculate discount and delivery
+#             if total_price > 0:
+#                 final_cart_value = total_price
+#                 discount_price = total_original_price - total_price
+
+#                 if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
+#                     # No delivery charge for virtual or flat fee products
+#                     delivery = Decimal('0.00')
+#                 elif final_cart_value < delivery_free_order_amount:
+#                     # Normal delivery charge applies
+#                     delivery = delivery_charge_per_bag
+#                 final_cart_value += delivery
+#             else:
+#                 discount_price = Decimal('0.00')
+
+#             # Save the updated cart total if the user is authenticated
+#             if user.is_authenticated and cart_items:
+#                 cart_items.total_price = float(total_price)
+#                 cart_items.save()
+
+#             # Prepare the context for the template
+#             context = {
+#                 'category_obj': category_obj,
+#                 'cartItems': cart_items,
+#                 'products': products,
+#                 'totaloriginalprice': float(total_original_price),
+#                 'totalPrice': float(total_price),
+#                 'Delivery': float(delivery),
+#                 'final_cart_value': float(final_cart_value),
+#                 'discount_price': float(discount_price),
+#                 'MEDIA_URL': settings.MEDIA_URL,
+#             }
+
+#             # Render the cart page template
+#             return render(request, "cart/user/cartpage.html", context)
+#         except Exception as e:
+#             error_message = f"An unexpected error occurred: {str(e)}"
+#             return render_error_page(request, error_message, status_code=400)
 
 class ShowCart(View):
     def get(self, request):
-        try:
-            # Get categories for the view
-            category_obj = Category.objects.all()
+        # Get categories for the view
+        category_obj = Category.objects.all()
 
-            # Get user and cart items
-            user = request.user
-            if user.is_authenticated:
-                cart_items = Cart.objects.filter(user=user).first()
-                products = cart_items.products if cart_items and cart_items.products else {}
-            else:
-                cart_items = None
-                products = request.session.get('cart', {}).get('products', {})
+        # Get user and cart items
+        user = request.user
+        if user.is_authenticated:
+            cart_items = Cart.objects.filter(user=user).first()
+            products = cart_items.products if cart_items and cart_items.products else {}
+        else:
+            cart_items = None
+            products = request.session.get('cart', {}).get('products', {})
 
-            # Fetch delivery settings
-            delivery_charge_per_bag = Decimal('0.00')
-            delivery_free_order_amount = Decimal('0.00')
-            delivery_settings = DeliverySettings.objects.first()
+        # Fetch delivery settings
+        delivery_charge_per_bag = Decimal('0.00')
+        delivery_free_order_amount = Decimal('0.00')
+        delivery_settings = DeliverySettings.objects.first()
 
-            if delivery_settings:
-                delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
-                delivery_free_order_amount = delivery_settings.delivery_free_order_amount
+        if delivery_settings:
+            delivery_charge_per_bag = delivery_settings.delivery_charge_per_bag
+            delivery_free_order_amount = delivery_settings.delivery_free_order_amount
 
-            total_original_price = Decimal('0.00')
-            total_price = Decimal('0.00')
-            delivery = Decimal('0.00')
-            final_cart_value = Decimal('0.00')
-            has_virtual_or_flat_delivery_product = False
-            has_non_flat_delivery_product = False
+        # Initialize total calculations
+        total_original_price = Decimal('0.00')
+        total_price = Decimal('0.00')
+        delivery = Decimal('0.00')
+        final_cart_value = Decimal('0.00')
+        has_virtual_or_flat_delivery_product = False
+        has_non_flat_delivery_product = False
 
-            for product_key, product_info in products.items():
-                max_price = Decimal(product_info['info'].get('max_price', '0.00'))
-                discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
-                quantity = product_info.get('quantity', 0)
+        for product_key, product_info in products.items():
+            max_price = Decimal(product_info['info'].get('max_price', '0.00'))
+            discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
+            quantity = product_info.get('quantity', 0)
 
-                total_original_price += max_price * quantity
-                total_price += discount_price * quantity
+            total_original_price += max_price * quantity
+            total_price += discount_price * quantity
 
-                product_id = product_info['info'].get('product_id')
-                if product_id:
-                    try:
-                        product = Products.objects.get(id=product_id)
-                        if product.virtual_product or product.flat_delivery_fee:
-                            # Product is virtual or has a flat delivery fee
-                            has_virtual_or_flat_delivery_product = True
-                        else:
-                            # Normal product, requires delivery fee
-                            has_non_flat_delivery_product = True
-                    except Products.DoesNotExist:
-                        continue
+            product_id = product_info['info'].get('product_id')
+            if product_id:
+                try:
+                    product = Products.objects.get(id=product_id)
+                    if product.virtual_product or product.flat_delivery_fee:
+                        has_virtual_or_flat_delivery_product = True
+                    else:
+                        has_non_flat_delivery_product = True
+                except Products.DoesNotExist:
+                    continue
 
-            # Calculate discount and delivery
-            if total_price > 0:
-                final_cart_value = total_price
-                discount_price = total_original_price - total_price
+        # Coupon logic: Get applied coupon and calculate discount
+        applied_coupon = None
+        discount_price = Decimal('0.00')
 
-                if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
-                    # No delivery charge for virtual or flat fee products
-                    delivery = Decimal('0.00')
-                elif final_cart_value < delivery_free_order_amount:
-                    # Normal delivery charge applies
-                    delivery = delivery_charge_per_bag
-                final_cart_value += delivery
-            else:
-                discount_price = Decimal('0.00')
+        if user.is_authenticated:
+            if cart_items and cart_items.applied_coupon:
+                applied_coupon = cart_items.applied_coupon
+        else:
+            applied_coupon_code = request.session.get('applied_coupon')
+            if applied_coupon_code:
+                try:
+                    applied_coupon = Coupon.objects.get(code=applied_coupon_code, active=True)
+                except Coupon.DoesNotExist:
+                    applied_coupon = None
 
-            # Save the updated cart total if the user is authenticated
-            if user.is_authenticated and cart_items:
-                cart_items.total_price = float(total_price)
-                cart_items.save()
+        if applied_coupon and applied_coupon.start_date <= timezone.now() <= applied_coupon.end_date:
+            if applied_coupon.discount_type == 'fixed':
+                discount_price = applied_coupon.discount_value
+            elif applied_coupon.discount_type == 'percent':
+                discount_price = total_price * (applied_coupon.discount_value / Decimal('100'))
 
-            # Prepare the context for the template
-            context = {
-                'category_obj': category_obj,
-                'cartItems': cart_items,
-                'products': products,
-                'totaloriginalprice': float(total_original_price),
-                'totalPrice': float(total_price),
-                'Delivery': float(delivery),
-                'final_cart_value': float(final_cart_value),
-                'discount_price': float(discount_price),
-                'MEDIA_URL': settings.MEDIA_URL,
-            }
+        # Calculate delivery and final cart value
+        if total_price > 0:
+            final_cart_value = total_price - discount_price
+            if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
+                delivery = Decimal('0.00')
+            elif final_cart_value < delivery_free_order_amount:
+                delivery = delivery_charge_per_bag
+            final_cart_value += delivery
+        else:
+            discount_price = Decimal('0.00')
 
-            # Render the cart page template
-            return render(request, "cart/user/cartpage.html", context)
-        except Exception as e:
-            error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)
+        # Save the updated cart total if the user is authenticated
+        if user.is_authenticated and cart_items:
+            cart_items.total_price = float(total_price - discount_price)
+            cart_items.save()
 
+        # Prepare the context for the template
+        context = {
+            'category_obj': category_obj,
+            'cartItems': cart_items,
+            'products': products,
+            'totaloriginalprice': float(total_original_price),
+            'totalPrice': float(total_price),
+            'Delivery': float(delivery),
+            'final_cart_value': float(final_cart_value),
+            'discount_price': float(discount_price),
+            'applied_coupon': applied_coupon,
+            'MEDIA_URL': settings.MEDIA_URL,
+        }
+
+        # Render the cart page template
+        return render(request, "cart/user/cartpage.html", context)
 
 class AddToCartView(View):
     def get(self, request, product_id):
         quantity = int(request.GET.get('quantity', 1))
         variant = request.GET.get('variant', '')
 
-        try:
-            if request.user.is_authenticated:
-                cart, _ = Cart.objects.get_or_create(user=request.user)
-                is_user_authenticated = True
-            else:
-                cart = request.session.get('cart', {'products': {}})
-                is_user_authenticated = False
+        # try:
+        if request.user.is_authenticated:
+            cart, _ = Cart.objects.get_or_create(user=request.user)
+            is_user_authenticated = True
+        else:
+            cart = request.session.get('cart', {'products': {}})
+            is_user_authenticated = False
 
-            if variant == "yes":
-                product_obj = get_object_or_404(VariantProduct, id=product_id)
-            else:
-                product_obj = get_object_or_404(SimpleProduct, id=product_id)
+        if variant == "yes":
+            product_obj = get_object_or_404(VariantProduct, id=product_id)
+        else:
+            product_obj = get_object_or_404(SimpleProduct, id=product_id)
 
-            # Ensure quantity is within valid range
-            if quantity <= 0:
-                messages.error(request, "Quantity must be at least 1.")
-                return redirect(request.META.get('HTTP_REFERER'))
-            elif quantity > 6:
-                quantity = 6
-                messages.warning(request, "Maximum quantity allowed is 6. Adjusting quantity to 6.")
+        # Ensure quantity is within valid range
+        if quantity <= 0:
+            messages.error(request, "Quantity must be at least 1.")
+            return redirect(request.META.get('HTTP_REFERER'))
+        elif quantity > 6:
+            quantity = 6
+            messages.warning(request, "Maximum quantity allowed is 6. Adjusting quantity to 6.")
 
-            product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
-            product_key = str(product_obj.id)
-            product_info = {
-                'product_id': product_obj.id,
-                'uid': product_uid,
-                'name': product_obj.product.name,
-                'image': product_obj.product.image.url if product_obj.product.image else None,
-                'max_price': product_obj.product_max_price,
-                'discount_price': product_obj.product_discount_price,
-                'variant': variant,
+        product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
+        product_key = str(product_obj.id)
+        product_info = {
+            'product_id': product_obj.id,
+            'uid': product_uid,
+            'name': product_obj.product.name,
+            'image': product_obj.product.image.url if product_obj.product.image else None,
+            'max_price': product_obj.product_max_price,
+            'discount_price': product_obj.product_discount_price,
+            'variant': variant,
+        }
+
+        products = cart.products if is_user_authenticated else cart.get('products', {})
+
+        if product_key in products:
+            new_quantity = products[product_key]['quantity'] + quantity
+            if new_quantity > 6:
+                quantity = 6 - products[product_key]['quantity']
+                messages.warning(request, "Adding more items would exceed the maximum limit. Adjusting quantity accordingly.")
+            products[product_key]['quantity'] += quantity
+            products[product_key]['total_price'] = products[product_key]['quantity'] * product_obj.product_discount_price
+        else:
+            products[product_key] = {
+                'info': product_info,
+                'quantity': quantity,
+                'total_price': quantity * product_obj.product_discount_price
             }
 
-            products = cart.products if is_user_authenticated else cart.get('products', {})
+        if is_user_authenticated:
+            cart.products = products
+            cart.total_price = sum(item['total_price'] for item in products.values())
+            cart.save()
+        else:
+            cart['products'] = products
+            cart['total_price'] = sum(item['total_price'] for item in products.values())
+            request.session['cart'] = cart
+            request.session.modified = True
 
-            if product_key in products:
-                new_quantity = products[product_key]['quantity'] + quantity
-                if new_quantity > 6:
-                    quantity = 6 - products[product_key]['quantity']
-                    messages.warning(request, "Adding more items would exceed the maximum limit. Adjusting quantity accordingly.")
-                products[product_key]['quantity'] += quantity
-                products[product_key]['total_price'] = products[product_key]['quantity'] * product_obj.product_discount_price
-            else:
-                products[product_key] = {
-                    'info': product_info,
-                    'quantity': quantity,
-                    'total_price': quantity * product_obj.product_discount_price
-                }
+        messages.success(request, f"{product_obj.product.name} added to cart.")
+        return redirect("app_common:home")
 
-            if is_user_authenticated:
-                cart.products = products
-                cart.total_price = sum(item['total_price'] for item in products.values())
-                cart.save()
-            else:
-                cart['products'] = products
-                cart['total_price'] = sum(item['total_price'] for item in products.values())
-                request.session['cart'] = cart
-                request.session.modified = True
-
-            messages.success(request, f"{product_obj.product.name} added to cart.")
-            return redirect("app_common:home")
-
-        except Exception as e:
-            error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)
+        # except Exception as e:
+        #     error_message = f"An unexpected error occurred: {str(e)}"
+        #     return render_error_page(request, error_message, status_code=400)
 
 
 class ManageCart(View):
@@ -470,3 +577,93 @@ def transfer_session_cart_to_user(request, user):
         except Exception as e:
             error_message = f"Error transferring session cart: {str(e)}"
             messages.error(request, error_message)
+class ApplyCouponView(View):
+    def post(self, request):
+        try:
+            # Get the coupon code from the request body (JSON format)
+            data = json.loads(request.body)
+            coupon_code = data.get('coupon_code')
+            print(coupon_code,"fjkdfbdfjbdfldbnfldbwfbdfdsfldljb")
+            # Validate if the coupon exists and is active
+            try:
+                coupon = Coupon.objects.get(code=coupon_code, is_active=True)
+                print(coupon.code,"ehehqfebhfobeofuhbeoqwfboodfbfbwefbwefbwebf")
+                # Ensure the coupon is within its valid date range
+                if coupon.valid_from <= timezone.now() <= coupon.valid_to:
+                    if request.user.is_authenticated:
+                        # If the user is authenticated, apply the coupon to their cart
+                        cart = Cart.objects.filter(user=request.user).first()
+
+                        if cart:
+                            cart.applied_coupon = coupon
+                            cart.save()
+
+                            # Calculate the final price after applying the coupon
+                            total_price = Decimal(cart.total_price)
+                            discount_price = self.calculate_coupon_discount(coupon, total_price)
+                            final_price = total_price - discount_price
+
+                            return JsonResponse({
+                                'success': True, 
+                                'final_price': float(final_price),
+                                'discount_price': float(discount_price),
+                                'message': 'Coupon applied successfully!'
+                            })
+                        else:
+                            return JsonResponse({'success': False, 'message': 'No items in the cart.'})
+
+                    else:
+                        # For unauthenticated users, apply the coupon via session
+                        cart_session = request.session.get('cart', {})
+                        total_price = Decimal(cart_session.get('total_price', '0.00'))
+
+                        if total_price > 0:
+                            # Store the coupon in the session
+                            request.session['applied_coupon'] = coupon.code
+                            request.session.modified = True
+
+                            # Calculate final price for session-based cart
+                            discount_price = self.calculate_coupon_discount(coupon, total_price)
+                            final_price = total_price - discount_price
+
+                            return JsonResponse({
+                                'success': True,
+                                'final_price': float(final_price),
+                                'discount_price': float(discount_price),
+                                'message': 'Coupon applied successfully!'
+                            })
+                        else:
+                            return JsonResponse({'success': False, 'message': 'No items in the cart.'})
+
+                else:
+                    return JsonResponse({'success': False, 'message': 'Coupon is expired or not valid right now.'})
+
+            except Coupon.DoesNotExist:
+                return JsonResponse({'success': False, 'message': 'Invalid coupon code.'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Something went wrong: {str(e)}'})
+
+    def calculate_coupon_discount(self, coupon, total_price):
+        """
+        Calculate the discount based on the coupon type.
+        """
+        discount_price = Decimal('0.00')
+        if coupon.discount_type == 'fixed':
+            discount_price = coupon.discount_value
+        elif coupon.discount_type == 'percent':
+            discount_price = total_price * (coupon.discount_value / Decimal('100'))
+        
+        return discount_price
+
+    
+def remove_coupon(request):
+    if request.user.is_authenticated:
+        cart = Cart.objects.get(user=request.user)
+        cart.applied_coupon = None
+        cart.save()
+    else:
+        request.session.pop('applied_coupon', None)
+        request.session.modified = True
+    messages.success(request, 'Coupon removed successfully.')
+    return redirect('cart:showcart')
