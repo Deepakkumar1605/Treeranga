@@ -116,7 +116,14 @@
                         <button type="submit" class="btn btn-primary mt-2">Apply</button>
                     </form>
                     {% if applied_coupon %}
+                    <!-- Display applied coupon info and remove button -->
                     <p class="mt-3 text-success">Coupon <strong>{{ applied_coupon.code }}</strong> applied successfully! Discount: ₹{{ discount_price }}</p>
+                    
+                    <!-- Remove Coupon Button -->
+                    <form method="POST" action="{% url 'cart:remove_coupon' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger mt-2">Remove Coupon</button>
+                    </form>
                     {% endif %}
                     <p id="coupon-message" class="mt-3 text-danger">
                         {% for message in messages %}

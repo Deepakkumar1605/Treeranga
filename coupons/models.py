@@ -18,5 +18,4 @@ class Coupon(models.Model):
         return self.code
 
     def is_valid(self):
-        # Check if the coupon is valid (within date range and active)
         return self.is_active and self.valid_from <= timezone.now() <= self.valid_to

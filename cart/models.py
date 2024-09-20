@@ -10,6 +10,7 @@ class Cart(models.Model):
     quantity = models.IntegerField(default=1)
     total_price = models.IntegerField(default=0)
     applied_coupon = models.ForeignKey(Coupon, null=True, blank=True, on_delete=models.SET_NULL)
+    coupon_discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # New field
 
     def __str__(self):
         return self.uid

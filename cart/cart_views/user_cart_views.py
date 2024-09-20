@@ -116,17 +116,27 @@ from django.utils import timezone
 
 class ShowCart(View):
     def get(self, request):
-        # Get categories for the view
         category_obj = Category.objects.all()
-
-        # Get user and cart items
         user = request.user
+
         if user.is_authenticated:
             cart_items = Cart.objects.filter(user=user).first()
             products = cart_items.products if cart_items and cart_items.products else {}
+            previous_products = cart_items.products if cart_items else {}
         else:
             cart_items = None
             products = request.session.get('cart', {}).get('products', {})
+            previous_products = request.session.get('previous_cart_products', {})
+
+        # If cart has been modified, clear the applied coupon and discount amount
+        if products != previous_products:
+            if user.is_authenticated and cart_items:
+                cart_items.applied_coupon = None
+                cart_items.coupon_discount_amount = Decimal('0.00')  # Reset discount
+                cart_items.save()
+            else:
+                request.session.pop('applied_coupon', None)
+                request.session.pop('coupon_discount_amount', None)
 
         # Fetch delivery settings
         delivery_charge_per_bag = Decimal('0.00')
@@ -145,6 +155,7 @@ class ShowCart(View):
         has_virtual_or_flat_delivery_product = False
         has_non_flat_delivery_product = False
 
+        # Calculate total price of products in cart
         for product_key, product_info in products.items():
             max_price = Decimal(product_info['info'].get('max_price', '0.00'))
             discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
@@ -166,40 +177,58 @@ class ShowCart(View):
 
         # Coupon logic: Get applied coupon and calculate discount
         applied_coupon = None
-        discount_price = Decimal('0.00')
+        discount_amount = Decimal('0.00')
 
+        # Step 1: Check for previously applied coupon or session value
         if user.is_authenticated:
             if cart_items and cart_items.applied_coupon:
                 applied_coupon = cart_items.applied_coupon
+                discount_amount = cart_items.coupon_discount_amount or Decimal('0.00')  # Get stored discount value
         else:
             applied_coupon_code = request.session.get('applied_coupon')
+            discount_amount = Decimal(request.session.get('coupon_discount_amount', '0.00'))  # Get stored session discount value
             if applied_coupon_code:
                 try:
                     applied_coupon = Coupon.objects.get(code=applied_coupon_code, active=True)
                 except Coupon.DoesNotExist:
                     applied_coupon = None
 
-        if applied_coupon and applied_coupon.start_date <= timezone.now() <= applied_coupon.end_date:
+        # Step 2: Apply coupon if it's valid and calculate the discount
+        if applied_coupon and applied_coupon.valid_from <= timezone.now() <= applied_coupon.valid_to:
             if applied_coupon.discount_type == 'fixed':
-                discount_price = applied_coupon.discount_value
+                discount_amount = applied_coupon.discount_value
             elif applied_coupon.discount_type == 'percent':
-                discount_price = total_price * (applied_coupon.discount_value / Decimal('100'))
+                discount_amount = total_price * (applied_coupon.discount_value / Decimal('100'))
 
-        # Calculate delivery and final cart value
-        if total_price > 0:
-            final_cart_value = total_price - discount_price
+            # Store the discount amount for authenticated users
+            if user.is_authenticated and cart_items:
+                cart_items.coupon_discount_amount = discount_amount
+                cart_items.save()
+            else:
+                request.session['coupon_discount_amount'] = str(discount_amount)  # For guest users
+
+        # Apply coupon to the product total (excluding delivery)
+        product_total_after_discount = total_price - discount_amount
+
+
+        # Step 3: Calculate the delivery fee based on the discounted product total
+        if product_total_after_discount > 0:
             if has_virtual_or_flat_delivery_product and not has_non_flat_delivery_product:
-                delivery = Decimal('0.00')
-            elif final_cart_value < delivery_free_order_amount:
-                delivery = delivery_charge_per_bag
-            final_cart_value += delivery
-        else:
-            discount_price = Decimal('0.00')
+                delivery = Decimal('0.00')  # No delivery charge for virtual/flat delivery products
+            elif product_total_after_discount < delivery_free_order_amount:
+                delivery = delivery_charge_per_bag  # Apply delivery charge if order value is below free threshold
 
-        # Save the updated cart total if the user is authenticated
+        # Step 4: Final cart value (product total after discount + delivery fee)
+        final_cart_value = product_total_after_discount + delivery
+
+        # Step 5: Save the updated cart total if user is authenticated
         if user.is_authenticated and cart_items:
-            cart_items.total_price = float(total_price - discount_price)
+            cart_items.total_price = float(final_cart_value)  # Store the final cart value including delivery
             cart_items.save()
+
+        # Step 6: Update the previous cart state in the session for guest users
+        if not user.is_authenticated:
+            request.session['previous_cart_products'] = products
 
         # Prepare the context for the template
         context = {
@@ -210,13 +239,15 @@ class ShowCart(View):
             'totalPrice': float(total_price),
             'Delivery': float(delivery),
             'final_cart_value': float(final_cart_value),
-            'discount_price': float(discount_price),
+            'discount_price': float(discount_amount),
             'applied_coupon': applied_coupon,
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
         # Render the cart page template
         return render(request, "cart/user/cartpage.html", context)
+
+
 
 class AddToCartView(View):
     def get(self, request, product_id):
@@ -577,17 +608,16 @@ def transfer_session_cart_to_user(request, user):
         except Exception as e:
             error_message = f"Error transferring session cart: {str(e)}"
             messages.error(request, error_message)
+            
 class ApplyCouponView(View):
     def post(self, request):
         try:
             # Get the coupon code from the request body (JSON format)
             data = json.loads(request.body)
             coupon_code = data.get('coupon_code')
-            print(coupon_code,"fjkdfbdfjbdfldbnfldbwfbdfdsfldljb")
             # Validate if the coupon exists and is active
             try:
                 coupon = Coupon.objects.get(code=coupon_code, is_active=True)
-                print(coupon.code,"ehehqfebhfobeofuhbeoqwfboodfbfbwefbwefbwebf")
                 # Ensure the coupon is within its valid date range
                 if coupon.valid_from <= timezone.now() <= coupon.valid_to:
                     if request.user.is_authenticated:
