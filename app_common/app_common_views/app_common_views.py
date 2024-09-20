@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib import messages
 from app_common.error import render_error_page
 from app_common.models import ContactMessage
+from orders.models import Order
 from product_variations.models import VariantProduct
 from users.forms import LoginForm
 from app_common.models import ContactMessage
@@ -30,7 +31,7 @@ class HomeView(View):
 
             # Get all categories
             categories = Category.objects.all()
-
+            # orders = Order.objects.all().delete()
             # Handle Trending Products (simple and variant)
             trending_products = []
             for product in Products.objects.filter(trending="yes").order_by('-id')[:7]:

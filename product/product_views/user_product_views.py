@@ -89,6 +89,8 @@ class ProductDetailsView(View):
 
     def get(self, request, p_id):
         try:
+            if not request.user.is_authenticated:
+                return redirect('users:login')
             user = request.user
             variant_param = request.GET.get('variant', '')
 
@@ -183,9 +185,10 @@ class ProductDetailsView(View):
 
             if user.is_authenticated:
                 wishlist = WishList.objects.filter(user=user).first()
-                products = wishlist.products.get('items', [])
-                if any(str(item['id']) == str(p_id) and item['is_variant'] == variant_param for item in products):
-                    is_added = True
+                if wishlist:
+                    products = wishlist.products.get('items', [])
+                    if any(str(item['id']) == str(p_id) and item['is_variant'] == variant_param for item in products):
+                        is_added = True
 
                 has_ordered_product = False
                 orders = Order.objects.filter(user=user)

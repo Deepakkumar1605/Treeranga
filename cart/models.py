@@ -8,7 +8,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     products = models.JSONField(default=dict, null=True, blank=True)
     quantity = models.IntegerField(default=1)
-    total_price = models.IntegerField(default=0)
+    total_price = models.FloatField(default=0.00)
     applied_coupon = models.ForeignKey(Coupon, null=True, blank=True, on_delete=models.SET_NULL)
     coupon_discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # New field
 

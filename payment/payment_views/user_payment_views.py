@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.views import View
 from django.shortcuts import redirect, get_object_or_404,render
 from django.contrib import messages
@@ -165,7 +166,13 @@ class PaymentSuccess(View):
             # Fetch order details
             order_details = CartSerializer(cart).data
             ord_meta_data = {k: v for d in order_details.values() for k, v in d.items()}
+            ord_meta_data = convert_decimals_to_str(ord_meta_data)  # Convert before using
+
+            print(f"Order meta data : {ord_meta_data}")
             t_price = float(ord_meta_data.get('final_cart_value', 0))
+            # Check data types after conversion
+            for key, value in ord_meta_data.items():
+                print(f"Key: {key}, Value: {value}, Type: {type(value)}")
 
             user_addresses = user.address
             selected_address = next((addr for addr in user_addresses if addr['id'] == address_id), None)
@@ -183,21 +190,28 @@ class PaymentSuccess(View):
                     return render_error_page(request, error_message, status_code=400)
 
                 # Create and save the order
-                order = self.model(
-                    user=user,
-                    full_name=cart.user.full_name,
-                    email=cart.user.email,
-                    products=cart.products,
-                    order_value=t_price,
-                    address=selected_address,
-                    order_meta_data=ord_meta_data,
-                    razorpay_payment_id=razorpay_payment_id,
-                    razorpay_order_id=razorpay_order_id,
-                    razorpay_signature=razorpay_signature,
-                )
+                print("HIII")
+                try:
+                    order = self.model(
+                        user=user,
+                        full_name=cart.user.full_name,
+                        email=cart.user.email,
+                        products=cart.products,
+                        order_value=float(t_price),
+                        address=selected_address,
+                        order_meta_data=ord_meta_data,
+                        razorpay_payment_id=razorpay_payment_id,
+                        razorpay_order_id=razorpay_order_id,
+                        razorpay_signature=razorpay_signature,
+                    )
 
-                order.save()
-
+                    order.save()
+                except Exception as e:
+                    print(e)
+                    error_message = "Error creating order: {}".format(str(e))
+                    return render_error_page(request, error_message, status_code=500)
+                print("HIII")
+                
                 # Reduce stock for each product in the cart
                 for product_key, product_data in cart.products.items():
                     product_id = product_data['info']['product_id']  # This ID can be for either simple or variant product
@@ -324,3 +338,12 @@ class PaymentSuccess(View):
         except Exception as e:
             error_message = f"An unexpected error occurred while processing your order: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+        
+def convert_decimals_to_str(data):
+    if isinstance(data, dict):
+        return {k: convert_decimals_to_str(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [convert_decimals_to_str(v) for v in data]
+    elif isinstance(data, Decimal):
+        return str(data)
+    return data
