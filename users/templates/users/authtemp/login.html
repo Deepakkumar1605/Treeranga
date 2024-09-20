@@ -2,6 +2,9 @@
 {% load static %}
 {% block title %}Login Page{% endblock title %}
 {% block content %}
+<style>
+   @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+</style>
 
 <section class="login_background">
   <div class="login_card">
@@ -10,7 +13,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 leftside_image">
           <img src="{% static 'app_common/images/Download130.jpeg' %}" alt="Login Image">
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 px-lg-3 border">
+        <div class="col-lg-6 col-md-6 col-sm-12 px-lg-3 py-5 py-lg-0 py-md-0 border">
           <form method="post" action="">
             {% csrf_token %}
             <h5 class="text-center mt-lg-3 mb-lg-4 fs-1 fw-bold">Welcome!</h5>
@@ -18,13 +21,16 @@
               <p class="snippets_alert"> {% include 'snippets/alert.html' %}</p>
             </div>
             {% for field in form %}
-              <div class="mb-4">
+              <div class=" form-group mb-lg-2 mb-md-3 mb-2">
                 <label for="{{ field.id_for_label }}" class="col-form-label">{{ field.label }}:</label>
                 {{ field }}
+                {% if field.name == 'password' %}
+                <i class="fa-solid fa-eye toggle-password"></i>
+                {% endif %}
               </div>
             {% endfor %}
             <div class="mt-lg-2 d-flex justify-content-end fs-6">
-              <button type="button" class="border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+              <button type="button" class="border-0 bg-transparent mt-lg-0 mt-md-0 mt-2" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
                 <u>Forgot Password?</u>
               </button>
             </div>
@@ -63,6 +69,18 @@
     </div>
   </div>
 </section>
+<script>
+ document.querySelectorAll('.toggle-password').forEach(function(toggleIcon) {
+    toggleIcon.addEventListener('click', function() {
+        var passwordField = this.closest('.form-group').querySelector('input[name="password"]');
+        var type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+});
+
+
+</script>
 
 
 

@@ -147,7 +147,7 @@ a.sidebar-links{
   transition: transform 0.3s;
   font-size: 12px !important;
   margin-left: 85px;
-}
+} 
 
 .chevron-icon.rotate {
   transform: rotate(-180deg);
