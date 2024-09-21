@@ -83,7 +83,7 @@ class ProductDetailsView(View):
     template_name = app + 'user/product_details.html'
 
     def get(self, request, p_id):
-        try:
+        # try:
             user = request.user
             variant_param = request.GET.get('variant', '')
 
@@ -177,22 +177,28 @@ class ProductDetailsView(View):
                         })
 
             # Check wishlist status
+            # Check wishlist status
             wishlist_items = []
             is_added = False
 
             if user.is_authenticated:
                 wishlist = WishList.objects.filter(user=user).first()
-                products = wishlist.products.get('items', [])
-                if any(str(item['id']) == str(p_id) and item['is_variant'] == variant_param for item in products):
-                    is_added = True
+                if wishlist:
+                    products = wishlist.products.get('items', [])
+                    if any(str(item['id']) == str(p_id) and item['is_variant'] == variant_param for item in products):
+                        is_added = True
+                else:
+                    products = []  # In case no wishlist exists
 
-                has_ordered_product = False
-                orders = Order.objects.filter(user=user)
-                for order in orders:
-                    products = order.products
-                    if str(product_obj.id) in products:
-                        has_ordered_product = True
-                        break
+            has_ordered_product = False
+            order_id = None  # Initialize order_id as None
+            if user.is_authenticated:
+                for order in Order.objects.filter(user=user):
+                    for product in order.products.get('items', []):
+                        if str(product['id']) == str(product_obj.id):
+                            has_ordered_product = True
+                            order_id = order.id  # Get the order_id
+                            break
 
             form = ProductReviewForm()
 
@@ -211,14 +217,16 @@ class ProductDetailsView(View):
                 'attributes': attributes,
                 'active_variant_attributes': active_variant_attributes,
                 'variant_param': variant_param,
-                'is_added': is_added
+                'is_added': is_added,
+                'has_ordered_product': has_ordered_product,
+                'order_id': order_id
             }
 
             return render(request, self.template_name, context)
 
-        except Exception as e:
-            error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)
+        # except Exception as e:
+        #     error_message = f"An unexpected error occurred: {str(e)}"
+        #     return render_error_page(request, error_message, status_code=400)
 
 class VariantRedirectView(View):
     def get(self, request):
@@ -249,47 +257,40 @@ class VariantRedirectView(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return JsonResponse({'error': error_message}, status=400)
 
-
 @login_required
-@csrf_exempt  # Only for simplicity; ideally, use CSRF tokens with AJAX requests
-def submit_review(request, product_type, product_id):
-    # Get the product type and the specific product
-    if product_type == 'simple':
-        product = get_object_or_404(SimpleProduct, pk=product_id)
-        content_type = ContentType.objects.get_for_model(SimpleProduct)
-    elif product_type == 'variant':
-        product = get_object_or_404(VariantProduct, pk=product_id)
-        content_type = ContentType.objects.get_for_model(VariantProduct)
-    else:
-        return JsonResponse({'error': 'Invalid product type'}, status=400)
-
-    # Check if the user has purchased this product by inspecting the products JSON in their orders
-    has_purchased = Order.objects.filter(
-        user=request.user,
-        products__contains={'product_id': product_id}
-    ).exists()
-
-    if not has_purchased:
-        return JsonResponse({'error': 'You can only review products you have purchased.'}, status=400)
-
-    # Check if the user already reviewed this product
-    existing_review = ProductReview.objects.filter(
-        content_type=content_type, object_id=product_id, user=request.user
-    ).first()
+def submit_review(request, product_id, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    # Check if the product exists in the order's products JSON
+    product_data = next((prod for prod in order.products['items'] if str(prod['id']) == str(product_id)), None)
+    if not product_data:
+        messages.error(request, "This product is not part of your order.")
+        return redirect('orders:order_detail', order_id=order.id)
+    
+    # Fetch the actual product object (either Products or SimpleProduct/VariantProduct)
+    product = get_object_or_404(Products, id=product_data['id'])  # Modify model if needed
+    
+    # Check if the user has already reviewed this product
+    user_review = ProductReview.objects.filter(user=request.user, product=product).first()
 
     if request.method == 'POST':
-        form = ProductReviewForm(request.POST, instance=existing_review)
+        form = ProductReviewForm(request.POST, instance=user_review, user=request.user)
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user
-            review.content_type = content_type
-            review.object_id = product.id
+            review.product = product
             review.save()
-            return JsonResponse({'success': 'Your review has been submitted!'})
-        else:
-            return JsonResponse({'error': 'There was an error submitting your review.'}, status=400)
+            messages.success(request, 'Your review has been submitted!')
 
-            
+            # Redirect to the product details page after successful submission
+            return redirect('product:product_details', p_id=product.id)
+    else:
+        form = ProductReviewForm(instance=user_review, user=request.user)
+
+    return render(request, 'submit_review.html', {'form': form, 'product': product, 'order': order})     
+
+    
+           
 class AllTrendingProductsView(View):
     template_name = app +'user/trending_products.html'
 
@@ -380,6 +381,8 @@ class AllNewProductsView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
+
 def search_product_names(request):
     try:
         if request.method == 'POST':
@@ -392,6 +395,8 @@ def search_product_names(request):
                     products_data.append({
                         'id': product.id,
                         'title': product.name,
+                        'brand': product.brand,
+                        
                         'is_variant': "Yes" if product.product_type == 'variant' else "No"
                     })
 
@@ -410,36 +415,18 @@ class SearchItems(View):
             if not search_title:
                 return redirect("app_common:home")
 
-            # Initial product query based on the search title
             products = Products.objects.filter(name__icontains=search_title)
-            print(products,"kkkkk")
+
             # Get filter criteria from request
             category_id = request.GET.get('category')
             product_type = request.GET.get('product_type')
             min_price = request.GET.get('min_price')
             max_price = request.GET.get('max_price')
             in_stock = request.GET.get('in_stock')
-            filter_products = []
-            print(category_id,min_price,max_price,"llllll")
-            # Apply additional filters if provided
+
             if category_id:
-                for i in products:
-                    if i.category.id == int(category_id):
-                        filter_products.append(i)
-                products = filter_products
-            print(products)
-            
+                products = products.filter(category_id=category_id)
 
-                # for product in products:
-                #     for ids in product_ids:
-                #         if ids == product.id:
-                #             products.remove(product)
-                # print(products,"Price rsnge")    
-                # products = products.filter(
-                #     Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
-                # )
-
-            # Filter by stock availability
             if in_stock:
                 simple_product_ids = SimpleProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
                 variant_product_ids = VariantProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
@@ -452,33 +439,40 @@ class SearchItems(View):
                 if product.product_type == 'variant':
                     variants = VariantProduct.objects.filter(product=product)
                     for variant in variants:
+                        # Get the first image from VariantImageGallery
+                        image_gallery = VariantImageGallery.objects.filter(variant_product=variant).first()
+                        main_image = image_gallery.images[0] if image_gallery and image_gallery.images else None
                         all_search_items.append({
                             'product': variant,
-                            'is_variant': True
+                            'is_variant': True,
+                            'main_image': main_image
                         })
                 else:
                     simple_products = SimpleProduct.objects.filter(product=product)
                     for simple_product in simple_products:
+                        # Get the first image from ImageGallery
+                        image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                        main_image = image_gallery.images[0] if image_gallery and image_gallery.images else None
                         all_search_items.append({
                             'product': simple_product,
-                            'is_variant': False
+                            'is_variant': False,
+                            'main_image': main_image
                         })
+
             if min_price and max_price:
-                # Filter all_search_items based on the product's discount price
                 all_search_items = [
                     item for item in all_search_items
                     if float(min_price) <= float(item['product'].product_discount_price) <= float(max_price)
                 ]
-            # Categories for filtering
+
             categories = Category.objects.all()
 
-            # Pass the necessary data to the template
             context = {
                 "all_search_items": all_search_items,
                 "MEDIA_URL": settings.MEDIA_URL,
                 "search_title": search_title,
                 'categories': categories,
-                'request': request,  # Pass request to access filters in the template
+                'request': request,
             }
             return render(request, self.template_name, context)
         except Exception as e:

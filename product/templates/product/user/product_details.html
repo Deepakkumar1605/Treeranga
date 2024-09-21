@@ -267,27 +267,44 @@ Product Details - {{ product_obj.name }}
             {% endfor %}
         </div>
     </div>
+    <div class="review-section"></div>
+        <h2>Submit Your Review</h2>
+
+        {% if user.is_authenticated %}
+        <form id="review-form" method="post" action="{% url 'product:submit_review' product_id=product_obj.id order_id=order_id|default:0 %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        {% else %}
+            <p>You need to <a href="{% url 'users:login' %}">login</a> to submit a review.</p>
+        {% endif %}
+    </div>
+
+    <!-- Display existing reviews -->
+    <div class="existing-reviews">
+        <h3>Customer Reviews</h3>
+
+        {% if product_obj.reviews.all %}
+            <ul class="review-list">
+                {% for review in product_obj.reviews.all %}
+                    <li>
+                        <strong>{{ review.user.full_name }}:</strong>
+                        <span>{{ review.rating }}★</span>
+                        <p>{{ review.review }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews yet for this product.</p>
+        {% endif %}
+    </div>
     <!-- Include jQuery library if not already included -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- The form for submitting reviews -->
-<form id="review-form" method="post" action="{% url 'product:submit_review' product_type=product_obj.product.product_type product_id=product_obj.id %}">
-    {% csrf_token %}
-    <!-- Form fields here -->
-    <div class="mb-3">
-        <label for="rating" class="form-label">Rating</label>
-        <select class="form-select" id="rating" name="rating">
-            {% for i in star_range %}
-                <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="mb-3">
-        <label for="comment" class="form-label">Comment</label>
-        <textarea class="form-control" id="comment" name="comment"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit Review</button>
-</form>
+
 
 
 
