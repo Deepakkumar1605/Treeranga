@@ -5,88 +5,6 @@ Product Details - {{ product_obj.name }}
 {% endblock title %}
 
 {% block content %}
-<style>
-    .variant-link {
-        text-decoration: none;
-        margin: 5px;
-    }
-
-    .variant-circle {
-        width: 50px;  /* Adjust the size as needed */
-        height: 50px;  /* Adjust the size as needed */
-        border-radius: 50%;
-        background-size: cover;
-        background-position: center;
-        border: 2px solid #ddd;
-        transition: transform 0.3s ease;
-    }
-
-    .variant-link.selected .variant-circle {
-        border-color: #007bff;  /* Highlight border color */
-        transform: scale(1.2);  /* Slightly larger */
-    }
-
-    .variant-circle:hover {
-        transform: scale(1.1);
-        border-color: #000;
-    }
-
-    .variant-link.highlighted{
-        border: 1px solid green;
-        background: linear-gradient(344deg,rgba(5,131,47,1) 14% ,rgba(5,99,19,1) 52% ,rgba(6,175,27,1) 100%);
-        color: white;
-        font-weight: bold;
-        transform: scale(1.2);  /* Slightly larger */
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,rgba(0, 0, 0, 0.23) 0px 3px 6px;
-        font-size: 14px;
-    }
-    .vbtn{
-        border: 1px solid gray;
-        background: linear-gradient(344deg,rgb(179, 182, 180) 14% ,rgb(95, 97, 95) 52% ,rgb(190, 190, 190) 100%);
-        color: white;
-        font-weight: bold;
-        border-radius: 4px;
-        padding: 2px 5px;
-        margin-left: 15px;
-        font-size: 14px;
-    }
-    .vbtn:hover{
-        color: white;
-        font-weight: bold;
-    }
-
-    .btn-wishlist {
-    background-color: #ff0000; /* Red background for visibility */
-    color: #ffffff; /* White text */
-    border: none; /* Remove default border */
-    padding: 10px 20px; /* Add padding */
-    font-size: 16px; /* Increase font size */
-    font-weight: bold; /* Make text bold */
-    border-radius: 5px; /* Round corners */
-    cursor: pointer; /* Change cursor to pointer on hover */
-    z-index: 10; /* Ensure button is above the image */
-}
-
-.btn-wishlist:hover {
-    background-color: #cc0000; /* Darker red on hover */
-}
-
-.position-absolute {
-    position: absolute; /* Position button absolutely within container */
-}
-
-.top-0 {
-    top: 10px; /* Adjust top position */
-}
-
-.end-0 {
-    right: 10px; /* Adjust right position */
-}
-
-.m-2 {
-    margin: 5px; /* Add margin around the button */
-}
-</style>
 
 <section id="products_of_category">
     <div class="container py-lg-5">
@@ -253,11 +171,11 @@ Product Details - {{ product_obj.name }}
                             {% endif %}
                         </p>
                         {% if item.variant == "yes" %}
-                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=yes" class="btn btn-success product-btn w-100">
+                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=yes" class="vd_button addto-cart">
                                 Product Details
                             </a>
                         {% else %}
-                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=no" class="btn btn-success product-btn w-100">
+                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=no" class="vd_button addto-cart">
                                 Product Details
                             </a>
                         {% endif %}

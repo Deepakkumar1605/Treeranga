@@ -81,16 +81,16 @@ class ShowProductsView(View):
 
 class ProductDetailsView(View):
     template_name = app + 'user/product_details.html'
-
+ 
     def get(self, request, p_id):
         # try:
             user = request.user
             variant_param = request.GET.get('variant', '')
-
+ 
             # Check if the product is a SimpleProduct or VariantProduct
             product_obj = None
             product_type = None
-
+ 
             # Handle variant_param correctly
             if variant_param == "yes":
                 product_obj = VariantProduct.objects.get(id=p_id)
@@ -98,17 +98,17 @@ class ProductDetailsView(View):
             else:
                 product_obj = SimpleProduct.objects.get(id=p_id)
                 product_type = "simple"
-
+ 
             # Fetch category data
             category_obj = Category.objects.all()
-
+ 
             # Initialize variables
             all_variants_of_this = []
             attributes = {}
             active_variant_attributes = {}
             product_images = []
             product_videos = []
-
+ 
             if product_obj:
                 if product_type == "simple":
                     image_gallery = ImageGallery.objects.filter(simple_product=product_obj).first()
@@ -120,36 +120,36 @@ class ProductDetailsView(View):
                     if image_gallery:
                         product_images = image_gallery.images
                         product_videos = image_gallery.video
-
+ 
                     avp = VariantProduct.objects.filter(product=product_obj.product)
                     for av in avp:
                         variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
                         variant_images = variant_image_gallery.images if variant_image_gallery else []
                         variant_videos = variant_image_gallery.video if variant_image_gallery else []
-
+ 
                         all_variants_of_this.append({
                             'product': av,
                             'variant': "yes",
                             'images': variant_images,
                             'videos': variant_videos
                         })
-
+ 
                     for variant in avp:
                         variant_combination = variant.variant_combination
                         for attribute, value in variant_combination.items():
                             if attribute not in attributes:
                                 attributes[attribute] = set()
                             attributes[attribute].add(value)
-
+ 
                     active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
-
+ 
                 for attribute in attributes:
                     attributes[attribute] = sorted(attributes[attribute])
-
+ 
             # Fetch similar products
             product_list_category_wise = Products.objects.filter(category=product_obj.product.category)
             all_simple_and_variant_similar = []
-
+ 
             for product in product_list_category_wise:
                 if product.product_type == "simple":
                     simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
@@ -180,7 +180,7 @@ class ProductDetailsView(View):
             # Check wishlist status
             wishlist_items = []
             is_added = False
-
+ 
             if user.is_authenticated:
                 wishlist = WishList.objects.filter(user=user).first()
                 if wishlist:
@@ -201,7 +201,7 @@ class ProductDetailsView(View):
                             break
 
             form = ProductReviewForm()
-
+ 
             context = {
                 'user': user,
                 'category_obj': category_obj,
@@ -221,7 +221,7 @@ class ProductDetailsView(View):
                 'has_ordered_product': has_ordered_product,
                 'order_id': order_id
             }
-
+ 
             return render(request, self.template_name, context)
 
         # except Exception as e:
@@ -337,6 +337,7 @@ class AllTrendingProductsView(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
 class AllNewProductsView(View):
+    template_name = app + 'user/new_product.html'
     template_name = app + 'user/new_product.html'
 
     def get(self, request):

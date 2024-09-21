@@ -57,9 +57,9 @@ Products Of {{ category_obj.title }} Category
                         </span>
                     </p>
                     {% if item.variant == "yes" %}
-                        <a href="{% url 'product:product_detail' item.variant_product.pk %}?variant=yes" class="btn vd_button">View Details</a>
+                        <a href="{% url 'product:product_detail' item.variant_product.pk %}?variant=yes" class=" vd_button">View Details</a>
                     {% else %}
-                        <a href="{% url 'product:product_detail' item.simple_product.pk %}?variant=no" class="btn vd_button">View Details</a>
+                        <a href="{% url 'product:product_detail' item.simple_product.pk %}?variant=no" class=" vd_button">View Details</a>
                     {% endif %}
                     <div class="d-flex mt-3">
                     </div>

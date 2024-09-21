@@ -6,7 +6,7 @@ New Arrivals
 {% endblock title %}
 
 {% block content %}
-
+  
 <div class="container py-4 d-flex flex-column align-items-center lh-lg ">
     <h1 class="text-capitalize">New Arrivals</h1>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -51,9 +51,9 @@ New Arrivals
 
                     <div class="d-flex mt-3">
                         {% if item.variant == "no" %}
-                            <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class="btn vd_button">Add To Cart</a>
+                            <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class=" vd_button">Add To Cart</a>
                         {% elif item.variant == "yes" %}
-                            <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class="btn vd_button">Add To Cart</a>
+                            <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class=" vd_button">Add To Cart</a>
                         {% endif %}
                     </div>
                 </div>
