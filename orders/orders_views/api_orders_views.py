@@ -77,7 +77,7 @@ class OrderDetailAPIView(APIView):
             products.append(product)
             quantities.append(details['quantity'])
             price_per_unit.append(details['product_discount_price'])
-            total_prices.append(float(details['total_price']))
+            total_prices.append(float(details['total_discounted_price']))
             total_quantity += int(details['quantity'])
 
         # Bundle product info into a list of dictionaries

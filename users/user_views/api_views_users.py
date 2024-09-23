@@ -319,7 +319,7 @@ class AddAddressAPIView(APIView):
                 "country": data["country"],
                 "state": data["state"],
                 "city": data["city"],
-                'mobile_no': data["contact"],
+                'mobile_no': data["mobile_no"],
                 "pincode": data["pincode"],
             }
 
