@@ -132,7 +132,7 @@ class ProductReviewForm(forms.ModelForm):
  
     class Meta:
         model = ProductReview
-        fields = ['rating', 'review', 'full_name', 'email']
+        fields = [ 'full_name', 'email','rating', 'review']
         widgets = {
             'rating': forms.RadioSelect(
                 choices=[(i, '★' * i) for i in range(1, 6)],

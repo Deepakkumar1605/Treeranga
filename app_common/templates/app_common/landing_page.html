@@ -9,24 +9,11 @@
   <div>
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="https://images.pexels.com/photos/2232566/pexels-photo-2232566.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+        {% for banner in banners %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <img src="{{ banner.image.url }}" class="d-block w-100" alt="Banner Image">
         </div>
-        <div class="carousel-item">
-          <img src="https://media.istockphoto.com/id/950933424/photo/my-beautiful-garden.jpg?s=2048x2048&w=is&k=20&c=4qeooHJOnDrUQp_Obh-SMag_aMK6DQ17K24R8nV3zN8=" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/3837317/pexels-photo-3837317.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/5808/food-healthy-vegetables-village.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/1105019/pexels-photo-1105019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/7718476/pexels-photo-7718476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
-        </div>
+        {% endfor %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
         <i class="fa-solid fa-chevron-left"></i>
@@ -39,6 +26,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- --------------------end banner section--------------- -->
 
