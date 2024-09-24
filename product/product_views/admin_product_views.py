@@ -19,9 +19,6 @@ from django.core.files.storage import default_storage
 app = "product/"
 
 
-
-
-
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CategoryList(View):
     model = Category
