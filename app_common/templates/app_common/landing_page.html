@@ -9,24 +9,18 @@
   <div>
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="https://marketplace.canva.com/EAFT4iBtkRY/1/0/1600w/canva-beige-brown-minimalist-casual-style-banner-landscape-ZXRUHYBCsCU.jpg" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://marketplace.canva.com/EAFKwirl3N8/1/0/1600w/canva-brown-minimalist-fashion-product-banner-iRHpbHTqh-A.jpg  " class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://marketplace.canva.com/EAFWecuevFk/1/0/1600w/canva-grey-brown-minimalist-summer-season-collections-banner-landscape-VXEmg9V800o.jpg" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/5808/food-healthy-vegetables-village.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://themewagon.github.io/malefashion/img/hero/hero-1.jpg" class="d-block" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="https://themewagon.github.io/malefashion/img/hero/hero-2.jpg" class="d-block" alt="...">
-        </div>
+        {% if banners %}
+          {% for banner in banners %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img src="{{ banner.image.url }}" class="d-block w-100" alt="Banner Image">
+            </div>
+          {% endfor %}
+        {% else %}
+          <!-- Static image when no banners are added -->
+          <div class="carousel-item active">
+            <img src="{% static 'app_common/images/contact.png' %}" class="d-block w-100" alt="Default Banner Image">
+          </div>
+        {% endif %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
         <i class="fa-solid fa-chevron-left"></i>

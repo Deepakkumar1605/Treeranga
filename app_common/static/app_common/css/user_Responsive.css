@@ -751,6 +751,13 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 		height: 170px;
 		width: 170px;
 	}
+	.image-wrapper a img {
+		height: 100%;
+		width: 100%;
+		object-fit: contain;
+		transition: transform 0.5s;
+		transform: scale(1.15);
+	}
 	#new-products {
 		height: 387px;
 		width: 100%;
@@ -763,6 +770,19 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 		object-fit: cover;
 		object-position: center;
 	}
+	
+#product-cards {
+	height: 450px;
+	width: 100%;
+	overflow: hidden;
+}
+
+#product-cards a img {
+	height: 257px;
+	width: 100%;
+	object-fit: contain;
+}
+
 	.vd_button.addto-cart {
 		
 			padding: 8px;
@@ -784,7 +804,12 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 	.foot_last_div{
 		
 	}
-	
+	.product-btn{
+		font-size: 14px !important;
+	}
+	..address-details li{
+		font-size: 12px !important;
+	}
 }
 
 

@@ -21,7 +21,7 @@ Trending Products
     <div class="row row-cols-lg-5 row-cols-2">
         {% for item in trending_products %}
         <div class="col product-head my-2">
-            <div class="card" id="product-cards">
+            <div class="" id="product-cards">
                 {% if item.variant == "no" %}
                     <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
                 {% elif item.variant == "yes" %}
