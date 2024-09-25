@@ -9,11 +9,18 @@
   <div>
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
       <div class="carousel-inner">
-        {% for banner in banners %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <img src="{{ banner.image.url }}" class="d-block w-100" alt="Banner Image">
-        </div>
-        {% endfor %}
+        {% if banners %}
+          {% for banner in banners %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img src="{{ banner.image.url }}" class="d-block w-100" alt="Banner Image">
+            </div>
+          {% endfor %}
+        {% else %}
+          <!-- Static image when no banners are added -->
+          <div class="carousel-item active">
+            <img src="{% static 'app_common/images/image4.webp' %}" class="d-block w-100" alt="Default Banner Image">
+          </div>
+        {% endif %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
         <i class="fa-solid fa-chevron-left"></i>
@@ -26,6 +33,7 @@
     </div>
   </div>
 </section>
+
 
 
 <!-- --------------------end banner section--------------- -->
