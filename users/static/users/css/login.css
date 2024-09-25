@@ -8,7 +8,7 @@
   }
 /*=================== Login CSS ==================================*/
 .login_background {
-    background-image: url("../../.././static/users/images/freebg.jpg");
+    background-image: url("https://png.pngtree.com/background/20211217/original/pngtree-geometric-pattern-white-gold-minimalist-creative-background-picture-image_1575961.jpg");
     height: 100vh;
     width: 100%;
     background-position: center;
@@ -25,7 +25,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); 
+    background-color: rgba(155, 154, 154, 0.4); 
     z-index: 1;
 }
 
@@ -33,30 +33,30 @@
     overflow: hidden;
     max-width: 70%;
     margin: 0 auto;
-    padding: 100px 0;
+    padding: 50px 0;
     position: relative;
     z-index: 2; 
 }
 
 .login_card .card {
-    max-height: 70vh;
+    max-height: auto;
     overflow: hidden;
-    max-width: 70%;
+    max-width: 75%;
     margin: 0 auto;
-    padding: 20px;
+    padding:;
     background-color: rgba(255, 255, 255,1); 
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     position: relative;
     z-index: 2;
 }
 
 .leftside_image {
-    max-height: 65vh;
+    
     overflow: hidden;
 }
 
 .leftside_image img {
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     height: 100%;
 }
@@ -69,7 +69,8 @@
     padding: 0.5em 2em;
     border: transparent;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-    background: linear-gradient(to right, #123a77, #00bf72, #a8eb12);
+    background: rgb(255,83,14);
+background: linear-gradient(340deg, rgba(255,83,14,1) 9%, rgba(206,61,2,1) 49%, rgba(255,83,14,1) 90%);
     color: white;
     border-radius: 20px;
     margin: 10px auto;
@@ -77,14 +78,16 @@
 }
 
 .Login_Button:hover {
-    background: linear-gradient(90deg, rgb(69, 211, 59) 0%, rgb(8, 96, 95) 100%);
-    /* transition: all ease-in-out 0.5s; */
+  background: rgb(206,61,2);
+background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, rgba(206,61,2,1) 90%);
 }
 
 .Login_Button:active {
     transform: translate(0em, 0.2em);
 }
-
+.bg-transparent{
+  font-size: 14px;
+}
 .sign_up small {
     font-family: "Poppins", sans-serif;
     font-size: 14px;
@@ -102,17 +105,17 @@
     overflow: hidden;
     max-width: 70%;
     margin: 0 auto;
-    padding: 60px 0;
+    padding: 40px 0;
     position: relative;
     z-index: 2;
 }
 
 .signup_card .card {
-    max-height: 90vh;
+    
     overflow: hidden;
     max-width: 80%;
     margin: 0 auto;
-    padding: 15px;
+    height: auto;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     position: relative;
@@ -124,17 +127,57 @@
     padding: 0;
 }
 .signup_card .card .row .leftside_image {
-    max-height: 80vh;
+   
     overflow: hidden;
 }
 
 .signup_card .card .row .leftside_image img {
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     height: 100%;
 }
 
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group textarea, 
+.form-group select {
+    width: 100%;
+    padding: 10px auto !important ;
+    height: 35px;
+    margin-top: 5px;
+    margin-bottom: .5em;
+    border: none;
+    border-bottom: 1.5px solid #ced4da;
+    border-radius: none !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease-in-out;
+    font-size: 14px;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #00836c;
+    box-shadow: 0 0 8px rgba(193, 212, 247, 0.5);
+    outline: none;
+}
 
+.password-container {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.form-group input[type="password"] {
+  padding-right: 35px; /* Ensure space for the eye icon */
+}
 
 
 /* For large screens (desktops and laptops) */
@@ -184,7 +227,7 @@
   @media only screen and (max-width: 576px) {
     .login_card {
       max-width: 100%;
-      padding: 50px 10px;
+      padding: 100px 10px;
     }
   
     .login_card .card {
@@ -193,7 +236,7 @@
     }
     .signup_card {
         max-width: 100%;
-        padding: 50px 10px;
+        padding: 100px 10px;
       }
     
       .signup_card .card {

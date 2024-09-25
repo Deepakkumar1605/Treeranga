@@ -4,50 +4,76 @@
 {% block content %}
 
 <section>
-    <div class="container" id="about">
-        <div>
-            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{% url 'app_common:home' %}">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">About Us</li>
-                </ol>
-              </nav>
-            <h3 class="text-center border-bottom my-lg-4 my-3">About Us</h3>
-            
-            <p class="mt-lg-4" ALIGN=CENTER>Niwa Agro Pvt Ltd is a dynamic company in the agricultural sector, dedicated to revolutionizing modern farming practices. With a focus on sustainability, innovation, and technology integration, Niwa Agro aims to enhance productivity and efficiency in agriculture. The company is committed to supporting farmers by providing advanced solutions, quality inputs, and comprehensive support services.
-               </p>
-                <div class="row p-lg-2">
-                    <div class="col col-12 col-lg-6  " >
-                        <h5 class="mb-lg-4 mb-3  text-center text-success ">Welcome to Niwa Agro!</h5>
-                        <p class="text-dark lh-lg" ALIGN=CENTER>Niwa Agro Pvt. Ltd. is a forward-thinking agricultural company committed to revolutionizing the agricultural landscape through innovative practices and sustainable solutions. With a mission to enhance food security and promote environmentally friendly farming techniques, Niwa Agro focuses on integrating modern technology with traditional farming methods to optimize productivity and ensure high-quality produce. Niwa Agro Pvt Ltd offers a wide range of products and services including high-quality seeds, fertilizers, and crop protection products. Additionally, the company invests in research and development to bring cutting-edge technologies and sustainable farming practices to its clients.</p>
-                    </div>
-                    <div class="col col-12 col-lg-6 side_img">
-                        <img class=" img-fluid" src="{% static 'app_common\images\about.jpg'%}" alt="About Us">
-                    </div>
-                </div>
-                <br>
-                <div class="row border p-4">
-                    <div class="col col-12 col-lg-4 my-lg-1 my-3 aboutus_card">
-                        <h4 class="mt-lg-4 text-center text-success pb-2 " ><u>MISSION</u></h4>
-                        <h6 class="mt-lg-2 text-success" >"Cultivating Sustainable Solutions for a Healthier Tomorrow"</h6>
-                                <p class="text-dark" ALIGN=CENTER>
-                                        At Niwa Agro Pvt. Ltd., our vision is to revolutionize the agricultural landscape by embracing innovation, sustainability, and community empowerment. We aim to be at the forefront of agricultural excellence, fostering a future where advanced farming techniques and eco-friendly practices harmonize to produce nutritious, high-quality crops.
-                                </p>
-                    </div>
-                    <div class="col col-12 col-lg-4 my-lg-1 my-3 aboutus_card">
-                        <h4 class="mt-lg-4 text-center text-success pb-2"><u>VISSION</u> </h4>
-                        <h6 class="mt-lg-2 text-success">"Growing green for a better world. Nurturing nature, feeding the future."</h6>
-                            <p class="text-dark" ALIGN=CENTER >At Niwa Agro Pvt. Ltd., our mission is to revolutionize the agricultural sector by empowering farmers with innovative and sustainable solutions. We are dedicated to enhancing productivity, ensuring food security, and promoting environmental stewardship. 
-                        </p>
-                    </div>
-                    <div class="col col-12 col-lg-4 my-lg-1 my-3 aboutus_card">
-                        <h4 class="mt-lg-4 text-center text-success pb-2"><u>VALUE</u> </h4>
-                        <h6 class="mt-lg-2 text-success">"Growing green for a better world. Nurturing nature, feeding the future."</h6>
-                        <p class="text-dark" ALIGN=CENTER>At Niwa Agro, we believe in the power of sustainable agriculture to transform communities and ensure a prosperous future for all. Our values are deeply rooted in our commitment to innovation, integrity, and environmental stewardship.</p>
-                    </div>
-                </div>
+    <div class="My_body">
+        <div class="row px-5 my-4 pt-2 bg-white">
+            <div class="col-12 d-flex justify-content-center">
+                <h3 class="sectiontitle mb-5 mt-3 text-center">About Us</h3>
+            </div>
+            <div class="col-lg-6 col-xl-6 col-sm-12 mt-4">
+                <h4 class="mb-4">Welcome to Treeranga!</h4>
+                <p class="para">
+                    At <b>Treeranga</b>, we believe that a t-shirt is more than just a piece of clothing – it's a canvas for self-expression, a symbol of comfort, and a statement of style. Our journey began with a simple idea: to create high-quality, unique t-shirts that resonate with our customers' personalities and lifestyles.
+                </p>
+            </div>
+            <div class="col-lg-6 col-xl-6 col-sm-12 d-flex justify-content-center justify-content-lg-end">
+                <img class="abt-img img-fluid " src="https://img.freepik.com/premium-vector/teamwork-solve-business-problem-cooperation_1134986-17734.jpg?size=626&ext=jpg&ga=GA1.1.1252649877.1716529876&semt=ais_hybrid" alt="About Us">
+            </div>
         </div>
-       
+        <div class="row my-5 px-5  pt-2 bg-white">
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center justify-content-lg-start align-items-center">
+                <img class="abt-img img-fluid  " src="https://img.freepik.com/free-vector/employees-meeting-office-kitchen-drinking-coffee_74855-5237.jpg?w=826&t=st=1727089846~exp=1727090446~hmac=1a69d82e12a650b5e98a68f9d4a6a6d80cda6df1d5eff90c207d1ef1e4756171" alt="Our Story">
+            </div>
+            <div class="col-lg-6 col-xl-6 col-sm-12 mt-4">
+                <h4 class="mb-4">Our Story</h4>
+                <p class="para">
+                    Founded in 2022, <b>Treeranga</b> was born out of a passion for creativity and a love for fashion. Our founder, Sushant Kumar Jena, started the company with a small collection of hand-designed t-shirts, each one inspired by a unique story or concept. What started as a small endeavour quickly grew, thanks to the overwhelming support and enthusiasm from our community.
+                </p>
+            </div>
+        </div>
+        <div class="row my-5 pt-2 px-5 bg-white">
+            <div class="col-lg-6 col-xl-6 col-sm-12 mt-4">
+                <h4 class="mb-4">Our Mission</h4>
+                <p class="para">
+                    
+                    Our mission is to bring you the best t-shirts that combine style, comfort, and individuality. We believe that everyone deserves to feel good in what they wear, and we strive to offer a wide range of designs that cater to all tastes and preferences. From bold graphics to subtle prints, our collections are designed to inspire and empower.
+                </p>
+            </div>
+            <div class="col-lg-6 col-xl-6 col-sm-12 d-flex justify-content-center justify-content-lg-end">
+                <img class="abt-img img-fluid " src="https://img.freepik.com/free-vector/work-team-group-meeting-avatar-characters_24877-57670.jpg?size=626&ext=jpg&uid=R154425881&ga=GA1.1.1252649877.1716529876&semt=ais_hybrid" alt="About Us">
+            </div>
+        </div>
+
+        <div class="row my-5 pt-2 px-5 bg-white">
+            <div class="col-lg-6 col-xl-6 col-sm-12 d-flex justify-content-center justify-content-lg-start align-items-center">
+                <img class="abt-img img-fluid  " src="https://img.freepik.com/free-vector/office-employees-hurry_74855-6593.jpg?size=626&ext=jpg&uid=R154425881&ga=GA1.1.1252649877.1716529876&semt=ais_hybrid " alt="Our Story">
+            </div>
+            <div class="col-lg-6 col-xl-6 col-sm-12 mt-4">
+                <h4 class="mb-4"> Quality and Sustainability</h4>
+                <p class="para">
+                    Quality is at the heart of everything we do. We take pride in using only the finest materials to ensure that our t-shirts are not only stylish but also durable and comfortable. Moreover, we are committed to sustainability. We source our fabrics responsibly and work with manufacturers who share our values of ethical and sustainable practices.
+                </p>
+            </div>
+        </div>
+        <div class="row my-5 pt-2  px-5 bg-white">
+            <div class="col-lg-6 col-xl-6 col-sm-12 mt-4">
+                <h4 class="mb-4">Join Our Community</h4>
+                <p class="para">
+                    
+                    At <b>Treeranga</b>, we see our customers as part of our extended family. We love hearing from you and seeing how you style our t-shirts. Follow us on social media, share your photos with us using #fashionfeast, and be part of our growing community of t-shirt enthusiasts.
+                </p>
+                <p class="para">Thank you for choosing <b>Treeranga</b>. We look forward to bringing you more unique and exciting designs!</p>
+            </div>
+            <div class="col-lg-6 col-xl-6 col-sm-12 d-flex justify-content-center justify-content-lg-end">
+                <img class="abt-img img-fluid " src="https://img.freepik.com/free-photo/business-people-meeting_53876-144829.jpg?size=626&ext=jpg&uid=R154425881&ga=GA1.1.1252649877.1716529876&semt=ais_hybrid" alt="About Us">
+            </div>
+        </div>
+        <div class="row my-5 pt-2 px-5  bg-white" >
+            <div class="col-lg-12 col-xl-6  col-sm-12 mt-4">
+                <h4>Contact Us</h4>
+                <p class="para">
+                    Have any questions or feedback? We’d love to hear from you! Reach out to us at &nbsp; <a href="">+91-6372100300</a > <a href="">contactus@treeranga.com</a >  &nbsp;, and our friendly team will be happy to assist you. </p>
+            </div>
+        </div>
     </div>
 </section>
 

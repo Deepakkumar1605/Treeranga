@@ -200,7 +200,7 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 
 	/* -------------------------------About us landing page----------------------- */
 	.aboutniwa_bg {
-		background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), url("../images/PictureUnlock_TOI_254730_user0.pictureunlock.jpg");
+		background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), url("https://cdn.pixabay.com/photo/2015/01/13/13/20/guy-598180_1280.jpg");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: cover;
@@ -216,9 +216,10 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 		word-spacing: 6px;
 		line-height: 1.6;
 		letter-spacing: 1.1px;
-		background: linear-gradient(90deg, rgb(255, 255, 255) 25%, rgb(26, 22, 22) 65%, rgb(0, 0, 0) 0%);
+		color: rgb(240, 237, 237);
+		/* background: linear-gradient(90deg, rgb(255, 255, 255) 25%, rgb(26, 22, 22) 65%, rgb(0, 0, 0) 0%);
 		-webkit-text-fill-color: transparent;
-		-webkit-background-clip: text;
+		-webkit-background-clip: text; */
 	}
 
 	/* < --------------------------Testimonial------------------------------- --> */
@@ -740,20 +741,66 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 
 /* ------------------Between lg to xl------------ */
 @media (min-width:992px) and (max-width:1199.9px) {
+	.image-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		overflow: hidden;
+		transition: transform 0.5s;
+		height: 170px;
+		width: 170px;
+	}
+	#new-products {
+		height: 387px;
+		width: 100%;
+		overflow: auto;
+	}
 	
-
+	#new-products a img {
+		height: 220px;
+		width: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+	.vd_button.addto-cart {
+		
+			padding: 8px;
+			width:100%;
+			margin: 0 auto;
+			font-weight: 500;
+			
+			font-style: normal;
+			font-size: 14px;
+			overflow: hidden;
+		
+	
+	}
+	
+	.vd_button.addto-cart:hover {
+		background-color: var(--button);
+		color: var(--white);
+	}
+	.foot_last_div{
+		
+	}
+	
 }
+
+
+
+
 
 /* ------------------Between xl to xxl------------ */
 @media (min-width:1200px) and (max-width:1400px) {
 	.vd_button.addto-cart {
 		padding: 8px;
-		width:95%;
+		width:100%;
 		margin: 0 auto;
 		font-weight: 500;
 		line-height: 23px;
 		font-style: normal;
-		font-size: 14p;
+		font-size: 14px;
 		overflow: hidden;
 	
 	}

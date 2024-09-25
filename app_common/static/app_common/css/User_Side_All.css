@@ -121,14 +121,15 @@
 	--secondary: #f5bf12;
 	--tb-head: #00836c;
 	--white: #ffffff;
-	--button: #399918;
-	--sub_button: #fb641b;
+	--button: #00836C;
+	--sub_button: #F37021;
 	--pagebg: #f5f5f5;
 	--p: #666666;
 	--dark: #000000;
 	--para: #212121;
 	--header: #f9f9f9;
 	--danger: #ec0606;
+
 }
 
 /* ======================================================================================== */
@@ -245,7 +246,7 @@ header {
 
 /* ---------------App Download Section----------------------------------*/
 .AppDownload {
-	background-color: var(--secondary);
+	background-color: var(--sub_button);
 }
 
 .AppDownload div {
@@ -311,20 +312,21 @@ header {
 
 /*------------------- New arrivals & Trending Products-------------- */
 .new-head {
-	height: 407px;
-	width: 225px;
+	height: 370px;
+	width: auto;
 	overflow: hidden;
 }
 
 #new-products {
 	height: 387px;
-	width: 220px;
+	width: 186px;
 	overflow: hidden;
+	
 }
 
 #new-products a img {
 	height: 220px;
-	width: 220px;
+	width: 100%;
 }
 
 #new-products .card-body {
@@ -381,16 +383,16 @@ header {
 }
 
 .viewmoreButton a {
-	background-color: var(--secondary);
-	color: var(--para);
+	background-color: var(--sub_button);
+	color: var(--white);
 	font-weight: 500;
 	margin: 16px;
 	padding: 15px 45px;
 }
 
 .viewmoreButton a:hover {
-	background-color: var(--secondary);
-	color: var(--para);
+	background-color: var(--sub_button);
+	color: var(--white);
 }
 
 /* -------------------------------Why choose niwa----------------------- */
@@ -410,37 +412,33 @@ header {
 
 /* -------------------------------About us page----------------------- */
 .aboutniwa_bg {
-	background-image: url("../images/picture-frame-leaning-against-white-wall.jpg");
+	background-image: url("https://themewagon.github.io/ultras/images/model.jpg");
 	background-repeat: no-repeat;
 	background-position: center;
-	background-size: cover;
-}
-
-.aboutniwa1 {
+	background-size: cover; 
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-left: 35%;
+	height: 130vh;
+	justify-content: center; 
+  }
+  .aboutHead {
+	text-align: center;
+	width: 100%;
+	padding-left: 0;
+	margin-bottom: px;
+  }
+  .aboutniwa1 {
 	max-width: 65%;
-}
-
-.aboutniwa1 p:first-letter {
-	font-family: var(--p-fontfamily);
-	font-size: 30px;
-	font-weight: 700;
-}
-
-.aboutniwa1 p {
-	font-family: var(--heading);
-	font-size: 16px;
-	font-weight: 400;
-	word-spacing: 6px;
-	line-height: 1.8;
-	letter-spacing: 1.5px;
-}
-
-.aboutniwa1 div a {
-	background-color: var(--secondary);
-	color: black;
-	width: 50%;
-	margin-top: 10%;
-}
+	text-align: center;
+	margin-left: auto;
+	padding: 20px;
+  }
+.abt-img {
+	width: 450px;
+	height: 300px;
+ }
 
 /* ---------------------testimonial---------------------------- */
 .testimonial-box {
@@ -448,7 +446,8 @@ header {
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 	border-radius: 8px;
 	text-align: center;
-	background-color: #93ff81;
+	background: rgb(255,83,14);
+background: linear-gradient(350deg, rgba(1,162,60,1) 9%, rgb(228, 227, 227) 46%,  rgba(255,83,14,1) 90%);
 	margin: 5px;
 }
 
@@ -758,78 +757,28 @@ button:hover .button-text {
 #return {
 	font-family: "Poppins", sans-serif;
 	margin: 20px auto 80px;
+	text-align: justify;
+	
+	font-size: 14px;
+	word-break: break-word;
+	hyphens: auto;
+}
+.return_img_div img{
+		width: 90px;
 }
 
-#return div h3 {
-	font-family: "Poppins", sans-serif;
-}
-
-#return div p {
-	font-family: "Poppins", sans-serif;
-	font-size: 15px;
-	font-weight: 400;
-	margin: 20px 0;
-	line-height: 2;
-}
-
-#return div h5 {
-	font-weight: 600;
-	font-size: 15px;
-	margin: 12px 0;
-}
-
-#return div ul li {
-	list-style-type: number !important;
-}
-
-#return div ul li ul li {
-	list-style-type: disc !important;
-	line-height: 2.5;
-	font-family: "Poppins", sans-serif;
-	font-size: 15px;
-	font-weight: 400;
-}
-
-#return div ul li ul {
-	font-family: "Poppins", sans-serif;
-	font-size: 15px;
-	font-weight: 500;
-}
 
 /* ----------------------------Privacy Policy Page css------------------------- */
 #Privacy {
 	font-family: "Poppins", sans-serif;
 	margin: 20px auto 80px;
+	text-align: justify;
+	line-height: 1.8rem;
+	font-size: 14px;
+	word-break: break-word;
+	hyphens: auto;
 }
 
-#Privacy div h3 {
-	font-family: "Poppins", sans-serif;
-}
-
-#Privacy div p {
-	font-family: "Poppins", sans-serif;
-	font-size: 15px;
-	font-weight: 400;
-	margin: 20px 0;
-	line-height: 2;
-}
-
-#Privacy div ul li {
-	list-style-type: number !important;
-}
-
-#Privacy div ul li ul li {
-	list-style: disc;
-	font-family: "Poppins", sans-serif;
-	font-size: 15px;
-	font-weight: 400;
-	line-height: 2;
-	margin: 10px 0;
-}
-
-#Privacy div ul li ul li b {
-	font-weight: 500;
-}
 
 /* ----------------------------Contact Us Page CSS------------------------- */
 #conatct_us {
@@ -1686,8 +1635,28 @@ video {
 }
 
 /* ------------Footer  Section page CSS----------------------------------*/
+.whatsapp-button {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 1000;
+	width: 45px;
+	height: 45px;
+	background-color: rgb(1, 199, 1);
+	border-radius: 50%;
+	display: flex;
+	color: white;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	text-decoration: none;
+	font-size: 16px;
+}
+.whatsapp-button:hover{
+	color: white;
+}
 footer {
-	background-color: var(--para);
+	background-color: var(--sub_button);
 	padding: 3rem 0;
 	color: var(--white);
 }
@@ -1707,9 +1676,9 @@ footer {
 
 .footer_div_ul div p {
 	color: var(--p);
-	font-size: 13px;
+	font-size: 12px;
 	font-weight: 400;
-	text-transform: uppercase;
+	
 }
 
 .footer_div_ul div p {
@@ -1723,6 +1692,8 @@ footer {
 
 .footer_div_ul div p i {
 	padding: 2px;
+	font-size: 15px;
+	color: white;
 }
 
 .footer_div_ul div li {

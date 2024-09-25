@@ -1,17 +1,17 @@
 {% extends 'users/authtemp/master.html' %}
 {% load static %}
 {% block title %}Signup Page{% endblock title %}
-
+ 
 {% block content %}
-
-
+ 
+ 
 <section class=" login_background">
     <div class="signup_card">
       <div class="card " >
         <div class="row">
           <div class="col col-lg-6 px-lg-3">
-            <div class="card-body border  ">
-                <h5 class="text-center fs-3 fw-bold"> Create an Account !</h5>         
+            <div class="card-body  ">
+                <h5 class="text-center fs-3 fw-bold pb-3"> Create an Account !</h5>        
                 {% if messages %}
                         <div class="alert-container">
                             {% for message in messages %}
@@ -24,101 +24,65 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                <form method="post" >
-                  {% csrf_token %}
-                  <span class="Register_paragraph">{{ form.as_p }}</span>
-                  {% if form.errors %}
-                      <div class="form-errors">
-                          <ul>
-                              {% for field in form %}
-                                  {% for error in field.errors %}
-                                      <li>{{ error }}</li>
-                                  {% endfor %}
-                              {% endfor %}
-                              {% for error in form.non_field_errors %}
-                                  <li>{{ error }}</li>
-                              {% endfor %}
-                          </ul>
-                      </div>
-                  {% endif %}
-                  <button type="submit" class="Login_Button">Register</button>
-                </form>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group position-relative">
+                                <div class="mb-3">
+                                    <!-- Check if the current field is either 'password' or 'confirm_password' -->
+                                    {% if field.name == 'password' or field.name == 'confirm_password' %}
+                                        <div class="password-container">
+                                            {{ field }}
+                                            <span class="toggle-password position-absolute" toggle="{{ field.id_for_label }}" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: gray;">
+                                                <i class="fa fa-eye"></i>
+                                            </span>
+                                        </div>
+                                    {% else %}
+                                        {{ field }} 
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="Login_Button">Register</button>
+                    </form>
+                    
+                    
                 <div class=" text-center w-100 sign_up">
                     <small>Already have an account?</small>
-                    <a href="{% url 'users:login' %}" class="ms-lg-1 text-warning text-decoration-none ">Login</a>
+                    <a href="{% url 'users:login' %}" class="ms-lg-1 text-primary text-decoration-none ">Login</a>
                   </div>
               </div>
-              
+             
           </div>
           <div class="col col-lg-6 leftside_image">
-            <img src="{% static 'app_common\images\Download130.jpeg'%}" alt="">
+            <img src="{% static 'app_common\images\reg2.svg'%}" alt="">
           </div>
         </div>
       </div>
     </div>
   </section>
 
-
-
-
-
-
-
-
-{% comment %}
-<!-- Section: Design Block -->
-<div class="card bg-glass">
-  <div class="card-body px-4 py-5 px-md-5">
-    {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      {% if form.errors %}
-          <div class="form-errors">
-              <ul>
-                  {% for field in form %}
-                      {% for error in field.errors %}
-                          <li>{{ error }}</li>
-                      {% endfor %}
-                  {% endfor %}
-                  {% for error in form.non_field_errors %}
-                      <li>{{ error }}</li>
-                  {% endfor %}
-              </ul>
-          </div>
-      {% endif %}
-      <button type="submit">Register</button>
-    </form>
-  </div>
-</div>
-</div>
-<div class="position-lg-relative bottom-0 end-0 my-14 mx-12 text-center text-lg-end">
-<small>Already have an account?</small>
-<a href="{% url 'users:login' %}" class="text-warning text-sm font-semibold">Log in</a>
-</div>
-  <!-- Section: Design Block -->
-  <!-- <script>
-    $(document).ready(function(){
-        {% if messages %}
-            {% for message in messages %}
-                alert("{{ message }}");
-                {% if message.tags == 'success' %}
-                    window.location.href = "{% url 'users:home' %}";
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const togglePassword = document.querySelectorAll('.toggle-password');
+    
+        togglePassword.forEach(function (element) {
+            element.addEventListener('click', function () {
+                const input = document.querySelector(`#${this.getAttribute('toggle')}`);
+                const icon = this.querySelector('i');
+    
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
     });
-</script> -->
-{% endcomment %}
+    </script>
+    
 {% endblock content %}

@@ -10,22 +10,22 @@
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="https://images.pexels.com/photos/2232566/pexels-photo-2232566.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+          <img src="https://marketplace.canva.com/EAFT4iBtkRY/1/0/1600w/canva-beige-brown-minimalist-casual-style-banner-landscape-ZXRUHYBCsCU.jpg" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="https://media.istockphoto.com/id/950933424/photo/my-beautiful-garden.jpg?s=2048x2048&w=is&k=20&c=4qeooHJOnDrUQp_Obh-SMag_aMK6DQ17K24R8nV3zN8=" class="d-block" alt="...">
+          <img src="https://marketplace.canva.com/EAFKwirl3N8/1/0/1600w/canva-brown-minimalist-fashion-product-banner-iRHpbHTqh-A.jpg  " class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/3837317/pexels-photo-3837317.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+          <img src="https://marketplace.canva.com/EAFWecuevFk/1/0/1600w/canva-grey-brown-minimalist-summer-season-collections-banner-landscape-VXEmg9V800o.jpg" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
           <img src="https://images.pexels.com/photos/5808/food-healthy-vegetables-village.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/1105019/pexels-photo-1105019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+          <img src="https://themewagon.github.io/malefashion/img/hero/hero-1.jpg" class="d-block" alt="...">
         </div>
         <div class="carousel-item">
-          <img src="https://images.pexels.com/photos/7718476/pexels-photo-7718476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="d-block" alt="...">
+          <img src="https://themewagon.github.io/malefashion/img/hero/hero-2.jpg" class="d-block" alt="...">
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
@@ -92,8 +92,8 @@
 
     <div class="row" id="new-arrivals">
       {% for item in new_products %}
-      <div class="col col-lg-2 col-md-3 col-6 new-head">
-        <div class="" id="new-products">
+      <div class="col px-1  col-lg-2 col-md-3 col-6 new-head">
+        <div class=" " id="new-products">
             {% if item.variant == "no" %}
             <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
             {% elif item.variant == "yes" %}
@@ -105,10 +105,10 @@
               <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
             {% endif %}
           </a>
-          <div class="card-body">
-            <h5>{{ item.product.name|truncatechars:25 }}</h5>
+          <div class="card-body p-0  py-0">
+            <h5 class="ps-1 mt-1">{{ item.product.name|truncatechars:25 }}</h5>
             
-            <p class="card-text">
+            <p class="card-text ps-1">
               {% if item.variant == "no" %}
                 <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
                 {% if item.simple_product.product_max_price %}
@@ -155,7 +155,7 @@
 
     <div class="row" id="new-arrivals">
       {% for item in trending_products %}
-      <div class="col col-lg-2 col-md-3 col-6 new-head">
+      <div class="col px-1 col-lg-2 col-md-3 col-6 new-head">
         <div class="" id="new-products">
             {% if item.variant == "no" %}
             <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
@@ -169,7 +169,7 @@
             {% endif %}
           </a>
           <div class="card-body">
-            <h5>{{ item.product.name|truncatechars:25 }}</h5>
+            <h5 class="mt-1 ps-1">{{ item.product.name|truncatechars:25 }}</h5>
             
             <p class="card-text">
               {% if item.variant == "no" %}
@@ -213,7 +213,7 @@
 <!-- ------------------------- why  choose  niwa---------------------- -->
 
 <section class="whychoose px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3" >
-  <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Why Choose Niwa Agro</h3>
+  <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Why Choose Treeranga</h3>
   <div class="row text-center  p-lg-4 p-md-4 p-3 chooseniwa_logo">
     <div class="col-3 col-md-3 col-lg-3 mb-2">
       <img src="{% static 'app_common/images/bg2.avif' %}" alt="" class="img-fluid">
@@ -237,12 +237,12 @@
 <!-- --------------------------about niwa agro-------------------------------- -->
 
 <section class="aboutniwa_bg px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
-  <h3 class=" text-center pb-lg-3 pb-md-3 pb-2">About Us</h3>
+  <h3 class=" aboutHead text-center pb-lg-3 pb-md-3 ">About Us</h3>
 <div class="aboutniwa1">
-    <p ALIGN=CENTER >Niwa Agro is dedicated to revolutionizing agriculture through sustainable and innovative farming practices. Our mission is to empower farmers with the latest technology and knowledge, ensuring high-quality produce and environmentally friendly methods. At Niwa Agro, we believe in a future where agriculture thrives in harmony with nature, fostering growth and prosperity for communities worldwide.</p>
-    <p ALIGN=CENTER>At Niwa Agro, we are dedicated to revolutionizing the agricultural landscape. Our mission is to empower farmers with innovative solutions and sustainable practices that enhance productivity and foster environmental stewardship. With a focus on cutting-edge technology and community support, we strive to create a thriving agricultural ecosystem that benefits both people and the planet. Join us in our journey to cultivate a brighter, greener future.</p>
-    <div>
-        <a href="{% url 'app_common:about_us' %}" class=" text-decoration-none u-button">Know More</a>
+    <p ALIGN=CENTER >Treeranga is committed to transforming the world of fashion by offering high-quality, eco-friendly t-shirts. Our mission is to provide customers with stylish, sustainable clothing that reflects their individuality while promoting environmental consciousness. At Treeranga, we believe that fashion should not only look good but also feel good, knowing that each purchase contributes to a healthier planet.</p>
+    <p ALIGN=CENTER>At Treeranga, we are passionate about redefining the t-shirt experience. We combine creativity and sustainability to offer innovative designs that resonate with today's conscious consumer. With a focus on responsibly sourced materials and ethical production methods, we aim to inspire a new era of fashion that supports both personal expression and the well-being of our planet. Join us on our journey to make fashion more sustainable, one t-shirt at a time.</p>
+    <div class=" d-flex justify-content-end viewmoreButton">
+        <a href="{% url 'app_common:about_us' %}" class="u-button viewmoreButton" id="u-button">Know More</a>
     </div>
 </div>
 </section>
@@ -252,104 +252,102 @@
 
 <!-- --------------------------Testimonial------------------------------- -->
 
-<section class= "section px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 testimonial-section">
+<section class="section px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 testimonial-section">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-start flex-column">
-        <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
-     </div>
- </div>
-  <div class=" ">
-      <div class="testimonial-slider ">
-          <div class="testimonial-slide">
-              <div class="testimonial-box ">
-                  <div class="testimonial-icon">
-                      <i class="bi bi-quote"></i>
-                  </div>
-                  <div class="testimonial-text">
-                     
-                      <p>
-                          Wonderful stay! Modern facilities, great value, and hassle-free booking. Definitely coming back!</p>
-                  </div>
-                  <div class="testimonial-img d-flex justify-content-center">
-                      <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
-                  </div>
-                  <div class="testimonial-name">
-                      <h4> Mahesh Sethi</h4>
-                  </div>
-                  
-              </div>
+      <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
+    </div>
+  </div>
+  <div>
+    <div class="testimonial-slider">
+      <div class="testimonial-slide">
+        <div class="testimonial-box">
+          <div class="testimonial-icon">
+            <i class="bi bi-quote"></i>
           </div>
-          <div class="testimonial-slide">
-              <div class="testimonial-box">
-                  <div class="testimonial-icon">
-                      <i class="bi bi-quote"></i>
-                  </div>
-                  <div class="testimonial-text">
-                      <p>Amazing stay! Comfortable rooms, great service, and perfect location. Highly recommend!</p>
-                  </div>
-                  <div class="testimonial-img d-flex justify-content-center">
-                      <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
-                  </div>
-                  <div class="testimonial-name">
-                      <h4>Rahul Jen</h4>
-                  </div>
-                
-              </div>
+          <div class="testimonial-text">
+            <p>Fantastic t-shirts! High-quality fabric, great designs, and perfect fit. Will buy again!</p>
           </div>
-          <div class="testimonial-slide">
-              <div class="testimonial-box">
-                  <div class="testimonial-icon">
-                      <i class="bi bi-quote"></i>
-                  </div>
-                  <div class="testimonial-text">
-                      <p>Excellent experience! Clean rooms, friendly staff, and seamless booking process. Will return.</p>
-                  </div>
-                  <div class="testimonial-img d-flex justify-content-center">
-                      <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
-                  </div>
-                  <div class="testimonial-name">
-                      <h4>Madhab Reddy</h4>
-                  </div>
-                  
-              </div>
+          <div class="testimonial-img d-flex justify-content-center">
+            <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
           </div>
-          <div class="testimonial-slide">
-              <div class="testimonial-box">
-                  <div class="testimonial-icon">
-                      <i class="bi bi-quote"></i>
-                  </div>
-                  <div class="testimonial-text">
-                      <p>Fantastic place! Cozy rooms, wonderful amenities, and superb customer service. Loved it!</p>
-                  </div>
-                  <div class="testimonial-img d-flex justify-content-center">
-                      <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
-                  </div>
-                  <div class="testimonial-name">
-                      <h4>Nitin Sah</h4>
-                  </div>
-                </div>
+          <div class="testimonial-name">
+            <h4>Mahesh Sethi</h4>
           </div>
-          <div class="testimonial-slide">
-              <div class="testimonial-box">
-                  <div class="testimonial-icon">
-                      <i class="bi bi-quote"></i>
-                  </div>
-                  <div class="testimonial-text">
-                      <p>Loved our stay! Beautiful property, convenient booking, and outstanding hospitality. Five stars!</p>
-                  </div>
-                  <div class="testimonial-img d-flex justify-content-center">
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
-                  </div>
-                  <div class="testimonial-name">
-                      <h4>Hritik Kamal</h4>
-                  </div>
-                  
-              </div>
-          </div>
-         
+        </div>
       </div>
+
+      <div class="testimonial-slide">
+        <div class="testimonial-box">
+          <div class="testimonial-icon">
+            <i class="bi bi-quote"></i>
+          </div>
+          <div class="testimonial-text">
+            <p>Great t-shirts, fast delivery, and excellent customer service. Will recommend to others!</p>
+          </div>
+          <div class="testimonial-img d-flex justify-content-center">
+            <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
+          </div>
+          <div class="testimonial-name">
+            <h4>Rahul Jen</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-slide">
+        <div class="testimonial-box">
+          <div class="testimonial-icon">
+            <i class="bi bi-quote"></i>
+          </div>
+          <div class="testimonial-text">
+            <p>Amazing collection! Soft t-shirts, trendy designs, and delivered on time. Totally satisfied!</p>
+          </div>
+          <div class="testimonial-img d-flex justify-content-center">
+            <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
+          </div>
+          <div class="testimonial-name">
+            <h4>Madhab Reddy</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-slide">
+        <div class="testimonial-box">
+          <div class="testimonial-icon">
+            <i class="bi bi-quote"></i>
+          </div>
+          <div class="testimonial-text">
+            <p>Love these shirts! Stylish, comfortable, and affordable. Highly recommend Treenga to everyone!</p>
+          </div>
+          <div class="testimonial-img d-flex justify-content-center">
+            <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
+          </div>
+          <div class="testimonial-name">
+            <h4>Nitin Sah</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-slide">
+        <div class="testimonial-box">
+          <div class="testimonial-icon">
+            <i class="bi bi-quote"></i>
+          </div>
+          <div class="testimonial-text">
+            <p>Perfect t-shirts! Beautiful prints, premium fabric, and fits perfectly. Will order more soon!</p>
+          </div>
+          <div class="testimonial-img d-flex justify-content-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
+          </div>
+          <div class="testimonial-name">
+            <h4>Hritik Kamal</h4>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
 
 <!-- --------------------------End Testimonial------------------------------- -->
   
@@ -369,50 +367,75 @@
       <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingOne">
           <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-            <i class="fas fa-plus me-2"></i> What is Niwa Agro?
+            <i class="fas fa-plus me-2"></i> What is Treeranga?
           </button>
         </h2>
         <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
           <div class="accordion-body">
-            Niwa Agro is an agricultural company specializing in sustainable farming solutions. You can reach us via email at info@niwaagro.com, call us at +123456789, or fill out the contact form on our website. We offer a range of products including organic vegetables, fruits, grains, etc. Our services include agricultural consulting, farm management, and sustainable farming practices. All our products are certified organic and meet USDA Organic standards.
+            Treenga is a fashion brand specializing in high-quality, trendy t-shirts for all styles. You can reach us via email at contactus@treeranga.com, call us at +91-6372100300, or fill out the contact form on our website. We offer a wide range of t-shirts, including graphic tees, plain basics, and seasonal collections. Our services include personalized designs, bulk orders, and fashion consultations. All our products are crafted with premium fabrics and meet the highest quality standards for comfort and style.
           </div>
         </div>
       </div>
       <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingTwo">
           <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-            <i class="fas fa-plus me-2"></i> What farming practices does Niwa Agro use?
+            <i class="fas fa-plus me-2"></i> What fabric is used in Treenga t-shirts?
           </button>
         </h2>
         <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
           <div class="accordion-body">
-            We use sustainable and environmentally friendly farming practices, including crop rotation, no-till farming, and integrated pest management. We implement rigorous quality control measures at every stage of production to ensure our products meet the highest standards.
+            Treenga t-shirts are made from premium quality fabrics, primarily 100% organic cotton, ensuring breathability, comfort, and durability. We also offer blends such as cotton-polyester for a softer feel and extra flexibility. All materials are ethically sourced and eco-friendly.
           </div>
         </div>
       </div>
       <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingThree">
           <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-            <i class="fas fa-plus me-2"></i> How can I place an order with Niwa Agro?
+            <i class="fas fa-plus me-2"></i> How can I place an order with Treenga?
           </button>
         </h2>
         <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
           <div class="accordion-body">
-            You can place an order through our website, by phone, or by visiting one of our partner retailers.
+            You can place an order through our website by browsing our collections, selecting the t-shirts you like, and proceeding with secure checkout. We also offer bulk orders for businesses, which can be placed by contacting our customer service team.
             <br><br>
-            <strong>Does Niwa Agro offer home delivery?</strong>
+            <strong>Does Treenga offer home delivery?</strong>
             <br>
-            Yes, we offer home delivery services in select areas. Delivery times and fees vary based on location.
+            Yes, we provide home delivery across India and internationally. Delivery times and fees vary based on location, and we offer free shipping on orders above a certain amount.
             <br><br>
-            <strong>What payment methods does Niwa Agro accept?</strong>
+            <strong>What payment methods does Treenga accept?</strong>
             <br>
-            We accept various payment methods including credit/debit cards, PayPal, and bank transfers.
+            We accept multiple payment methods including credit/debit cards, UPI, PayPal, and cash on delivery for select locations.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item shadow-sm mb-4">
+        <h2 class="accordion-header" id="flush-headingFour">
+          <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+            <i class="fas fa-plus me-2"></i> What sizes do your t-shirts come in?
+          </button>
+        </h2>
+        <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            Our t-shirts are available in a wide range of sizes, from XS to 4XL, to ensure a perfect fit for everyone. You can refer to our size chart on the product page for exact measurements and guidance.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item shadow-sm mb-4">
+        <h2 class="accordion-header" id="flush-headingFive">
+          <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+            <i class="fas fa-plus me-2"></i> Can I return or exchange my order?
+          </button>
+        </h2>
+        <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            Yes, we offer a hassle-free return and exchange policy. You can return or exchange your order within 15 days of delivery, provided the items are unused and in their original condition with all tags intact.
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 <!-- --------------------------------------------End Accordian------------------------------------- -->
 

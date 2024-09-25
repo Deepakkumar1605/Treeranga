@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/user_Responsive.css' %}">
 
   <!------------ ICONS FILE------ -->
-  <link rel="icon" href="{% static 'app_common/images/logo1.png' %}">
+  <link rel="icon" href="{% static 'app_common/images/logo5.jpeg' %}">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -50,7 +50,7 @@
      <!-- ---=========--======-----===========Authenticated========== --========----------->
   {% if user.is_authenticated %}
 
-  <header class="p-xxl-4 p-xl-4 p-lg-4 p-md-3 p-sm-2 p-2">
+  <header class="p-xxl-4 p-xl-4 py-lg-2 px-lg-4 p-md-3 p-sm-2 p-2">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6" id="menu-bar">
@@ -77,7 +77,7 @@
             </div>
           </div>
           <a class="navbar-brand" href="{% url 'app_common:home' %}">
-            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
+            <img src="{% static 'app_common/images/logo5.jpeg' %}" alt="Logo" >
           </a>
         </div>
 
@@ -147,7 +147,7 @@
    <!-- ---=========--======-----===========UnAuthenticated========== --========----------->
   {% elif not user.is_authenticated %}
 
-  <header class="p-lg-3">
+  <header class="px-lg-3 py-lg-2">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
         <div class="col-lg-1 col-6" id="menu-bar">
@@ -173,7 +173,7 @@
         </div>
     
           <a class="navbar-brand" href="{% url 'app_common:home' %}">
-            <img src="{% static 'app_common/images/logo1.png' %}" alt="Logo" >
+            <img src="{% static 'app_common/images/logo5.jpeg' %}" alt="Logo" >
           </a>
         </div>
 
@@ -267,7 +267,9 @@
   <!-- end page 4 -->
 
 
-
+  <a href="https://api.whatsapp.com/send/?phone=916372100300" class="whatsapp-button" target="_blank">
+    <i class="fab fa-whatsapp fa-2x"></i>
+</a>
 
   <!-- -------------------------Footer------------------------- -->
 
@@ -323,29 +325,27 @@
           </div>
         </div>
   
-        <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
-          <div class="row row-cols-2 row-cols-sm-2   ms-lg-2  footer_div_ul mb-2">
-            <div class="border-end border-white m-auto">
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 px-0 col-xxl-4">
+          <div class="row row-cols-2 row-cols-sm-2 px-0  ms-lg-2  footer_div_ul mb-2">
+            <div class="  border-white ">
               <h6>Get in Touch</h6>
-              <p><i class="fa-solid fa-phone"></i> +91 -7735955569</p>
-              <p><i class="fa-solid fa-envelope"></i> niwacare@outlook.com</p>
+              <p><i class="fa-solid fa-phone"></i>+91-6372100300</p>
+              <p><i class="fa-solid fa-envelope"></i>contactus@treeranga.com</p>
               
               <h6>Socials:</h6>
               <p class="fs-5 mt-3">
-                <i class="fa-brands fa-facebook"></i>
-                <i class="fa-brands fa-instagram"></i>
-                <i class="fa-brands fa-whatsapp"></i>
-                <i class="fa-brands fa-square-x-twitter"></i>
-                <i class="fa-brands fa-youtube"></i>
+                <a href="https://www.facebook.com/profile.php?id=61562153391273&mibextid=LQQJ4d" class="text-decoration-none " target="_blank"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#" class="text-decoration-none "><i class="fab fa-twitter fa-lg" target="_blank"></i> </a>
+                <a href="https://www.instagram.com/treeranga_?igsh=MTd5YzN5MWplNGtoYg%3D%3D&utm_source=qr " class="text-decoration-none " target="_blank"><i class="fab fa-instagram fa-lg" ></i> </a>
+                <a href="http://www.youtube.com/@Treeranga" class="text-decoration-none " target="_blank"><i class="fab fa-youtube fa-lg"></i> </a>
+               
               </p>
             </div>
-            <div class="m-auto">
+            <div class=" foot_last_div">
               <h6>Registered Office Address</h6>
-              <p>Plot No: 3298/5536,<br>
-                C-8, Lane-5A,<br>
-                Gouri Nagar,<br>
-                Old Town (Khorda),<br>
-                Bhubaneswar, Khorda- 751002,<br>
+              <p>
+                
+                PaniKoili,<br> Jajpur <br> 755043,<br>
                 Odisha</p>
             </div>
           </div>
@@ -354,7 +354,7 @@
       </div>
     </div>
     <div class="text-center mt-4 ps-3 pe-3 mt-lg-3 footer_subhead">
-      <p class="">This Website is Designed and Developed by ❤ Techavia IT Solutions.  @Copyright 2024 Niwa Agro Pvt. Ltd.</p>
+      <p class="">This Website is Designed and Developed by ❤ Techavia IT Solutions.  @Copyright 2024 Fashionfest Pvt. Ltd.</p>
     </div>
   </footer>
   
