@@ -14,6 +14,8 @@ urlpatterns = [
     path('ManageCart/<str:c_p_uid>/', user_cart_views.ManageCart.as_view(), name='managecart'),
     path('RemoveFromCart/<str:cp_uid>/', user_cart_views.RemoveFromCart, name='removefromcart'),
     path('Checkout/',user_cart_views.Checkout.as_view(),name='checkout'),
+    path('apply-coupon/', user_cart_views.ApplyCouponView.as_view(),name='apply_coupon'),
+    path('remove-coupon/', user_cart_views.remove_coupon,name='remove_coupon'),
 
 
      # checkout address

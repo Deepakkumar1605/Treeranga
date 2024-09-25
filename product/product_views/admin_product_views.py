@@ -19,9 +19,6 @@ from django.core.files.storage import default_storage
 app = "product/"
 
 
-
-
-
 @method_decorator(utils.super_admin_only, name='dispatch')
 class CategoryList(View):
     model = Category
@@ -553,6 +550,7 @@ class AdminReviewManagementView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+        
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductSearch(View):
     model = Products

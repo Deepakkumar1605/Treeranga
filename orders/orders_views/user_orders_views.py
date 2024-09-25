@@ -44,6 +44,8 @@ class OrderDetail(View):
             gross_cart_value = float(order_meta_data.get('gross_cart_value', '0.00'))
             total_cart_items = int(order_meta_data.get('total_cart_items', 0))
             delivery_charge = float(order_meta_data.get('charges', {}).get('Delivery', '0.00'))
+            applied_coupon = order_meta_data.get('applied_coupon',None)
+            coupon_discount_amount = order_meta_data.get('coupon_discount_amount','0.00')
 
             products = []
             quantities = []
@@ -59,8 +61,8 @@ class OrderDetail(View):
                 product = get_object_or_404(Products, id=details['id'])
                 products.append(product)
                 quantities.append(details['quantity'])
-                price_per_unit.append(details['product_discount_price'])
-                total_prices.append(float(details['total_price']))
+                price_per_unit.append(details['price_per_unit'])
+                total_prices.append(float(details['total_discounted_price']))
                 total_quantity += int(details['quantity'])
 
             zipproduct = zip(products, quantities, price_per_unit, total_prices)
@@ -73,6 +75,8 @@ class OrderDetail(View):
                 'discount_amount': discount_amount,
                 'gross_cart_value': gross_cart_value,
                 'total_cart_items': total_cart_items,
+                'applied_coupon':applied_coupon,
+                'coupon_discount_amount':coupon_discount_amount,
                 'cgst_amount': total_cgst,
                 'sgst_amount': total_sgst,
                 'delivery_charge': delivery_charge,
@@ -102,13 +106,14 @@ class UserDownloadInvoice(View):
 
             total_cgst = Decimal('0.00')
             total_sgst = Decimal('0.00')
-
+            applied_coupon = order.order_meta_data.get('applied_coupon',None)
+            coupon_discount_amount = order.order_meta_data.get('coupon_discount_amount','0.00')
             # Loop through each product to extract and calculate required information
             for product_id, p_overview in data['order_meta_data']['products'].items():
                 products.append(p_overview['name'])
                 quantities.append(p_overview['quantity'])
-                price_per_unit.append(p_overview['product_discount_price'])
-                total_prices.append(p_overview['total_price'])
+                price_per_unit.append(p_overview['price_per_unit'])
+                total_prices.append(p_overview['total_discounted_price'])
     
                 # Calculate the total CGST and SGST
                 total_cgst += Decimal(p_overview.get('cgst_amount', '0.00'))
@@ -132,7 +137,9 @@ class UserDownloadInvoice(View):
                 'sgst_amount': "{:.2f}".format(total_sgst),
                 'gross_amt': data['order_meta_data']['our_price'],
                 'discount': data['order_meta_data'].get('discount_amount', '0.00'),
-                'final_total': final_total
+                'final_total': final_total,
+                'applied_coupon':applied_coupon,
+                'coupon_discount_amount':coupon_discount_amount,
             }
 
             # Render the template with the provided context
