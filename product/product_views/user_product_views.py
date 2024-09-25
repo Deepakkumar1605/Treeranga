@@ -1,6 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404,redirect,Http404
+from django.http import HttpResponseRedirect 
 from django.urls import reverse
 from django.views import View
 from app_common import models
@@ -83,142 +84,170 @@ class ProductDetailsView(View):
     template_name = app + 'user/product_details.html'
 
     def get(self, request, p_id):
-        try:
-            user = request.user
-            variant_param = request.GET.get('variant', '')
+        user = request.user
+        variant_param = request.GET.get('variant', '')
 
-            # Check if the product is a SimpleProduct or VariantProduct
-            product_obj = None
-            product_type = None
+        # Check if the product is a SimpleProduct or VariantProduct
+        product_obj = None
+        product_type = None
 
-            # Handle variant_param correctly
-            if variant_param == "yes":
-                product_obj = VariantProduct.objects.get(id=p_id)
-                product_type = "variant"
-            else:
-                product_obj = SimpleProduct.objects.get(id=p_id)
-                product_type = "simple"
+        # Handle variant_param correctly
+        if variant_param == "yes":
+            product_obj = VariantProduct.objects.get(id=p_id)
+            product_type = "variant"
+        else:
+            product_obj = SimpleProduct.objects.get(id=p_id)
+            product_type = "simple"
 
-            # Fetch category data
-            category_obj = Category.objects.all()
+        # Get the parent Products object from SimpleProduct or VariantProduct
+        parent_product = product_obj.product  # Assuming a ForeignKey 'product' in SimpleProduct/VariantProduct
 
-            # Initialize variables
-            all_variants_of_this = []
-            attributes = {}
-            active_variant_attributes = {}
-            product_images = []
-            product_videos = []
+        # Fetch reviews and calculate average rating for the parent product
+        reviews = ProductReview.objects.filter(product=parent_product).order_by('-created_at')
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        average_rating = round(average_rating, 1)
 
-            if product_obj:
-                if product_type == "simple":
-                    image_gallery = ImageGallery.objects.filter(simple_product=product_obj).first()
-                    if image_gallery:
-                        product_images = image_gallery.images
-                        product_videos = image_gallery.video
-                elif product_type == "variant":
-                    image_gallery = VariantImageGallery.objects.filter(variant_product=product_obj).first()
-                    if image_gallery:
-                        product_images = image_gallery.images
-                        product_videos = image_gallery.video
+        # Check if the user has purchased the product
+        user_has_ordered = has_user_ordered_product(user, product_obj) if user.is_authenticated else False
 
-                    avp = VariantProduct.objects.filter(product=product_obj.product)
-                    for av in avp:
-                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
-                        variant_images = variant_image_gallery.images if variant_image_gallery else []
-                        variant_videos = variant_image_gallery.video if variant_image_gallery else []
+        # Initialize review form
+        form = ProductReviewForm(user=user)
 
-                        all_variants_of_this.append({
-                            'product': av,
-                            'variant': "yes",
-                            'images': variant_images,
-                            'videos': variant_videos
-                        })
+        # Fetch category data and other product-related details
+        category_obj = Category.objects.all()
 
-                    for variant in avp:
-                        variant_combination = variant.variant_combination
-                        for attribute, value in variant_combination.items():
-                            if attribute not in attributes:
-                                attributes[attribute] = set()
-                            attributes[attribute].add(value)
+        # Initialize variables for images, videos, variants, etc.
+        all_variants_of_this = []
+        attributes = {}
+        active_variant_attributes = {}
+        product_images = []
+        product_videos = []
 
-                    active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
+        if product_obj:
+            if product_type == "simple":
+                image_gallery = ImageGallery.objects.filter(simple_product=product_obj).first()
+                if image_gallery:
+                    product_images = image_gallery.images
+                    product_videos = image_gallery.video
+            elif product_type == "variant":
+                image_gallery = VariantImageGallery.objects.filter(variant_product=product_obj).first()
+                if image_gallery:
+                    product_images = image_gallery.images
+                    product_videos = image_gallery.video
 
-                for attribute in attributes:
-                    attributes[attribute] = sorted(attributes[attribute])
+                avp = VariantProduct.objects.filter(product=product_obj.product)
+                for av in avp:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=av).first()
+                    variant_images = variant_image_gallery.images if variant_image_gallery else []
+                    variant_videos = variant_image_gallery.video if variant_image_gallery else []
 
-            # Fetch similar products
-            product_list_category_wise = Products.objects.filter(category=product_obj.product.category)
-            all_simple_and_variant_similar = []
+                    all_variants_of_this.append({
+                        'product': av,
+                        'variant': "yes",
+                        'images': variant_images,
+                        'videos': variant_videos
+                    })
 
-            for product in product_list_category_wise:
-                if product.product_type == "simple":
-                    simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
-                    for simple_product in simple_product_similar:
-                        image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
-                        similar_images = image_gallery.images if image_gallery else []
-                        similar_videos = image_gallery.video if image_gallery else []
-                        all_simple_and_variant_similar.append({
-                            'product': simple_product,
-                            'variant': "no",
-                            'images': similar_images,
-                            'videos': similar_videos
-                        })
-                elif product.product_type == "variant":
-                    variant_product_similar = VariantProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id).first()
-                    if variant_product_similar:
-                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product_similar).first()
-                        similar_images = variant_image_gallery.images if variant_image_gallery else []
-                        similar_videos = variant_image_gallery.video if variant_image_gallery else []
-                        all_simple_and_variant_similar.append({
-                            'product': variant_product_similar,
-                            'variant': "yes",
-                            'images': similar_images,
-                            'videos': similar_videos
-                        })
+                for variant in avp:
+                    variant_combination = variant.variant_combination
+                    for attribute, value in variant_combination.items():
+                        if attribute not in attributes:
+                            attributes[attribute] = set()
+                        attributes[attribute].add(value)
 
-            # Check wishlist status
-            wishlist_items = []
-            is_added = False
+                active_variant_attributes = {attr: val for attr, val in product_obj.variant_combination.items()}
 
-            if user.is_authenticated:
-                wishlist = WishList.objects.filter(user=user).first()
+            for attribute in attributes:
+                attributes[attribute] = sorted(attributes[attribute])
+
+        # Fetch similar products
+        product_list_category_wise = Products.objects.filter(category=product_obj.product.category)
+        all_simple_and_variant_similar = []
+
+        for product in product_list_category_wise:
+            if product.product_type == "simple":
+                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
+                for simple_product in simple_product_similar:
+                    image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                    similar_images = image_gallery.images if image_gallery else []
+                    similar_videos = image_gallery.video if image_gallery else []
+                    all_simple_and_variant_similar.append({
+                        'product': simple_product,
+                        'variant': "no",
+                        'images': similar_images,
+                        'videos': similar_videos
+                    })
+            elif product.product_type == "variant":
+                variant_product_similar = VariantProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id).first()
+                if variant_product_similar:
+                    variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product_similar).first()
+                    similar_images = variant_image_gallery.images if variant_image_gallery else []
+                    similar_videos = variant_image_gallery.video if variant_image_gallery else []
+                    all_simple_and_variant_similar.append({
+                        'product': variant_product_similar,
+                        'variant': "yes",
+                        'images': similar_images,
+                        'videos': similar_videos
+                    })
+
+        # Check wishlist status
+        wishlist_items = []
+        is_added = False
+        if user.is_authenticated:
+            wishlist = WishList.objects.filter(user=user).first()
+            if wishlist:
                 products = wishlist.products.get('items', [])
                 if any(str(item['id']) == str(p_id) and item['is_variant'] == variant_param for item in products):
                     is_added = True
 
-                has_ordered_product = False
-                orders = Order.objects.filter(user=user)
-                for order in orders:
-                    products = order.products
-                    if str(product_obj.id) in products:
-                        has_ordered_product = True
-                        break
+        context = {
+            'user': user,
+            'category_obj': category_obj,
+            'product_obj': product_obj,
+            'all_variants_of_this': all_variants_of_this,
+            'images': product_images,
+            'videos': product_videos,
+            'all_simple_and_variant_similar': all_simple_and_variant_similar,
+            'wishlist_items': wishlist_items,
+            'form': form,
+            'MEDIA_URL': settings.MEDIA_URL,
+            'variant_combination': product_obj.variant_combination if product_type == "variant" else None,
+            'attributes': attributes,
+            'active_variant_attributes': active_variant_attributes,
+            'variant_param': variant_param,
+            'is_added': is_added,
+            'reviews': reviews,
+            'average_rating': average_rating,
+            'star_range': range(1, 6),
+            'user_has_ordered': user_has_ordered,
+        }
 
-            form = ProductReviewForm()
+        return render(request, self.template_name, context)
 
-            context = {
-                'user': user,
-                'category_obj': category_obj,
-                'product_obj': product_obj,
-                'all_variants_of_this': all_variants_of_this,
-                'images': product_images,
-                'videos': product_videos,
-                'all_simple_and_variant_similar': all_simple_and_variant_similar,
-                'wishlist_items': wishlist_items,
-                'form': form,
-                'MEDIA_URL': settings.MEDIA_URL,
-                'variant_combination': product_obj.variant_combination if product_type == "variant" else None,
-                'attributes': attributes,
-                'active_variant_attributes': active_variant_attributes,
-                'variant_param': variant_param,
-                'is_added': is_added
-            }
+    def post(self, request, p_id):
+    # Handle review form submission
+        user = request.user
+        variant_param = request.GET.get('variant', '')
 
-            return render(request, self.template_name, context)
+        product_obj = get_object_or_404(VariantProduct if variant_param == "yes" else SimpleProduct, id=p_id)
 
-        except Exception as e:
-            error_message = f"An unexpected error occurred: {str(e)}"
-            return render_error_page(request, error_message, status_code=400)
+        # Check if user has ordered the product before processing the form
+        if not has_user_ordered_product(user, product_obj):
+            messages.error(request, 'You can only review products you have purchased.')
+            return HttpResponseRedirect(f"{reverse('product:product_detail', args=[p_id])}?variant={variant_param}")
+
+        form = ProductReviewForm(request.POST)
+        
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = user
+            review.product = product_obj.product  # Ensure you're saving the parent product
+            review.save()
+            messages.success(request, 'Thank you for your review!')
+        else:
+            messages.error(request, 'There was an error with your review submission.')
+
+        return HttpResponseRedirect(f"{reverse('product:product_detail', args=[p_id])}?variant={variant_param}")
 
 class VariantRedirectView(View):
     def get(self, request):
@@ -249,49 +278,19 @@ class VariantRedirectView(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return JsonResponse({'error': error_message}, status=400)
 
-
-@login_required
-@csrf_exempt  # Only for simplicity; ideally, use CSRF tokens with AJAX requests
-def submit_review(request, product_type, product_id):
-    # Get the product type and the specific product
-    if product_type == 'simple':
-        product = get_object_or_404(SimpleProduct, pk=product_id)
-        content_type = ContentType.objects.get_for_model(SimpleProduct)
-    elif product_type == 'variant':
-        product = get_object_or_404(VariantProduct, pk=product_id)
-        content_type = ContentType.objects.get_for_model(VariantProduct)
-    else:
-        return JsonResponse({'error': 'Invalid product type'}, status=400)
-
-    # Check if the user has purchased this product by inspecting the products JSON in their orders
-    has_purchased = Order.objects.filter(
-        user=request.user,
-        products__contains={'product_id': product_id}
-    ).exists()
-
-    if not has_purchased:
-        return JsonResponse({'error': 'You can only review products you have purchased.'}, status=400)
-
-    # Check if the user already reviewed this product
-    existing_review = ProductReview.objects.filter(
-        content_type=content_type, object_id=product_id, user=request.user
-    ).first()
-
-    if request.method == 'POST':
-        form = ProductReviewForm(request.POST, instance=existing_review)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.user = request.user
-            review.content_type = content_type
-            review.object_id = product.id
-            review.save()
-            return JsonResponse({'success': 'Your review has been submitted!'})
-        else:
-            return JsonResponse({'error': 'There was an error submitting your review.'}, status=400)
-
-            
+def has_user_ordered_product(user, product_obj):
+    if not user.is_authenticated:
+        return False
+    orders = Order.objects.filter(user=user)
+    for order in orders:
+        products = order.products 
+        for product_key, product_data in products.items():
+            product_info = product_data.get('info', {})
+            if str(product_info.get('product_id')) == str(product_obj.id):
+                return True
+    return False
 class AllTrendingProductsView(View):
-    template_name = app+'user/trending_products.html'
+    template_name = app +'user/trending_products.html'
 
     def get(self, request):
         try:
@@ -336,7 +335,8 @@ class AllTrendingProductsView(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
 class AllNewProductsView(View):
-    template_name = app+'user/new_product.html'
+    template_name = app + 'user/new_product.html'
+    
 
     def get(self, request):
         try:
@@ -380,6 +380,8 @@ class AllNewProductsView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
+
 def search_product_names(request):
     try:
         if request.method == 'POST':
@@ -392,6 +394,8 @@ def search_product_names(request):
                     products_data.append({
                         'id': product.id,
                         'title': product.name,
+                        'brand': product.brand,
+                        
                         'is_variant': "Yes" if product.product_type == 'variant' else "No"
                     })
 
@@ -410,36 +414,18 @@ class SearchItems(View):
             if not search_title:
                 return redirect("app_common:home")
 
-            # Initial product query based on the search title
             products = Products.objects.filter(name__icontains=search_title)
-            print(products,"kkkkk")
+
             # Get filter criteria from request
             category_id = request.GET.get('category')
             product_type = request.GET.get('product_type')
             min_price = request.GET.get('min_price')
             max_price = request.GET.get('max_price')
             in_stock = request.GET.get('in_stock')
-            filter_products = []
-            print(category_id,min_price,max_price,"llllll")
-            # Apply additional filters if provided
+
             if category_id:
-                for i in products:
-                    if i.category.id == int(category_id):
-                        filter_products.append(i)
-                products = filter_products
-            print(products)
-            
+                products = products.filter(category_id=category_id)
 
-                # for product in products:
-                #     for ids in product_ids:
-                #         if ids == product.id:
-                #             products.remove(product)
-                # print(products,"Price rsnge")    
-                # products = products.filter(
-                #     Q(id__in=simple_product_ids) | Q(id__in=variant_product_ids)
-                # )
-
-            # Filter by stock availability
             if in_stock:
                 simple_product_ids = SimpleProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
                 variant_product_ids = VariantProduct.objects.filter(stock__gt=0).values_list('product_id', flat=True)
@@ -452,33 +438,40 @@ class SearchItems(View):
                 if product.product_type == 'variant':
                     variants = VariantProduct.objects.filter(product=product)
                     for variant in variants:
+                        # Get the first image from VariantImageGallery
+                        image_gallery = VariantImageGallery.objects.filter(variant_product=variant).first()
+                        main_image = image_gallery.images[0] if image_gallery and image_gallery.images else None
                         all_search_items.append({
                             'product': variant,
-                            'is_variant': True
+                            'is_variant': True,
+                            'main_image': main_image
                         })
                 else:
                     simple_products = SimpleProduct.objects.filter(product=product)
                     for simple_product in simple_products:
+                        # Get the first image from ImageGallery
+                        image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+                        main_image = image_gallery.images[0] if image_gallery and image_gallery.images else None
                         all_search_items.append({
                             'product': simple_product,
-                            'is_variant': False
+                            'is_variant': False,
+                            'main_image': main_image
                         })
+
             if min_price and max_price:
-                # Filter all_search_items based on the product's discount price
                 all_search_items = [
                     item for item in all_search_items
                     if float(min_price) <= float(item['product'].product_discount_price) <= float(max_price)
                 ]
-            # Categories for filtering
+
             categories = Category.objects.all()
 
-            # Pass the necessary data to the template
             context = {
                 "all_search_items": all_search_items,
                 "MEDIA_URL": settings.MEDIA_URL,
                 "search_title": search_title,
                 'categories': categories,
-                'request': request,  # Pass request to access filters in the template
+                'request': request,
             }
             return render(request, self.template_name, context)
         except Exception as e:

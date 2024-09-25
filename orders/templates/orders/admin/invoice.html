@@ -363,7 +363,24 @@
                                                                     {{discount}}
                                                                 </td>
                                                             </tr>
- 
+                                                            {% if applied_coupon %}
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    Coupon Discount:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{coupon_discount_amount}}
+                                                                </td>
+                                                            </tr>
+                                                            {% endif %}
                                                             <tr>
                                                                 <td
                                                                     style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">

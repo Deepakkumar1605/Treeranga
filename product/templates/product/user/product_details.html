@@ -5,94 +5,12 @@ Product Details - {{ product_obj.name }}
 {% endblock title %}
 
 {% block content %}
-<style>
-    .variant-link {
-        text-decoration: none;
-        margin: 5px;
-    }
-
-    .variant-circle {
-        width: 50px;  /* Adjust the size as needed */
-        height: 50px;  /* Adjust the size as needed */
-        border-radius: 50%;
-        background-size: cover;
-        background-position: center;
-        border: 2px solid #ddd;
-        transition: transform 0.3s ease;
-    }
-
-    .variant-link.selected .variant-circle {
-        border-color: #007bff;  /* Highlight border color */
-        transform: scale(1.2);  /* Slightly larger */
-    }
-
-    .variant-circle:hover {
-        transform: scale(1.1);
-        border-color: #000;
-    }
-
-    .variant-link.highlighted{
-        border: 1px solid green;
-        background: linear-gradient(344deg,rgba(5,131,47,1) 14% ,rgba(5,99,19,1) 52% ,rgba(6,175,27,1) 100%);
-        color: white;
-        font-weight: bold;
-        transform: scale(1.2);  /* Slightly larger */
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,rgba(0, 0, 0, 0.23) 0px 3px 6px;
-        font-size: 14px;
-    }
-    .vbtn{
-        border: 1px solid gray;
-        background: linear-gradient(344deg,rgb(179, 182, 180) 14% ,rgb(95, 97, 95) 52% ,rgb(190, 190, 190) 100%);
-        color: white;
-        font-weight: bold;
-        border-radius: 4px;
-        padding: 2px 5px;
-        margin-left: 15px;
-        font-size: 14px;
-    }
-    .vbtn:hover{
-        color: white;
-        font-weight: bold;
-    }
-
-    .btn-wishlist {
-    background-color: #ff0000; /* Red background for visibility */
-    color: #ffffff; /* White text */
-    border: none; /* Remove default border */
-    padding: 10px 20px; /* Add padding */
-    font-size: 16px; /* Increase font size */
-    font-weight: bold; /* Make text bold */
-    border-radius: 5px; /* Round corners */
-    cursor: pointer; /* Change cursor to pointer on hover */
-    z-index: 10; /* Ensure button is above the image */
-}
-
-.btn-wishlist:hover {
-    background-color: #cc0000; /* Darker red on hover */
-}
-
-.position-absolute {
-    position: absolute; /* Position button absolutely within container */
-}
-
-.top-0 {
-    top: 10px; /* Adjust top position */
-}
-
-.end-0 {
-    right: 10px; /* Adjust right position */
-}
-
-.m-2 {
-    margin: 5px; /* Add margin around the button */
-}
-</style>
 
 <section id="products_of_category">
-    <div class="container py-lg-5">
+    <div class="container py-lg-5 position-relative">
         <div class="row">
             <!-- Side Image Gallery -->
-            <div class="col-lg-7 d-flex">
+            <div class="col-lg-7 d-flex ">
                 <div class="gallery-container">
                     <div class="gallery-wrapper">
                         <div class="gallery-items">
@@ -135,6 +53,7 @@ Product Details - {{ product_obj.name }}
                                 Add to Wishlist
                             {% endif %}
                         </button>
+                        
                     {% else %}
                         <a href="{% url 'users:login' %}" class="btn-wishlist position-absolute top-0 end-0 m-2">
                             Add to Wishlist
@@ -146,7 +65,16 @@ Product Details - {{ product_obj.name }}
             <!-- Product Details -->
             <div class="col-lg-5">
                 <div class="product-details">
-                    <h1 class="text-capitalize">{{ product_obj.product.name }}</h1>                 
+                    <h1 class="text-capitalize">{{ product_obj.product.name }}</h1>
+                    <div class="product-ratings">
+                        {% for i in star_range %}
+                            {% if i <= average_rating %}
+                                ★
+                            {% else %}  
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                       <span> ({{ reviews.count }} Reviews ) </span>               
                     <div class="discount-price mt-lg-3">
                         ₹{{ product_obj.product_discount_price }}
                         {% if product_obj.product_max_price %}
@@ -158,6 +86,47 @@ Product Details - {{ product_obj.name }}
                         <h5>Description:</h5>
                         <p>{{ product_obj.product.product_short_description | truncatechars:200 }}</p>
                     </div>
+                    <!-- Share Button -->
+                    <button id="shareButton" class="btn" data-bs-toggle="modal" data-bs-target="#shareModal"><i class="fa-solid fa-share"></i> Share </button>
+
+
+                    <!-- Share Product Modal -->
+                    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered"> <!-- Added modal-dialog-centered -->
+                            <div class="modal-content" style="height: 250px;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="shareModalLabel">
+                                        <i class="fas fa-share-alt fa-lg" style="margin-right: 8px;"></i> <!-- Share Icon -->
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center"> <!-- Centering content -->
+                                    <p>Share this product on:</p>
+                                    <div class="d-flex justify-content-center gap-4">
+                                        <!-- WhatsApp -->
+                                        <a id="shareWhatsApp" href="#" target="_blank" title="Share on WhatsApp">
+                                            <i class="fab fa-whatsapp fa-3x" style="color: #25D366;"></i>
+                                        </a>
+                                        <!-- Facebook -->
+                                        <a id="shareFacebook" href="#" target="_blank" title="Share on Facebook">
+                                            <i class="fab fa-facebook fa-3x" style="color: #3b5998;"></i>
+                                        </a>
+                                        <!-- Twitter -->
+                                        <a id="shareTwitter" href="#" target="_blank" title="Share on Twitter">
+                                            <i class="fab fa-twitter fa-3x" style="color: #00acee;"></i>
+                                        </a>
+                                        <!-- Instagram -->
+                                        <a id="shareInstagram" href="#" target="_blank" title="Share on Instagram">
+                                            <i class="fab fa-instagram fa-3x" style="color: #C13584;"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                     <div class="variant-options">
                         <!-- Example attributes and their values -->
                         {% for attribute, values in attributes.items %}
@@ -253,11 +222,11 @@ Product Details - {{ product_obj.name }}
                             {% endif %}
                         </p>
                         {% if item.variant == "yes" %}
-                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=yes" class="btn btn-success product-btn w-100">
+                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=yes" class="vd_button addto-cart">
                                 Product Details
                             </a>
                         {% else %}
-                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=no" class="btn btn-success product-btn w-100">
+                            <a href="{% url 'product:product_detail' item.product.pk %}?variant=no" class="vd_button addto-cart">
                                 Product Details
                             </a>
                         {% endif %}
@@ -266,28 +235,79 @@ Product Details - {{ product_obj.name }}
             </div>
             {% endfor %}
         </div>
+            <!-- Reviews Section -->
+    <div class="reviews-section">
+        <h3>Product Reviews</h3>
+        {% if user.is_authenticated %}
+    {% if user_has_ordered %}
+        <form method="post" action="{% url 'product:product_detail' product_obj.id %}?variant={{ variant_param }}" >
+            {% csrf_token %}
+            <div class="form-group Rating_forms">
+                <label for="full_name" class="">Your Name:</label>
+                <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" readonly>
+            </div>
+    
+            <!-- Display Email -->
+            <div class="form-group  Rating_forms">
+                <label for="email" class="">Your Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+            </div>
+            <div class="form-group Rating_forms my-lg-2">
+                <label for="rating">Rating:</label>
+                <div class="review-rating">
+                    {% for i in star_range %}
+                        <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
+                        <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="review">Review:</label>
+                {{ form.review }}
+            </div>
+            <button type="submit" class="u-button Review my-lg-3">Submit Review</button>
+        </form>
+        {% else %}
+            <p>You can only review products you have purchased.</p>
+        {% endif %}
+    {% else %}
+        <p><a href="{% url 'users:login' %}">Log in</a> to leave a review.</p>
+    {% endif %}
+        <!-- Display existing reviews -->
+        {% if reviews %}
+            <div class="reviews">
+                {% for review in reviews %}
+                    <div class="review-item border-bottom py-lg-3">
+                        <h6 class="m-0">{{ review.user.full_name }}</h6>
+                        <div class="">
+                            {% for star in star_range %}
+                                {% if star <= review.rating %}
+                                    <span class="filled-star">★</span>
+                                {% else %}
+                                    <span class="empty-star">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                            <label>{{ review.created_at }}</label>
+                        </div>
+                        <p class="m-0 py-lg-2">{{ review.review }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No reviews yet. Be the first to review this product!</p>
+        {% endif %}
+    
+
+
     </div>
+    </div>
+    </div>
+    
     <!-- Include jQuery library if not already included -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- The form for submitting reviews -->
-<form id="review-form" method="post" action="{% url 'product:submit_review' product_type=product_obj.product.product_type product_id=product_obj.id %}">
-    {% csrf_token %}
-    <!-- Form fields here -->
-    <div class="mb-3">
-        <label for="rating" class="form-label">Rating</label>
-        <select class="form-select" id="rating" name="rating">
-            {% for i in star_range %}
-                <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="mb-3">
-        <label for="comment" class="form-label">Comment</label>
-        <textarea class="form-control" id="comment" name="comment"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit Review</button>
-</form>
+
 
 
 
@@ -358,12 +378,12 @@ Product Details - {{ product_obj.name }}
     function displayMedia(mediaElement) {
         const mediaContainer = document.getElementById('mediaContainer');
         if (mediaElement.tagName === 'IMG') {
-            mediaContainer.innerHTML = `<img src="${mediaElement.src}" alt="Selected Image">`;
+            mediaContainer.innerHTML = <img src="${mediaElement.src}" alt="Selected Image">;
         } else if (mediaElement.tagName === 'VIDEO') {
-            mediaContainer.innerHTML = `<video controls autoplay>
+            mediaContainer.innerHTML = <video controls autoplay>
 <source src="${mediaElement.querySelector('source').src}" type="video/mp4">
         Your browser does not support the video tag.
-</video>`;
+</video>;
         }
     }
 </script>
@@ -465,7 +485,16 @@ Product Details - {{ product_obj.name }}
         })
         .catch(error => console.error('Error:', error));
     });
-</script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const productUrl = window.location.href;  // Current product URL
     
+        document.getElementById('shareWhatsApp').href = `https://wa.me/?text=Check out this product: ${productUrl}`;
+        document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${productUrl}`;
+        document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?url=${productUrl}&text=Check out this product!`;
+        document.getElementById('shareInstagram').href = `https://www.instagram.com/?url=${productUrl}`;
+    
+        // Add similar functionality for other platforms if needed
+    });
+</script>
     
 {% endblock content %}

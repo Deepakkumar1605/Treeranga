@@ -157,7 +157,7 @@ add_address_post = [
         required=True,
     ),
     openapi.Parameter(
-        "contact",
+        "mobile_no",
         openapi.IN_FORM,
         description="Contact number",
         type=openapi.TYPE_STRING,

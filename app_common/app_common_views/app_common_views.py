@@ -3,9 +3,10 @@ from django.views import View
 from django.contrib import messages
 from app_common.error import render_error_page
 from app_common.models import ContactMessage
+from orders.models import Order
 from product_variations.models import VariantProduct
 from users.forms import LoginForm
-from app_common.models import ContactMessage
+from app_common.models import ContactMessage,Banner
 from users.user_views.emails import send_template_email
 from app_common.forms import ContactMessageForm
 from product.models import Category,Products,SimpleProduct,ImageGallery
@@ -30,6 +31,9 @@ class HomeView(View):
 
             # Get all categories
             categories = Category.objects.all()
+
+            
+            banners = Banner.objects.filter(active=True).order_by('order')
 
             # Handle Trending Products (simple and variant)
             trending_products = []
@@ -73,6 +77,7 @@ class HomeView(View):
 
             context = {
                 'categories': categories,
+                'banners': banners,
                 'trending_products': trending_products,
                 'new_products': new_products,
                 'MEDIA_URL': settings.MEDIA_URL,

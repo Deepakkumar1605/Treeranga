@@ -102,6 +102,30 @@ class BannerList(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
 
+@method_decorator(utils.super_admin_only, name='dispatch')
+class BannerEdit(View):
+    form_class = BannerForm
+    model = Banner
+
+    def get(self, request, banner_id):
+        banner = get_object_or_404(self.model, id=banner_id)
+        form = self.form_class(instance=banner)
+        return render(request, 'path/to/edit_banner.html', {'form': form, 'banner': banner})
+
+    def post(self, request, banner_id):
+        banner = get_object_or_404(self.model, id=banner_id)
+        form = self.form_class(request.POST, request.FILES, instance=banner)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Banner updated successfully.')
+            return redirect('app_common:web_banner_list')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+            return redirect('app_common:web_banner_list')
+
 
 @method_decorator(utils.super_admin_only, name='dispatch')
 class BannerDelete(View):

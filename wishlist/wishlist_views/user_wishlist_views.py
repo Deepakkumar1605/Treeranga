@@ -91,7 +91,9 @@ class AllWishlistItemsView(View):
                 'name': product_name,
                 'price': product_price,
                 'max_price': product_max_price,
-                'image': product_image
+                'image': product_image,
+                'is_variant': is_variant
+                
             })
             print(detailed_products)
         context = {

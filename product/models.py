@@ -125,13 +125,11 @@ class DeliverySettings(models.Model):
 
 
 class ProductReview(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
-    object_id = models.PositiveIntegerField(default=1, blank=True, null=True)
-    content_object = GenericForeignKey('content_type', 'object_id')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='reviews', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField(choices=[(i, str(i)) for i in range(1, 6)])  # Rating out of 5
     review = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Review by {self.user.username} on {self.content_object}'
+        return f'Review by {self.user.username} on {self.product.name}'

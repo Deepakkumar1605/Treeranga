@@ -80,6 +80,9 @@
         <div>Delivery Charge</div>
         <div>Payment Method</div>
         <div class="text-success">Discount</div>
+        {% if applied_coupon %}
+        <div class="text-success">Coupon Discount</div>
+        {% endif %}
         <div>CGST</div>
         <div>SGST</div>
         <div class="fw-bold">Total</div>
@@ -100,6 +103,9 @@
         <div>{{ delivery_charge|default:"Free Shipping" }}</div>
         <div class="text-uppercase">{{ payment_method|default:"N/A" }}</div>
         <div class="text-success">- ₹ {{ discount_amount|default:"N/A" }}</div>
+        {% if applied_coupon %}
+        <div class="text-success">- ₹ {{ coupon_discount_amount|default:"N/A" }}</div>
+        {% endif %}
         <div>₹ {{ cgst_amount|floatformat:2 }}</div>
         <div>₹ {{ sgst_amount|floatformat:2 }}</div>
         <div class="fw-bold">₹ {{ grand_total|default:"N/A" }}</div>
