@@ -256,6 +256,7 @@ class ProfileApiView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
     
 class UpdateProfileApiView(APIView):
+    permission_classes = [IsAuthenticated]
     parser_classes = [FormParser, MultiPartParser]
 
     @swagger_auto_schema(
@@ -319,7 +320,7 @@ class AddAddressAPIView(APIView):
                 "country": data["country"],
                 "state": data["state"],
                 "city": data["city"],
-                'mobile_no': data["contact"],
+                'mobile_no': data["mobile_no"],
                 "pincode": data["pincode"],
             }
 

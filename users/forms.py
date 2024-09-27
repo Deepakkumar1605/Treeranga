@@ -11,7 +11,7 @@ class SignUpForm(forms.Form):
 
     full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Your Full Name'}))
     email = forms.EmailField(max_length=254,
-                             widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address'}))
+                             widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address','oninput': 'this.value = this.value.toLowerCase()'}))
     contact = forms.CharField(max_length=10,
         validators=[RegexValidator(regex='^[9876]\d{9}$')],widget=forms.TextInput(attrs={'class': 'form-control','Placeholder':'Enter Mobile Number'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
@@ -59,11 +59,11 @@ class SignUpForm(forms.Form):
         return cleaned_data
 
 class LoginForm(forms.Form):
-    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address','oninput': 'this.value = this.value.toLowerCase()'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Enter Password'}))
     
 class ForgotPasswordForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Enter Valid Email Address','oninput': 'this.value = this.value.toLowerCase()'}))
     
  
 class ResetPasswordForm(forms.Form):
@@ -76,7 +76,7 @@ class ResetPasswordForm(forms.Form):
 class UpdateProfileForm(forms.Form):
     
     email = forms.EmailField(max_length=255)
-    email.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Email',"required":"required"})
+    email.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Email',"required":"required",'oninput': 'this.value = this.value.toLowerCase()'})
 
     full_name = forms.CharField(max_length=255)
     full_name.widget.attrs.update({'class': 'form-control','type':'text','placeholder':'Enter Full Name',"required":"required"})

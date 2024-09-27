@@ -13,4 +13,8 @@ urlpatterns = [
     path('api/remove/<str:cp_uid>/', api_cart_views.RemoveFromCartAPIView.as_view(), name='remove_from_cart_api'),
     path('api/checkout/', api_cart_views.CheckoutAPIView.as_view(), name='checkout_api'),
 
+    path('api/apply/', api_cart_views.ApplyCouponAPIView.as_view(), name='apply_coupon'),
+    path('api/remove/', api_cart_views.RemoveCouponAPIView.as_view(), name='remove_coupon'),
+
+
 ]

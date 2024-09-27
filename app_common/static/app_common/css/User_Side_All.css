@@ -126,7 +126,7 @@
 	--pagebg: #f5f5f5;
 	--p: #666666;
 	--dark: #000000;
-	--para: #212121;
+	--para: #1e1919;
 	--header: #f9f9f9;
 	--danger: #ec0606;
 
@@ -228,6 +228,36 @@ header {
 #offcanvasWithBothOption {
 	width: 30%;
 }
+
+
+/* ------------------------search Suggestion------------- */
+#search-suggestions{
+	min-height: auto;
+	background-color:var(--white);
+	padding: 10px 10px;
+	box-shadow: var(--box1-box-shadow);
+	border-radius: 0 0 4px 4px;
+	margin: 8px 0;
+}
+.suggestions-list {
+    border-radius: 4px; /* Rounded corners for the list */
+    margin-top: 10px; /* Space between the input and suggestions list */
+    max-width: 400px; /* Maximum width of the suggestions list */
+    list-style-type: none; /* Remove default list styling */
+    padding: 15px; /* Remove default padding */
+    position: absolute; /* Position relative to the parent input */
+    background-color: var(--white); /* Background color for the list */
+    z-index: 1000; /* Ensure it appears above other content */
+}
+.suggestion:hover{
+	background-color: #baeaa6;
+}
+.suggestion{
+	padding: 10px; 
+	margin: 5px 0;
+}
+
+
 
 /* -------------------carousel start hero section------------------------ */
 #carouselExampleFade .carousel-inner {
@@ -1142,13 +1172,13 @@ button:hover .button-text {
 }
 
 .product-head {
-	height: 450px;
+	height: auto;
 	width: 268px;
 	overflow: hidden;
 }
 
 #product-cards {
-	height: 450px;
+	height: auto;
 	width: 257px;
 	overflow: hidden;
 }
@@ -1538,7 +1568,10 @@ video {
 .review-rating label.gold {
 	color: #ffcc00;     /* Gold color for selected stars */
 }
-
+.vd_button.product-btn{
+	background-color: var(--button);
+	color: var(--white);
+}
 
 
 /*---------------------------- new products------------------------------- */
@@ -1820,31 +1853,47 @@ footer {
 	font-size: 13px;
 }
 
+/* ----------------search products list item??------------------------- */
 
+#filterForm div .form-control{
+	border:1px solid rgb(219, 218, 218);
+	border-radius: 0;
+}
+#Filter_sidebar{
+	background-color: #edeff2;
+}
+.categories_section label{
+	font-size: 12px;
+	font-family: "Poppins", sans-serif;
+	font-weight: 500;
+	margin: 5px 0;
+}
+/* -----------------------------------wishlist??---------------------------- */
 
-/* Style for the suggestions list container */
-.suggestions-list {
-    border: 1px solid #ccc; /* Border color for the suggestions list */
-    border-radius: 4px; /* Rounded corners for the list */
-    margin-top: 10px; /* Space between the input and suggestions list */
-    max-width: 400px; /* Maximum width of the suggestions list */
-    list-style-type: none; /* Remove default list styling */
-    padding: 0; /* Remove default padding */
-    position: absolute; /* Position relative to the parent input */
-    background-color: #fff; /* Background color for the list */
-    z-index: 1000; /* Ensure it appears above other content */
+.My_wishlist_head {
+	background-color: #f8f8ff;
+	padding: 25px 20px;
+	margin: 2px 0;
+	box-shadow: var(--sm-shadow);
 }
 
-/* Style for individual suggestion items */
-.suggestions-list li {
-    padding: 8px; /* Space inside each item */
-    cursor: pointer; /* Pointer cursor on hover */
-    color: #333; /* Text color */
+.My_wishlist_body {
+	background-color: #f8f8ff;
+	padding: 25px 20px;
+	margin: 2px 0;
+	box-shadow: var(--sm-shadow);
+
 }
 
-/* Highlight suggestion item on hover */
-.suggestions-list li:hover {
-    background-color: #f0f0f0; /* Background color on hover */
-    color: #000; /* Text color on hover */
+.wishlist_details a h6 {
+	color: rgb(0, 0, 0);
 }
 
+.wishlist_details a h6:hover {
+	color: rgb(8, 8, 255);
+}
+
+.wishlist_images a img {
+	height: 80px;
+	width: 150px;
+}

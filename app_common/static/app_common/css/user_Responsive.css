@@ -807,7 +807,7 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 	.product-btn{
 		font-size: 14px !important;
 	}
-	..address-details li{
+	.address-details li{
 		font-size: 12px !important;
 	}
 }

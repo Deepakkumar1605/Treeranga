@@ -1,3 +1,5 @@
+
+
 *{
     margin: 0;
     padding: 0;
@@ -72,9 +74,9 @@
     background: rgb(255,83,14);
 background: linear-gradient(340deg, rgba(255,83,14,1) 9%, rgba(206,61,2,1) 49%, rgba(255,83,14,1) 90%);
     color: white;
-    border-radius: 20px;
+    border-radius: 2px;
     margin: 10px auto;
-    /* transition:all eas 5s; */
+    
 }
 
 .Login_Button:hover {
@@ -90,20 +92,50 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
 }
 .sign_up small {
     font-family: "Poppins", sans-serif;
-    font-size: 14px;
-    font-weight: 300;
+    font-size: 15px;
+    font-weight: 400;
+
 }
 
-.sign_up a {
-    font-family: "Poppins", sans-serif;
-    font-size: 16px;
+
+
+.form-group {
+  position: relative;
+ 
 }
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: hsl(86, 61%, 44%);
+  font-size: 16px;
+}
+.form-group input {
+  width: 100%;
+  height: 35px;
+  color: hsl(0, 0, 20);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.form-group i {
+  position: absolute;
+  right: 15px;
+  top: 85%;
+  transform: translateY(-75%);
+  cursor: pointer;
+  color: #32495e;
+}
+
 
 /*=================== SignUp CSS ==================================*/
 
 .signup_card {
     overflow: hidden;
-    max-width: 70%;
+    max-width: 80%;
     margin: 0 auto;
     padding: 40px 0;
     position: relative;
@@ -113,7 +145,7 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
 .signup_card .card {
     
     overflow: hidden;
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;
     height: auto;
     background-color: rgba(255, 255, 255, 1);
@@ -183,20 +215,20 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
 /* For large screens (desktops and laptops) */
 @media only screen and (min-width: 1200px) {
     .login_card {
-      max-width: 70%;
+      max-width: 75%;
       padding: 80px 0;
     }
   
     .login_card .card {
-      max-width: 70%;
+      max-width: 75%;
     }
     .signup_card {
-        max-width: 70%;
+        max-width: 75%;
         padding: 80px 0;
       }
     
       .signup_card .card {
-        max-width: 70%;
+      width: 75%;
       }
   }
   
@@ -204,6 +236,7 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
   @media only screen and (max-width: 992px) {
     .login_card {
       max-width: 85%;
+      margin: 10px auto;
     }
   
     .login_card .card {
@@ -221,6 +254,10 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
     .Login_Button {
         font-size: 14px;
       }
+      .sign_up small {
+        padding: 20px auto;
+        
+    }
   }
   
   /* For mobile phones */
@@ -233,6 +270,7 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
     .login_card .card {
       max-width: 100%;
       padding: 20px;
+      max-height: 80vh;
     }
     .signup_card {
         max-width: 100%;
@@ -252,7 +290,27 @@ background: linear-gradient(340deg, rgba(206,61,2,1) 9%, rgba(255,83,14,1) 49%, 
     }
   
     .Login_Button {
-      font-size: 12px;
+      font-size: 16px;
     }
+    .form-group input {
+      height: 38px;
+   
+    }
+    .Login_Button {
+     
+      margin: 20px auto;
+      
+  }
+  .sign_up small,.sign_up a {
+    font-size: 18px;
+    font-weight: 400;
+
+}
+.form-group i {
+  position: absolute;
+  top: 85%;
+ 
+}
+
   }
   

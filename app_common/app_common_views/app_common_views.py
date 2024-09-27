@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib import messages
 from app_common.error import render_error_page
 from app_common.models import ContactMessage
+from orders.models import Order
 from product_variations.models import VariantProduct
 from users.forms import LoginForm
 from app_common.models import ContactMessage,Banner
@@ -76,6 +77,7 @@ class HomeView(View):
 
             context = {
                 'categories': categories,
+                'banners': banners,
                 'trending_products': trending_products,
                 'new_products': new_products,
                 'banners': banners,

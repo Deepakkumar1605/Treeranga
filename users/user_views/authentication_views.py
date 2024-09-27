@@ -167,7 +167,7 @@ class Login(View):
             return render_error_page(request, error_message, status_code=400)
 
 class Logout(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         try:
             if 'confirm' in request.GET:
                 logout(request)
