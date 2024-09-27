@@ -158,7 +158,8 @@ a {
 }
 
 h3 {
-	color: var(--primary) !important;
+	color: var(--tb-head) !important;
+	/* font-size: 22px !important; */
 	font-family: "Poppins", sans-serif !important;
 }
 
@@ -441,18 +442,21 @@ header {
 	line-height: 23px;
 	padding: 10px 0;
 }
-
+.chooseniwa_logo p{
+	color: #BBB8C3;
+}
 /* -------------------------------About us page----------------------- */
 .aboutniwa_bg {
-	background-image: url("https://themewagon.github.io/ultras/images/model.jpg");
+	background-image: url("https://theme367-fashion.myshopify.com/cdn/shop/files/Rectangle_216.png?v=1684334374&width=1944");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover; 
+	background-attachment: fixed;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding-left: 35%;
-	height: 130vh;
+	/* padding-left: 35%; */
+	height: 100vh;
 	justify-content: center; 
   }
   .aboutHead {
@@ -462,7 +466,7 @@ header {
 	margin-bottom: px;
   }
   .aboutniwa1 {
-	max-width: 65%;
+	color: white;
 	text-align: center;
 	margin-left: auto;
 	padding: 20px;
@@ -1897,3 +1901,245 @@ footer {
 	height: 80px;
 	width: 150px;
 }
+
+/* =============Product Card Treenga=============== */
+.product-card {
+	background-color: #fff;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	transition: all 0.3s ease-in-out;
+	position: relative;
+	text-align: center;
+   
+}
+
+.product-images {
+	position: relative;
+	height: 300px; /* Fixed height for the product image */
+	overflow: hidden;
+}
+
+.product-images img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* Ensures the image maintains aspect ratio and covers the area */
+	transition: transform 0.4s ease-in-out;
+}
+
+.product-icons {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.product-icons i {
+	background-color: #fff;
+	padding: 7px;
+	border-radius: 50%;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	font-size: 16px;
+	color: #333;
+	transition: color 0.3s ease;
+	width: auto;
+}
+.bi-share{
+font-size: 14px !important;
+font-weight: bold !important;
+}
+.product-icons i:hover {
+	color: #ffff; /* Icon hover effect */
+	background-color: #F37021;
+}
+.add-to-cart {
+position: absolute;
+bottom: -50px;
+left: 50%;
+transform: translateX(-50%);
+background-color: #00836C;
+color: white;
+border: none;
+padding: 8px 20px;
+
+opacity: 0;
+transition: all 0.8s ease;
+white-space: nowrap; /* Ensures text stays on one line */
+width: 95%; /* Let the button auto-size based on the content */
+text-align: center;
+}
+
+/* Media queries for small screens */
+
+
+.product-details h4 {
+	font-size: 16px;
+	margin: 10px 0;
+}
+
+.product-details .price {
+	color: #333;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+/* Hover Effects */
+.product-card:hover .product-images img {
+	transform: scale(1.06); /* Zoom effect */
+}
+.add-to-cart a{
+	color: white !important;
+}
+.product-card:hover .add-to-cart {
+	bottom: 10px; /* Button slides up */
+	opacity: 1;
+}
+.moreBtn {
+    border: 1px solid #F37021;
+    padding: 4px 5px;
+    text-decoration: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: #F37021;
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: rgba(248, 150, 69, 0.678) 0px 1px 4px;
+    
+    /* Add the transition property for background and color */
+    transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.moreBtn:hover {
+    color: white;
+    background-color: #F37021;
+}
+/* Ensure the images fill the container */
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Make the images cover the entire area */
+.image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Styling the overlay with the centered heading and button */
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.overlay h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.overlay .btn {
+    padding: 10px 20px;
+}
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Left side image should be double the height of the right-side images */
+.left-image {
+    height: 100vh;
+}
+
+.left-image img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.right-image {
+    height: 49vh;
+    overflow: hidden;
+}
+
+.right-image img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Styling the overlay with the centered heading and button */
+.overlay {
+    position: absolute;
+    top: 60%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.overlay1 {
+    position: absolute;
+    top: 84%;
+    left: 74%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.overlay  h5 {
+    color: rgb(88, 87, 87);
+    margin-bottom: 10px;
+}
+.overlay1  h5 {
+    color: rgb(0, 0, 0);
+    margin-bottom: 10px;
+}
+
+.overlay .btn {
+    padding: 10px 20px;
+}
+.moreBtn {
+    border: 1px solid #F37021;
+    padding: 4px 5px;
+    text-decoration: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: #F37021;
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: rgba(238, 191, 153, 0.678) 0px 1px 4px;
+    
+    /* Add the transition property for background and color */
+    transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.moreBtn:hover {
+    color: white;
+    background-color: #F37021;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    
+}
+
+/* =============Product Card Treenga=============== */

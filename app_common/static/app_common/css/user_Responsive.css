@@ -191,7 +191,7 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 		width: 50px
 	}
 
-	.chooseniwa_logo div h5 {
+	.chooseniwa_logo div h6 {
 		font-size: 14px;
 		font-weight: 500;
 		line-height: 23px;
@@ -221,7 +221,42 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 		-webkit-text-fill-color: transparent;
 		-webkit-background-clip: text; */
 	}
+/*----------- gallery---------- */
+.overlay h2 {
+	font-size: 1.5rem;
+}
+.left-image {
+	height: 100%;
+}
 
+.right-image {
+	height: auto;
+	margin-bottom: 15px;
+}
+.overlay {
+position: absolute;
+top: 65%;
+left: 50%;
+transform: translate(-50%, -50%);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+.overlay1 {
+position: absolute;
+top: 80%;
+left: 50%;
+transform: translate(-50%, -50%);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+
+/*----------- gallery---------- */
 	/* < --------------------------Testimonial------------------------------- --> */
 
 	/* none */
@@ -726,6 +761,13 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 	.card.Address-Page {
 		width: 100%;
 	}
+	.add-to-cart {
+        font-size: 12px; /* Smaller font size for very small screens */
+        padding: 6px 12px; /* Reduced padding to ensure the button fits */
+    }
+    .product-details .price {
+        font-size: 12px ;
+    }
 
 }
 
