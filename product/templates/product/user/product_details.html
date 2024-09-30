@@ -1,3 +1,4 @@
+
 {% extends 'app_common/base.html' %}
 {% load static %}
 {% block title %}
@@ -65,7 +66,7 @@ Product Details - {{ product_obj.name }}
             <!-- Product Details -->
             <div class="col-lg-5">
                 <div class="product-details">
-                    <h1 class="text-capitalize">{{ product_obj.product.name }}</h1>
+                    <h1 class="text-capitalize">{{ product_obj.product.name |truncatechars:50 }}</h1>
                     <div class="product-ratings">
                         {% for i in star_range %}
                             {% if i <= average_rating %}
@@ -74,7 +75,8 @@ Product Details - {{ product_obj.name }}
                                 ☆
                             {% endif %}
                         {% endfor %}
-                       <span> ({{ reviews.count }} Reviews ) </span>               
+                       <span> ({{ reviews.count }} Reviews ) </span> 
+                    </div>              
                     <div class="discount-price mt-lg-3">
                         ₹{{ product_obj.product_discount_price }}
                         {% if product_obj.product_max_price %}
@@ -93,33 +95,38 @@ Product Details - {{ product_obj.name }}
                     <!-- Share Product Modal -->
                     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered"> <!-- Added modal-dialog-centered -->
-                            <div class="modal-content" style="height: 250px;">
+                            <div class="modal-content share_Button">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="shareModalLabel">
-                                        <i class="fas fa-share-alt fa-lg" style="margin-right: 8px;"></i> <!-- Share Icon -->
+                                        <i class="bi bi-share"></i>
                                     </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body text-center"> <!-- Centering content -->
                                     <p>Share this product on:</p>
-                                    <div class="d-flex justify-content-center gap-4">
+                                    <div class="d-flex justify-content-center gap-5">
                                         <!-- WhatsApp -->
-                                        <a id="shareWhatsApp" href="#" target="_blank" title="Share on WhatsApp">
-                                            <i class="fab fa-whatsapp fa-3x" style="color: #25D366;"></i>
+                                        <a id="shareWhatsApp" href="#" target="_blank" title="Share on WhatsApp" class="text-center d-flex flex-column align-items-center">
+                                            <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                                            <p>WhatsApp</p>
                                         </a>
                                         <!-- Facebook -->
-                                        <a id="shareFacebook" href="#" target="_blank" title="Share on Facebook">
-                                            <i class="fab fa-facebook fa-3x" style="color: #3b5998;"></i>
+                                        <a id="shareFacebook" href="#" target="_blank" title="Share on Facebook" class="text-center d-flex flex-column align-items-center">
+                                            <i class="fa-brands fa-facebook-f" style="color: #3b5998;"></i>
+                                            <p>Facebook</p>
                                         </a>
                                         <!-- Twitter -->
-                                        <a id="shareTwitter" href="#" target="_blank" title="Share on Twitter">
-                                            <i class="fab fa-twitter fa-3x" style="color: #00acee;"></i>
+                                        <a id="shareTwitter" href="#" target="_blank" title="Share on Twitter" class="text-center d-flex flex-column align-items-center">
+                                            <i class="fa-brands fa-x-twitter" style="color: #00425c;"></i>
+                                            <p>Twitter</p>
                                         </a>
                                         <!-- Instagram -->
-                                        <a id="shareInstagram" href="#" target="_blank" title="Share on Instagram">
-                                            <i class="fab fa-instagram fa-3x" style="color: #C13584;"></i>
+                                        <a id="shareInstagram" href="#" target="_blank" title="Share on Instagram" class="text-center d-flex flex-column align-items-center">
+                                            <i class="fab fa-instagram" style="color: #C13584;"></i>
+                                            <p>Instagram</p>
                                         </a>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -181,7 +188,7 @@ Product Details - {{ product_obj.name }}
 
                     <!-- Add to Cart Button -->
                     <div class="buttons mt-4">
-                        <a href="#" id="addToCartButton" class=" cart-btn   ">
+                        <a href="#" id="addToCartButton" class=" cart-btn">
                             Add To Cart
                         </a>
                     </div>
@@ -235,6 +242,8 @@ Product Details - {{ product_obj.name }}
             </div>
             {% endfor %}
         </div>
+
+
             <!-- Reviews Section -->
     <div class="reviews-section">
         <h3>Product Reviews</h3>
@@ -254,7 +263,7 @@ Product Details - {{ product_obj.name }}
             </div>
             <div class="form-group Rating_forms my-lg-2">
                 <label for="rating">Rating:</label>
-                <div class="review-rating">
+                <div class="review-rating gap-3" >
                     {% for i in star_range %}
                         <input type="radio" name="rating" value="{{ i }}" id="rating-{{ i }}">
                         <label for="rating-{{ i }}" data-value="{{ i }}">★</label>
@@ -273,13 +282,16 @@ Product Details - {{ product_obj.name }}
     {% else %}
         <p><a href="{% url 'users:login' %}">Log in</a> to leave a review.</p>
     {% endif %}
+
         <!-- Display existing reviews -->
         {% if reviews %}
-            <div class="reviews">
+            <div class="review-list border-top py-lg-2">
                 {% for review in reviews %}
                     <div class="review-item border-bottom py-lg-3">
-                        <h6 class="m-0">{{ review.user.full_name }}</h6>
-                        <div class="">
+                        <h6 class="mb-1">{{ review.user.full_name }}</h6>
+                        <label>{{ review.created_at }}</label>
+
+                        <div class="mt-1">
                             {% for star in star_range %}
                                 {% if star <= review.rating %}
                                     <span class="filled-star">★</span>
@@ -287,7 +299,6 @@ Product Details - {{ product_obj.name }}
                                     <span class="empty-star">☆</span>
                                 {% endif %}
                             {% endfor %}
-                            <label>{{ review.created_at }}</label>
                         </div>
                         <p class="m-0 py-lg-2">{{ review.review }}</p>
                     </div>
@@ -373,17 +384,16 @@ Product Details - {{ product_obj.name }}
         });
     });
 </script>
-
 <script>
     function displayMedia(mediaElement) {
         const mediaContainer = document.getElementById('mediaContainer');
         if (mediaElement.tagName === 'IMG') {
-            mediaContainer.innerHTML = <img src="${mediaElement.src}" alt="Selected Image">;
+            mediaContainer.innerHTML = `<img src="${mediaElement.src}" alt="Selected Image">`;
         } else if (mediaElement.tagName === 'VIDEO') {
-            mediaContainer.innerHTML = <video controls autoplay>
+            mediaContainer.innerHTML = `<video controls autoplay>
 <source src="${mediaElement.querySelector('source').src}" type="video/mp4">
         Your browser does not support the video tag.
-</video>;
+</video>`;
         }
     }
 </script>

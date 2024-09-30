@@ -30,14 +30,14 @@ class HomeView(View):
                 return redirect('users:admin_dashboard')
 
             # Get all categories
-            categories = Category.objects.all()
+            categories = Category.objects.all()[:5]
 
             # Banner
             banners=Banner.objects.filter(active=True).order_by('order')
 
             # Handle Trending Products (simple and variant)
             trending_products = []
-            for product in Products.objects.filter(trending="yes").order_by('-id')[:7]:
+            for product in Products.objects.filter(trending="yes").order_by('-id')[:5]:
                 if product.product_type == "simple":
                     simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
                     if simple_product:
@@ -57,7 +57,7 @@ class HomeView(View):
 
             # Handle New Products (simple and variant)
             new_products = []
-            for product in Products.objects.filter(show_as_new="yes").order_by('-id')[:7]:
+            for product in Products.objects.filter(show_as_new="yes").order_by('-id')[:5]:
                 if product.product_type == "simple":
                     simple_product = SimpleProduct.objects.filter(product=product, is_visible=True).first()
                     if simple_product:

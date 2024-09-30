@@ -123,7 +123,7 @@
 	--white: #ffffff;
 	--button: #00836C;
 	--sub_button: #F37021;
-	--pagebg: #f5f5f5;
+	--pagebg: #F1F2F4;
 	--p: #666666;
 	--dark: #000000;
 	--para: #1e1919;
@@ -223,13 +223,55 @@ header {
 
 .navbar-brand img {
 	height: 60px;
-	width: 80px;
+	width: 100px;
 }
 
 #offcanvasWithBothOption {
 	width: 30%;
 }
-
+.SEARCH-CONTAINER {
+	position: relative;
+	max-width: 550px;
+	width: auto;
+	
+  }
+  
+  .SEARCH-ICON {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #999;
+	
+  }
+  
+  .CLEAR-ICON {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #999;
+	display: none; /* Hidden initially */
+	cursor: pointer;
+  }
+  
+  #SEARCH-INPUT {
+	width: 100%;
+	padding: 5px 30px 5px 35px;
+	border: 1px solid #ccc;
+	background-color: #F0F5FF;
+	border-radius: 5px;
+	font-size: 16px;
+  }
+  #SEARCH-INPUT::placeholder{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 17px;
+  }
+  #SEARCH-INPUT:focus {
+	outline: none;
+	border-color: #00836C;
+  }
+  
 
 /* ------------------------search Suggestion------------- */
 #search-suggestions{
@@ -266,7 +308,7 @@ header {
 }
 
 .carousel-item img {
-	height: 100vh;
+	height: 50vh;
 	object-fit: fill;
 	width: 100%;
 }
@@ -303,8 +345,11 @@ header {
 /* ------------Shop By Collection  Section----------------------------------*/
 .Shop_by_Collection {
 	background-color: var(--pagebg);
+	
 }
-
+.Shop_by_Collection_row{
+	box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
 .image-wrapper {
 	display: flex;
 	align-items: center;
@@ -1915,10 +1960,9 @@ footer {
 
 .product-images {
 	position: relative;
-	height: 300px; /* Fixed height for the product image */
+	height: 300px; 
 	overflow: hidden;
 }
-
 .product-images img {
 	width: 100%;
 	height: 100%;
@@ -2075,7 +2119,7 @@ text-align: center;
 
 .right-image img {
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
     width: 100%;
 }
 
@@ -2104,7 +2148,7 @@ text-align: center;
 }
 
 .overlay  h5 {
-    color: rgb(88, 87, 87);
+    color: rgb(0, 0, 0);
     margin-bottom: 10px;
 }
 .overlay1  h5 {
@@ -2135,6 +2179,27 @@ text-align: center;
 .moreBtn:hover {
     color: white;
     background-color: #F37021;
+}
+.moreBtn1 {
+    border: 1px solid #249581;
+    padding: 4px 5px;
+    text-decoration: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: #249581;
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: rgba(153, 238, 212, 0.678) 0px 1px 4px;
+    
+    /* Add the transition property for background and color */
+    transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.moreBtn1:hover {
+    color: white;
+    background-color: #249581;
 }
 
 /* Responsiveness */

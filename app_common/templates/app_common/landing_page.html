@@ -18,7 +18,7 @@
         {% else %}
           <!-- Static image when no banners are added -->
           <div class="carousel-item active">
-            <img src="{% static 'app_common/images/contact.png' %}" class="d-block w-100" alt="Default Banner Image">
+            <img src="https://marketplace.canva.com/EAFuUVuQu98/1/0/1600w/canva-yellow-pink-bold-fashion-sale-landscape-banner-XgQnSpGbsnQ.jpg" class="d-block w-100" alt="Default Banner Image">
           </div>
         {% endif %}
       </div>
@@ -34,30 +34,27 @@
   </div>
 </section>
 
-
-
 <!-- --------------------end banner section--------------- -->
-
-
+ 
 <!-- --------------------android app--------------- -->
-<section class="AppDownload">
+<!-- <section class="AppDownload">
   <div class="d-flex justify-content-center align-items-center p-lg-3 p-md-2 p-2">
     Download App! &nbsp; 
     <a href="#" class="text-decoration-none u-button ms-lg-3 m-md-2 ms-1">FOR ANDROID</a>
   </div>
-</section>
+</section> -->
 <!-- --------------------end android app--------------- -->
 
 <!----------------- Gallery Section --------------->
-<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Shop_by_Collection">
-  <div class="row">
+<section class="px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection">
+  <div class="row ">
     <!-- Left side image (2x height) -->
-    <div class="col-lg-6 col-md-12 pe-0">
+    <div class="col-lg-6 col-md-12 pe-0  ">
         <div class="image-container left-image">
             <img src="https://theme367-fashion.myshopify.com/cdn/shop/files/banner-menu3_126067f0-5b37-45cb-9f5d-8c3695867bdd.jpg?v=1677842608&width=710" alt="Clothes" class="img-fluid">
             <div class="overlay1">
                 <h5> All Collection</h5>
-                <button class="moreBtn">Shop Now</button>
+                <button class="moreBtn1">Shop Now</button>
             </div>
         </div>
     </div>
@@ -69,7 +66,7 @@
                     <img src="https://theme367-fashion.myshopify.com/cdn/shop/articles/Rectangle_254_4.png?v=1676553351" alt="Shoes" class="img-fluid">
                     <div class="overlay">
                         <h5>Women's Collection</h5>
-                        <button class="moreBtn">Shop Now</button>
+                        <button class="moreBtn1">Shop Now</button>
                     </div>
                 </div>
             </div>
@@ -78,7 +75,7 @@
                     <img src="https://theme367-fashion.myshopify.com/cdn/shop/files/banner2_4c0d84ae-a00f-4b67-a459-f36c1bb23581.png?v=1677768411&width=2000" alt="Accessories" class="img-fluid">
                     <div class="overlay">
                         <h5  class="text-white">Men's Collection</h5>
-                        <button class="moreBtn">Shop Now</button>
+                        <button class="moreBtn1">Shop Now</button>
                     </div>
                 </div>
             </div>
@@ -91,38 +88,43 @@
 
 <!-- --------------------Shop by collection--------------- -->
 
-<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Shop_by_Collection">
-  <div class="">
+<section class="px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection">
+  <div class="bg-white px-3 py-4">
       <div class="pb-lg-3 pb-md-3 pb-2">
         <h3 class="">Shop By Collection</h3>
       </div> 
-   
-    <div class="row">
-       {% for category in categories %}
-    
-        <div class="col col-lg-2 col-md-3 col-6 content-wrapper">
-          <div class="image-wrapper align-self-center">
-            <a href="{% url 'product:products_of_category' category.title %}">
-                <img src="{{ category.image.url }}" alt="{{ category.title }}">
-              </a>
-          </div>
-          <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none">
-          <h4 class="text-center text-capitalize">{{ category.title }}</h4>  </a>
-        </div>
-    
-        {% endfor %}
+ 
 
-  </div> 
+  <div class="row  row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 ">
+    {% for category in categories %}
+    <div class="col mb-2">
+      <div class="product-card">
+          <div class="product-images p-1">
+            <a href="{% url 'product:products_of_category' category.title %}">
+              <img src="{{ category.image.url }}" class="rounded-1" alt="{{ category.title }}">
+            </a>
+            <!-- <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none"> -->
+          </div>
+   
+          <div class="product-details my-3">
+            
+              <h5>{{ category.title }}</h5>
+            
+          </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
   </div>
 </section>
 <!-- --------------------end Shop by collection--------------- -->
 
 <!-- --------------------New Arrival Collection--------------- -->
 
-<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
-  <div class="">
+<section class="px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection">
+  <div class="bg-white px-3 py-4">
     <div class="d-flex justify-content-between pb-lg-3 pb-md-3 pb-2 align-items-center">
-      <h3 class=" ">Trending Products</h3>
+      <h3 class=" ">New Arrivals</h3>
       <a href="{% url 'product:all_new_products' %}" class="moreBtn">View All</a>
     </div>
 <div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2  ">
@@ -141,9 +143,8 @@
           <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
           {% endif %}
             <div class="product-icons">
-                <i class="fa-regular fa-heart"></i><!-- Favorite Icon -->
-                <i class="bi bi-share"></i> <!-- Compare Icon -->
-                <i class="fas fa-eye"></i> <!-- Quick View Icon -->
+                <i class="fa-regular fa-heart"></i>
+             
             </div>
             <button class="add-to-cart">
               
@@ -186,8 +187,8 @@
 
 <!-- --------------------Trending Products Collection--------------- -->
 
-<section class="px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
-  <div class="">
+<section class="px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection">
+  <div class="bg-white px-3 py-4">
     <div class="d-flex justify-content-between pb-lg-3 pb-md-3 pb-2 align-items-center">
       <h3 class=" ">Trending Products</h3>
       <a href="{% url 'product:all_trending_products' %}" class="moreBtn">View All</a>
@@ -209,9 +210,8 @@
           {% endif %}
         </a>
             <div class="product-icons">
-                <i class="fa-regular fa-heart"></i><!-- Favorite Icon -->
-                <i class="bi bi-share"></i> <!-- Compare Icon -->
-                <i class="fas fa-eye"></i> <!-- Quick View Icon -->
+                <i class="fa-regular fa-heart"></i>
+                
             </div>
             <button class="add-to-cart">
               {% if item.variant == "no" %}
@@ -249,11 +249,11 @@
 <!-- --------------------End Trending Products Collection--------------- -->
 
 
-
 <!-- ------------------------- why  choose  treeranga---------------------- -->
 
-<section class="whychoose px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3" >
-  <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Why Choose Treeranga</h3>
+<section class="whychoose px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection" >
+  <div class="bg-white px-3 py-4">
+    <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Why Choose Treeranga</h3>
   <div class="row text-center  p-lg-4 p-md-4 p-3 chooseniwa_logo">
     <div class="col-6 col-md-3 col-lg-3 mb-2">
       <img src="https://vendypro-2.myshopify.com/cdn/shop/files/svg-img-1.svg?v=1695635030&width=550" alt="" class="img-fluid mb-4">
@@ -288,11 +288,12 @@ them for a full refund
     </div>
 
   </div>
+  </div>
 </section>
 
 <!-- --------------------------about treeranga-------------------------------- -->
 
-<section class="aboutniwa_bg px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3">
+<section class="aboutniwa_bg px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3">
   <h3 class=" aboutHead text-center pb-lg-3 pb-md-3 ">About Us</h3>
 <div class="aboutniwa1">
     <p ALIGN=CENTER >Treeranga is committed to transforming the world of fashion by offering high-quality, eco-friendly t-shirts. Our mission is to provide customers with stylish, sustainable clothing that reflects their individuality while promoting environmental consciousness. At Treeranga, we believe that fashion should not only look good but also feel good, knowing that each purchase contributes to a healthier planet.</p>
@@ -308,100 +309,102 @@ them for a full refund
 
 <!-- --------------------------Testimonial------------------------------- -->
 
-<section class="section px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 testimonial-section">
-  <div class="row">
-    <div class="col-12 d-flex align-items-center justify-content-start flex-column">
-      <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
+<section class="section px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 testimonial-section Shop_by_Collection">
+    <div class="bg-white py-3">
+      <div class="row">
+        <div class="col-12 d-flex align-items-center justify-content-start flex-column">
+          <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
+        </div>
+      </div>
+      <div>
+        <div class="testimonial-slider">
+          <div class="testimonial-slide">
+            <div class="testimonial-box">
+              <div class="testimonial-icon">
+                <i class="bi bi-quote"></i>
+              </div>
+              <div class="testimonial-text">
+                <p>Fantastic t-shirts! High-quality fabric, great designs, and perfect fit. Will buy again!</p>
+              </div>
+              <div class="testimonial-img d-flex justify-content-center">
+                <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
+              </div>
+              <div class="testimonial-name">
+                <h4>Mahesh Sethi</h4>
+              </div>
+            </div>
+          </div>
+    
+          <div class="testimonial-slide">
+            <div class="testimonial-box">
+              <div class="testimonial-icon">
+                <i class="bi bi-quote"></i>
+              </div>
+              <div class="testimonial-text">
+                <p>Great t-shirts, fast delivery, and excellent customer service. Will recommend to others!</p>
+              </div>
+              <div class="testimonial-img d-flex justify-content-center">
+                <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
+              </div>
+              <div class="testimonial-name">
+                <h4>Rahul Jen</h4>
+              </div>
+            </div>
+          </div>
+    
+          <div class="testimonial-slide">
+            <div class="testimonial-box">
+              <div class="testimonial-icon">
+                <i class="bi bi-quote"></i>
+              </div>
+              <div class="testimonial-text">
+                <p>Amazing collection! Soft t-shirts, trendy designs, and delivered on time. Totally satisfied!</p>
+              </div>
+              <div class="testimonial-img d-flex justify-content-center">
+                <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
+              </div>
+              <div class="testimonial-name">
+                <h4>Madhab Reddy</h4>
+              </div>
+            </div>
+          </div>
+    
+          <div class="testimonial-slide">
+            <div class="testimonial-box">
+              <div class="testimonial-icon">
+                <i class="bi bi-quote"></i>
+              </div>
+              <div class="testimonial-text">
+                <p>Love these shirts! Stylish, comfortable, and affordable. Highly recommend Treenga to everyone!</p>
+              </div>
+              <div class="testimonial-img d-flex justify-content-center">
+                <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
+              </div>
+              <div class="testimonial-name">
+                <h4>Nitin Sah</h4>
+              </div>
+            </div>
+          </div>
+    
+          <div class="testimonial-slide">
+            <div class="testimonial-box">
+              <div class="testimonial-icon">
+                <i class="bi bi-quote"></i>
+              </div>
+              <div class="testimonial-text">
+                <p>Perfect t-shirts! Beautiful prints, premium fabric, and fits perfectly. Will order more soon!</p>
+              </div>
+              <div class="testimonial-img d-flex justify-content-center">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
+              </div>
+              <div class="testimonial-name">
+                <h4>Hritik Kamal</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div>
-    <div class="testimonial-slider">
-      <div class="testimonial-slide">
-        <div class="testimonial-box">
-          <div class="testimonial-icon">
-            <i class="bi bi-quote"></i>
-          </div>
-          <div class="testimonial-text">
-            <p>Fantastic t-shirts! High-quality fabric, great designs, and perfect fit. Will buy again!</p>
-          </div>
-          <div class="testimonial-img d-flex justify-content-center">
-            <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
-          </div>
-          <div class="testimonial-name">
-            <h4>Mahesh Sethi</h4>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-slide">
-        <div class="testimonial-box">
-          <div class="testimonial-icon">
-            <i class="bi bi-quote"></i>
-          </div>
-          <div class="testimonial-text">
-            <p>Great t-shirts, fast delivery, and excellent customer service. Will recommend to others!</p>
-          </div>
-          <div class="testimonial-img d-flex justify-content-center">
-            <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
-          </div>
-          <div class="testimonial-name">
-            <h4>Rahul Jen</h4>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-slide">
-        <div class="testimonial-box">
-          <div class="testimonial-icon">
-            <i class="bi bi-quote"></i>
-          </div>
-          <div class="testimonial-text">
-            <p>Amazing collection! Soft t-shirts, trendy designs, and delivered on time. Totally satisfied!</p>
-          </div>
-          <div class="testimonial-img d-flex justify-content-center">
-            <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
-          </div>
-          <div class="testimonial-name">
-            <h4>Madhab Reddy</h4>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-slide">
-        <div class="testimonial-box">
-          <div class="testimonial-icon">
-            <i class="bi bi-quote"></i>
-          </div>
-          <div class="testimonial-text">
-            <p>Love these shirts! Stylish, comfortable, and affordable. Highly recommend Treenga to everyone!</p>
-          </div>
-          <div class="testimonial-img d-flex justify-content-center">
-            <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
-          </div>
-          <div class="testimonial-name">
-            <h4>Nitin Sah</h4>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-slide">
-        <div class="testimonial-box">
-          <div class="testimonial-icon">
-            <i class="bi bi-quote"></i>
-          </div>
-          <div class="testimonial-text">
-            <p>Perfect t-shirts! Beautiful prints, premium fabric, and fits perfectly. Will order more soon!</p>
-          </div>
-          <div class="testimonial-img d-flex justify-content-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
-          </div>
-          <div class="testimonial-name">
-            <h4>Hritik Kamal</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
 
@@ -412,7 +415,7 @@ them for a full refund
 <!-- --------------------------Start Accordian------------------------------------- -->
 
 
-<section class="Shop_by_Collection  px-lg-5 px-md-3 px-2 py-lg-5 py-md-4 py-3 Accordian">
+<section class="Shop_by_Collection  px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Accordian">
   <div class="row">
     <div class="col-12 d-flex align-items-center justify-content-center flex-column">
         <h3 class="text-center pb-lg-3 pb-md-3 pb-2">Frequently Asked Questions</h3>

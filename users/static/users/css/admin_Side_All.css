@@ -85,6 +85,19 @@ body::-webkit-scrollbar {
     min-width: 60px;
     /* margin: 0 20px; */
 }
+.circle-icon img {
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #fff; /* Dark blue background similar to your image */
+  color: #172B4D; /* White letter "T" */
+  font-size: 24px;
+  
+  font-family: Arial, sans-serif;
+}
 #sidebar .brand .lni-nextjs {
 	min-width: 60px;
 	display: flex;

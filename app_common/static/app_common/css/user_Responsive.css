@@ -81,6 +81,7 @@ Extra-extra-large:	    xxl	                    ≥1400px */
 	.carousel-inner .carousel-item img {
 		width: 100%;
 		height: 250px;
+		
 	}
 
 	.carousel-control-prev, .carousel-control-next {

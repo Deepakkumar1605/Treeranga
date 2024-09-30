@@ -83,8 +83,8 @@
 
         <!-- ==================Auth full screen header================== -->
 
-        <div class="col-lg-6 d-none mt-lg-3 d-lg-block" id="nav_buttons">
-          <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
+         <div class="col-lg-6 d-none mt-lg-1 d-lg-block" id="nav_buttons">
+          <!-- <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'app_common:home' %}">Home</a>
             </li>
@@ -104,7 +104,14 @@
               <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
             </li>
             
-          </ul>
+          </ul> -->
+          <div class="SEARCH-CONTAINER">
+            <i class="fa fa-search SEARCH-ICON"></i>
+            <input type="text" id="SEARCH-INPUT" placeholder="Search...">
+            <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
+          </div>
+          
+          
         </div>
 
      
@@ -112,9 +119,9 @@
         <!-- ----------===========Auth Nav buttons========== ------------->
 
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
-          <button type="button" class="btn" id="search-icon">
+          <!-- <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
-          </button>
+          </button> -->
           <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
             <i class="fa-regular fa-user HeaderIcons text-success"></i> 
           </a>
@@ -180,38 +187,26 @@
 
      <!-- ==================Unauth full screen header================== -->
 
-        <div class="col-lg-6 col-xl-6  d-none mt-lg-3 d-lg-block" id="nav_buttons">
-          <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
-            <li class="nav-item" id="Navbarlinks">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:home' %}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'app_common:our_services' %}">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
-            </li>
-           
-          </ul>
-        </div>  
+     <div class="col-lg-7 col-xl-6 d-none mt-lg-1 d-lg-block d-flex justify-content-center align-items-center" id="NAV_BUTTONS">
+      <div class="SEARCH-CONTAINER">
+        <i class="fa fa-search SEARCH-ICON"></i>
+        <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
+        <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
+      </div>
+    </div>
+    
 
               <!-- ==============Unauth Nav buttons============== -->
 
-        <div class="col-lg-3 col-md-3 col-6 d-flex justify-content-around align-items-center">
-            <button type="button" class="btn" id="search-icon">
+        <div class="col-lg-2 col-md-3 col-6 d-flex justify-content-end align-items-center">
+            <!-- <button type="button" class="btn" id="search-icon">
               <i class="fa fa-search  text-success" aria-hidden="true"></i>
-            </button>
-            <a href="{% url 'users:login' %}" class="text-decoration-none btn">
+            </button> -->
+            <a href="{% url 'users:login' %}" class="text-decoration-none btn me-3 ">
               <i class="fa-regular fa-user HeaderIcons text-success"></i> 
             </a>
 
-            <a href="{% url 'cart:showcart' %}">
+            <a href="{% url 'cart:showcart' %}" class="ms-4">
                 <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
                   <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     {{ cart_count }}
@@ -292,28 +287,29 @@
                 <li class="text-dark">.</li>
               </ul>
             </div>
-            <div class="m-auto">
+            <div class="">
               <ul class="p-0">
-              <h6>Consumer Policy</h6>
-                <li><a href="">Security</a></li>
-                <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
-                <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
-                <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policy</a></li>
-              </ul>
+                <h6>Navigation</h6>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="">All Products</a></li>
+                  <li><a href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
+                </ul>
             </div>
-           
+
           </div>
         </div>
-  
+
         <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
           <div class="row row-cols-2 row-cols-sm-2 footer_div_ul">
             <div class="d-none d-md-block d-lg-block">
-              <ul>
-              <h6>Help</h6>
-                <li><a href="">Own Grown</a></li>
-                <li><a href="">Garden Services</a></li>
-                <li><a href="">Maintenance</a></li>
-              </ul>
+            
+              <ul class="ps-0">
+                <h6>Our Policy</h6>
+                  <li><a href="">Security</a></li>
+                  <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
+                  <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
+                  <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
             </div>
             <div class="text-start d-none d-md-block d-lg-block ">
               <ul class="p-0">
@@ -440,6 +436,28 @@
           }
       });
   });
+
+
+
+  const SEARCH_INPUT = document.getElementById('SEARCH-INPUT');
+const CLEAR_ICON = document.getElementById('CLEAR-SEARCH');
+
+// Show the clear icon only when there is text in the input
+SEARCH_INPUT.addEventListener('input', () => {
+  if (SEARCH_INPUT.value.length > 0) {
+    CLEAR_ICON.style.display = 'block';
+  } else {
+    CLEAR_ICON.style.display = 'none'; 
+  }
+});
+
+// Function to clear the search input when the "X" is clicked
+function clearSearch() {
+  SEARCH_INPUT.value = '';
+  CLEAR_ICON.style.display = 'none';
+  SEARCH_INPUT.focus(); 
+}
+
 </script>
 
 <!-- Script for submitting full search query -->

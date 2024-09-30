@@ -1,3 +1,4 @@
+
 {% extends 'users/authtemp/master.html' %}
 {% load static %}
 {% block title %}Login Page{% endblock title %}
@@ -25,7 +26,7 @@
                     {% if field.name == 'password' %}
                         <div class="password-container">
                             {{ field }}
-                            <span class="toggle-password position-absolute" toggle="{{ field.id_for_label }}" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: gray;">
+                            <span class="toggle-password position-absolute" toggle="{{ field.id_for_label }}" style="right: 10px; top: 65%; transform: translateY(-50%); cursor: pointer; color: gray;">
                                 <i class="fa fa-eye"></i>
                             </span>
                         </div>
@@ -75,18 +76,6 @@
     </div>
   </div>
 </section>
-<script>
- document.querySelectorAll('.toggle-password').forEach(function(toggleIcon) {
-    toggleIcon.addEventListener('click', function() {
-        var passwordField = this.closest('.form-group').querySelector('input[name="password"]');
-        var type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-        this.classList.toggle('fa-eye-slash');
-    });
-});
-
-
-</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
