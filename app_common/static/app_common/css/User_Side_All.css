@@ -1529,7 +1529,7 @@ video {
 }
 
 .similar-products .product-card {
-	height: 340px;
+	
 	overflow: hidden;
 }
 
@@ -1943,12 +1943,21 @@ footer {
 }
 
 .wishlist_images a img {
-	height: 80px;
+	height: 100px;
 	width: 150px;
 }
 
 /* =============Product Card Treenga=============== */
 .product-card {
+	background-color: #fff;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	transition: all 0.3s ease-in-out;
+	position: relative;
+	text-align: center;
+   
+}
+.product-cards {
 	background-color: #fff;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
@@ -2007,7 +2016,6 @@ background-color: #00836C;
 color: white;
 border: none;
 padding: 8px 20px;
-
 opacity: 0;
 transition: all 0.8s ease;
 white-space: nowrap; /* Ensures text stays on one line */
@@ -2040,6 +2048,28 @@ text-align: center;
 	bottom: 10px; /* Button slides up */
 	opacity: 1;
 }
+/* Hover Effects */
+.product-cards:hover .product-images img {
+	transform: scale(1.06); /* Zoom effect */
+}
+.add-to-cart a{
+	color: white !important;
+}
+.product-cards:hover .add-to-cart {
+	bottom: 10px; /* Button slides up */
+	opacity: 1;
+}
+/* Hover Effects */
+.product-card:hover .product-images img {
+	transform: scale(1.06); /* Zoom effect */
+}
+.add-to-cart a{
+	color: white !important;
+}
+.product-card:hover .add-to-cart {
+	bottom: 10px; /* Button slides up */
+	opacity: 1;
+}
 .moreBtn {
     border: 1px solid #F37021;
     padding: 4px 5px;
@@ -2060,6 +2090,46 @@ text-align: center;
 .moreBtn:hover {
     color: white;
     background-color: #F37021;
+}
+.moreBtn1 {
+    border: 1px solid #249581;
+    padding: 4px 5px;
+    text-decoration: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: #249581;
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: rgba(153, 238, 212, 0.678) 0px 1px 4px;
+    transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.moreBtn1:hover {
+    color: white;
+    background-color: #249581;
+}
+.moreBtn2 {
+    border: 1px solid #F37021;
+    padding: 4px 5px;
+    text-decoration: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background-color: #F37021;
+    color: white;
+    font-size: 14px;
+    border-radius: 3px;
+    box-shadow: rgba(248, 150, 69, 0.678) 0px 1px 4px;
+    
+    /* Add the transition property for background and color */
+    transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.moreBtn2:hover {
+    background-color: white;
+    color: #F37021;
 }
 /* Ensure the images fill the container */
 .image-container {
@@ -2159,48 +2229,9 @@ text-align: center;
 .overlay .btn {
     padding: 10px 20px;
 }
-.moreBtn {
-    border: 1px solid #F37021;
-    padding: 4px 5px;
-    text-decoration: none;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    color: #F37021;
-    font-size: 14px;
-    border-radius: 3px;
-    box-shadow: rgba(238, 191, 153, 0.678) 0px 1px 4px;
-    
-    /* Add the transition property for background and color */
-    transition: background-color 0.6s ease, color 0.6s ease;
-}
 
-.moreBtn:hover {
-    color: white;
-    background-color: #F37021;
-}
-.moreBtn1 {
-    border: 1px solid #249581;
-    padding: 4px 5px;
-    text-decoration: none;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    color: #249581;
-    font-size: 14px;
-    border-radius: 3px;
-    box-shadow: rgba(153, 238, 212, 0.678) 0px 1px 4px;
-    
-    /* Add the transition property for background and color */
-    transition: background-color 0.6s ease, color 0.6s ease;
-}
 
-.moreBtn1:hover {
-    color: white;
-    background-color: #249581;
-}
+
 
 /* Responsiveness */
 @media (max-width: 768px) {

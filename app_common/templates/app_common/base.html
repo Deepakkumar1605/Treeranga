@@ -107,7 +107,7 @@
           </ul> -->
           <div class="SEARCH-CONTAINER">
             <i class="fa fa-search SEARCH-ICON"></i>
-            <input type="text" id="SEARCH-INPUT" placeholder="Search...">
+            <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
             <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
           </div>
           
@@ -119,9 +119,9 @@
         <!-- ----------===========Auth Nav buttons========== ------------->
 
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
-          <!-- <button type="button" class="btn" id="search-icon">
+          <button type="button" class="btn " id="search-icon">
             <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
-          </button> -->
+          </button> 
           <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
             <i class="fa-regular fa-user HeaderIcons text-success"></i> 
           </a>
@@ -198,21 +198,24 @@
 
               <!-- ==============Unauth Nav buttons============== -->
 
-        <div class="col-lg-2 col-md-3 col-6 d-flex justify-content-end align-items-center">
-            <!-- <button type="button" class="btn" id="search-icon">
-              <i class="fa fa-search  text-success" aria-hidden="true"></i>
-            </button> -->
-            <a href="{% url 'users:login' %}" class="text-decoration-none btn me-3 ">
-              <i class="fa-regular fa-user HeaderIcons text-success"></i> 
-            </a>
-
-            <a href="{% url 'cart:showcart' %}" class="ms-4">
-                <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
-                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{ cart_count }}
-                  </span>
-                </i>
-            </a>
+     
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
+          <!-- <button type="button" class="btn" id="search-icon">
+            <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
+          </button> -->
+          <a href="{% url 'users:login' %}" class="text-decoration-none btn  ">
+            <i class="fa-regular fa-user HeaderIcons text-success"></i> 
+          </a>
+          <a href="{% url 'users:login' %}" class="text-decoration-none btn  ">
+            <i class="fa-regular fa-heart HeaderIcons text-success"></i> 
+          </a>
+          <a href="{% url 'cart:showcart' %}" class="">
+            <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ cart_count }}
+              </span>
+            </i>
+        </a>
         </div>
 
         <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">

@@ -4,7 +4,7 @@
 {% block content %}
 
 <section class="py-lg-4 px-lg-4 min-vh-100">
-    <div class="">
+    <div class="container">
         <div class="My_wishlist_head">
             <h5>My Wishlist(4)</h5>
         </div>
@@ -35,15 +35,13 @@
                             </div>
                         </a>
                         
-                       <div>
-                        <a href="{% url 'cart:addtocart' product.id %}?variant=no" class="btn ">Add To Cart</a>
-                        
+                    <div class="mt-3">
                         {% if product.is_variant == "no" %}
-                            <a href="{% url 'cart:addtocart' product.id %}?variant=no" class="btn ">Add To Cart</a>
+                            <a href="{% url 'cart:addtocart' product.id %}?variant=no" class=" btn btn-success  ">Add To Cart</a>
                         {% elif product.is_variant == "yes" %}
-                            <a href="{% url 'cart:addtocart' product.id %}?variant=yes" class="btn ">Add To Cart</a>
+                            <a href="{% url 'cart:addtocart' product.id %}?variant=yes" class="btn btn-success ">Add To Cart</a>
                         {% endif %}
-                       </div>
+                    </div>
                     </div>
 
                     <div class="col-lg-1 col-md-6 mb-4 mb-lg-0">
