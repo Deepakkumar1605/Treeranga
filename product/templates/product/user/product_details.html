@@ -49,9 +49,9 @@ Product Details - {{ product_obj.name }}
                     {% if user.is_authenticated %}
                         <button id="wishlist-btn" class="btn-wishlist position-absolute top-0 end-0 m-2" data-product-id="{{ product_obj.id }}" data-is-variant="{{ variant_param }}">
                             {% if is_added %}
-                                Remove from Wishlist
+                            <i class="fa-solid fa-heart text-danger"></i>
                             {% else %}
-                                Add to Wishlist
+                            <i class="fa-regular fa-heart"></i>
                             {% endif %}
                         </button>
                         
@@ -479,7 +479,7 @@ Product Details - {{ product_obj.name }}
         const productId = this.getAttribute('data-product-id');
         const isVariant = this.getAttribute('data-is-variant');
         console.log(productId,isVariant,"jhgfdsdfghj")
-        const action = this.innerText.includes('Add') ? 'add' : 'remove';
+        const action = this.innerHTML.includes('fa-regular') ? 'add' : 'remove';
     
         const url = action === 'add' ? '{% url "wishlist:add_to_wishlist" %}' : '{% url "wishlist:remove_from_wishlist" %}';
     
@@ -502,23 +502,17 @@ Product Details - {{ product_obj.name }}
         })
         .then(data => {
             if (data.message) {
-                // Update button text based on the action
-                this.innerText = action === 'add' ? 'Remove from Wishlist' : 'Add to Wishlist';
+                // Toggle the icon class based on the action
+                if (action === 'add') {
+                    this.innerHTML = '<i class="fa-solid fa-heart text-danger"></i>';
+                } else {
+                    this.innerHTML = '<i class="fa-regular fa-heart"></i>';
+                }
             } else {
                 console.error('Unexpected response:', data);
             }
         })
         .catch(error => console.error('Error:', error));
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        const productUrl = window.location.href;  // Current product URL
-    
-        document.getElementById('shareWhatsApp').href = `https://wa.me/?text=Check out this product: ${productUrl}`;
-        document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${productUrl}`;
-        document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?url=${productUrl}&text=Check out this product!`;
-        document.getElementById('shareInstagram').href = `https://www.instagram.com/?url=${productUrl}`;
-    
-        // Add similar functionality for other platforms if needed
     });
 </script>
     

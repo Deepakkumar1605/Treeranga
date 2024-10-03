@@ -1137,18 +1137,30 @@ button:hover .button-text {
 .address-details li {
 	font-family: "Inter", sans-serif;
 	font-weight: 500;
-	font-size: 12px;
+	font-size: 10px;
 	line-height: 20px;
 	color: var(--para);
 	font-style: normal;
 	word-spacing: 2px;
 	letter-spacing: 1px;
+	display: flex;
+}
+
+
+.address-details li::before {
+	content: attr(data-label);
+	min-width: 70px; /* Adjust width according to your design */
+	font-weight: bold;
+}
+
+.address-details li span {
+	flex: 1;
 }
 
 .address-detailss li {
 	font-family: "Inter", sans-serif;
 	font-weight: 300;
-	font-size: 12px;
+	font-size: 10px;
 	line-height: 20px;
 	color: var(--para);
 	font-style: normal;
@@ -1161,9 +1173,51 @@ button:hover .button-text {
 }
 
 .modal-content {
-	height: 90vh;
-	width: 80% !important;
+	
+	width: 90% !important;
 }
+/* Style the radio button to hide the default appearance */
+input[type="radio"] {
+    appearance: none; /* Hide the default radio button */
+    border: 2px solid gray; /* Default border for unselected state */
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; /* Make it circular */
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease; /* Smooth transition for color only */
+}
+
+/* Style for checked radio button */
+input[type="radio"]:checked {
+    background-color: green; /* Green background for selected state */
+    border: 2px solid green; /* Green border when selected */
+}
+
+/* Style for unchecked radio button */
+input[type="radio"]:not(:checked) {
+    border: 2px solid darkgray; /* Darker gray border for unselected state */
+}
+
+/* Add a pseudo-element to create the inner dot for the checked state */
+input[type="radio"]:checked::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: white; /* Inner white dot */
+    border-radius: 50%;
+    position: absolute;
+    top: 3.5px;
+    left: 3.5px;
+}
+
+/* Hover effect without changing the border size, only color */
+input[type="radio"]:hover {
+    border-color: green; /* Only change the color on hover */
+}
+
 
 #addAddressModal .modal-header, #addAddressModal .modal-footer {
 	background-color: var(--primary);
@@ -1659,6 +1713,7 @@ video {
 	border-radius: 50%;
 	width: 200px;
 	height: 200px;
+	object-fit: contain;
 }
 
 .right-content {

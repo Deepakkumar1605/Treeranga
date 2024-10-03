@@ -17,11 +17,11 @@ Products Of {{ category_obj.title }} Category
     </nav>
 </div>
 
-<div class="px-5 text-center py-3" id="products_of_category">
+<div class="px-lg-5 text-center py-3" id="products_of_category">
     {% if products_with_variants %}
     <div class="row row-cols-lg-5 row-cols-md-4 row-cols-sm-3 row-cols-2">
         {% for item in products_with_variants %}
-        <div class="col mb-2 mb-lg-4">
+        <div class="col mb-3 mb-lg-4">
             <div class="product-card">
                 <div class="product-images">
                     {% if item.variant == "yes" %}

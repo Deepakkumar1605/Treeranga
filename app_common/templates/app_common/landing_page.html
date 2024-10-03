@@ -1,6 +1,6 @@
 {% extends 'app_common/base.html' %}
  {% load static %}
- {% block title%} Home | NiwaAgro.com{% endblock title %} 
+ {% block title%} Home | Treeranga.com{% endblock title %} 
  {% block content %}
 
 <!-- --------------------banner section--------------- -->
@@ -94,27 +94,8 @@
         <h3 class="">Shop By Collection</h3>
       </div> 
  
-
-  <div class="row  row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 ">
-    {% for category in categories %}
-    <div class="col mb-2">
-      <div class="product-card">
-          <div class="product-images p-1">
-            <a href="{% url 'product:products_of_category' category.title %}">
-              <img src="{{ category.image.url }}" class="rounded-1" alt="{{ category.title }}">
-            </a>
-            <!-- <a href="{% url 'product:products_of_category' category.title %}" class="text-decoration-none"> -->
-          </div>
-   
-          <div class="product-details my-3">
-            
-              <h5>{{ category.title }}</h5>
-            
-          </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
+      {% include 'app_common/shopbycollection.html' %}
+  
   </div>
 </section>
 <!-- --------------------end Shop by collection--------------- -->
@@ -127,7 +108,7 @@
       <h3 class=" ">New Arrivals</h3>
       <a href="{% url 'product:all_new_products' %}" class="moreBtn">View All</a>
     </div>
-<div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2  ">
+<div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 products_row_alignment ">
   {% for item in new_products %}
   <div class="col mb-3">
     <div class="product-card">
@@ -193,7 +174,7 @@
       <h3 class=" ">Trending Products</h3>
       <a href="{% url 'product:all_trending_products' %}" class="moreBtn">View All</a>
     </div>
-<div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 ">
+<div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 products_row_alignment">
   {% for item in trending_products %}
   <div class="col mb-3">
     <div class="product-card">

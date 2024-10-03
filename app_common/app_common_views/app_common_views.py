@@ -30,7 +30,7 @@ class HomeView(View):
                 return redirect('users:admin_dashboard')
 
             # Get all categories
-            categories = Category.objects.all()[:5]
+            categories = Category.objects.all()
 
             # Banner
             banners=Banner.objects.filter(active=True).order_by('order')

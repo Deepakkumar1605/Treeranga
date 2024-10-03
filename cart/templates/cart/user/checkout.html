@@ -24,33 +24,35 @@ Checkout | NiwaAgro.com
                 <div class="col-md-6 col-lg-6 d-flex flex-row my-2">
                     <div class="card w-100">
                         
-                        <div class=" address-carD d-flex justify-content-around pt-lg-3" >
-                           <div>
-                            <ul class="p-0 address-details ">
-                                <li>Address 1: </li>
-                                <li>Address 2: </li>
-                                <li>Mobile:</li>
-                                <li>City:</li>
-                                <li>State:</li>
-                                <li>Country: </li>
-                                <li>Pincode: </li>
-                            </ul>
-                           </div>
-                           <div>
-                            <ul class="p-0 address-detailss">
-                                <li>{{i.Address1}}</li>
-                                <li>{{i.Address2}}</li>
-                                <li>{{i.mobile_no}}</li>
-                                <li>{{i.city}}</li>
-                                <li>{{i.state}}</li>
-                                <li>{{i.country}}</li>
-                                <li>{{i.pincode}}</li>
-                            </ul>
-                           </div>
-                           
-                            <div>
+                        <div class=" d-flex justify-content-between align-items-center   pt-lg-3 px-2" >
+                            <div class="me-2  ">
                                 <input class="form-check-input" type="radio" name="addressNoLabel" id="addressNoLabel" value="{{i.id}}" aria-label="..." {% if forloop.first %}checked{% endif %}   />
                             </div>
+                           <div>
+                            <ul class=" p-0 address-details ">
+                                <li data-label="Address 1:"><span>{{i.Address1}}</span></li>
+                                <li data-label="Address 2:"><span>{{i.Address2}}</span></li>
+                                <li data-label="Mobile:"><span>{{i.mobile_no}}</span></li>
+                                <li data-label="City:"><span>{{i.city}}</span></li>
+                                <li data-label="State:"><span>{{i.state}}</span></li>
+                                <li data-label="Country:"><span>{{i.country}}</span></li>
+                                <li data-label="Pincode:"><span>{{i.pincode}}</span></li>
+                            </ul>
+                            
+                           </div>
+                           <!-- <div>
+                            <ul class="p-0 address-detailss">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                           </div> -->
+                           
+                          
                         </div>
                         <div class="d-flex justify-content-center pb-lg-3 adress_button">
                             <button type="button" class="u-button pencil " data-bs-toggle="modal" data-bs-target="#updateAddressModal" data-id="{{ i.id }}" data-landmark1="{{ i.landmark1 }}" data-landmark2="{{ i.landmark2 }}" data-country="{{ i.country }}" data-state="{{ i.state }}" data-city="{{ i.city }}" data-zipcode="{{ i.zipcode }}">
@@ -214,13 +216,13 @@ Checkout | NiwaAgro.com
                      </div>
                      <div class="payment-method p-lg-3 p-2">
                         <h6>Select Payment Method</h6>
-                        <label>
-                            <input type="radio" name="payment_method" value="razorpay" checked>
+                        <label class="d-flex align-items-center">
+                            <input class="me-2" type="radio" name="payment_method" value="razorpay" checked>
                             Online Payment (Razorpay)
                         </label>
-                        <br>
-                        <label>
-                            <input type="radio" name="payment_method" value="cod">
+                      
+                        <label class="d-flex align-items-center">
+                            <input class="me-2" type="radio" name="payment_method" value="cod">
                             Cash on Delivery (COD)
                         </label>
                         </div>

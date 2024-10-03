@@ -770,6 +770,14 @@ text-align: center;
         font-size: 12px ;
     }
 
+	/* landing products responsive */
+	.products_row_alignment{
+		display: flex;
+        justify-content: center;
+	}
+	/* landing products responsive */
+
+
 }
 
 /* ------------------Between sm to md------------ */
@@ -850,9 +858,24 @@ text-align: center;
 	.product-btn{
 		font-size: 14px !important;
 	}
-	.address-details li{
-		font-size: 12px !important;
+	.address-details li {
+		display: flex;
 	}
+	
+	.address-details li::before {
+		content: attr(data-label);
+		min-width: 70px; /* Adjust width according to your design */
+		font-weight: bold;
+	}
+	
+	.address-details li span {
+		flex: 1;
+	}
+	.u-button{
+		padding: ;
+	}
+	
+	
 }
 
 
