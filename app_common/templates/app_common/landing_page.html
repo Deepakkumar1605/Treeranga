@@ -108,57 +108,8 @@
       <h3 class=" ">New Arrivals</h3>
       <a href="{% url 'product:all_new_products' %}" class="moreBtn">View All</a>
     </div>
-<div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 products_row_alignment ">
-  {% for item in new_products %}
-  <div class="col mb-3">
-    <div class="product-card">
-        <div class="product-images">
-          {% if item.variant == "no" %}
-          <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
-          {% elif item.variant == "yes" %}
-              <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
-          {% endif %}  
-          {% if item.product.image %}
-          <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
-          {% else %}
-          <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
-          {% endif %}
-            <div class="product-icons">
-                <i class="fa-regular fa-heart"></i>
-             
-            </div>
-            <button class="add-to-cart">
-              
-                {% if item.variant == "no" %}
-                  <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class=" ">Add To Cart</a>
-                {% elif item.variant == "yes" %}
-                  <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class=" ">Add To Cart</a>
-                {% endif %}
-             
-            </button>
-        </div>
-        <div class="product-details">
-            <h4>{{ item.product.name|truncatechars:17 }}</h4>
-            <p class="price">
-            {% if item.variant == "no" %}
-            <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
-           
-              {% if item.simple_product.product_max_price %}
-              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
-              {% endif %}
-            {% else %}
-            <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
-              {% if item.variant_product.product_max_price %}
+    {% include 'app_common/NewArrival.html' %}
 
-              <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
-              {% endif %}
-            {% endif %}
-          </p>
-        </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
 
   </div>
 </section>
@@ -174,54 +125,7 @@
       <h3 class=" ">Trending Products</h3>
       <a href="{% url 'product:all_trending_products' %}" class="moreBtn">View All</a>
     </div>
-<div class="row row-cols-2 row-cols-lg-5 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 products_row_alignment">
-  {% for item in trending_products %}
-  <div class="col mb-3">
-    <div class="product-card">
-        <div class="product-images">
-          {% if item.variant == "no" %}
-          <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
-          {% elif item.variant == "yes" %}
-              <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
-          {% endif %}            
-          {% if item.product.image %}
-            <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
-          {% else %}
-            <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
-          {% endif %}
-        </a>
-            <div class="product-icons">
-                <i class="fa-regular fa-heart"></i>
-                
-            </div>
-            <button class="add-to-cart">
-              {% if item.variant == "no" %}
-              <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class=" ">Add To Cart</a>
-            {% elif item.variant == "yes" %}
-              <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class=" ">Add To Cart</a>
-            {% endif %}
-            </button>
-        </div>
-        <div class="product-details">
-            <h4>{{ item.product.name|truncatechars:25 }}</h4>
-            <p class="price">              {% if item.variant == "no" %}
-              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
-              {% if item.simple_product.product_max_price %}
-              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
-              {% endif %}
-            {% else %}
-              <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
-              {% if item.variant_product.product_max_price %}
-              <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
-              {% endif %}
-            {% endif %}</span>
-          </p>
-        </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-
+    {% include 'app_common/Trendingproducts.html' %}
 
   </div>
 </section>

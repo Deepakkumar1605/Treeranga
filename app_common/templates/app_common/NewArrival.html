@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .custom-slider-container-2 {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .custom-slider-2 {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-behavior: smooth; /* Smooth scrolling effect */
+      padding: 0 20px; 
+    }
+
+    .custom-slider-2::-webkit-scrollbar {
+      display: none;
+    }
+
+    .custom-col-2 {
+      flex: 0 0 22%; 
+      margin: 0 4px;
+    }
+
+    .custom-prev-btn-2, .custom-next-btn-2 {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #00836bef;
+      border: none;
+      padding: 7px 14px ;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .custom-prev-btn-2 {
+      left: 0;
+    }
+
+    .custom-next-btn-2 {
+      right: 0;
+    }
+
+    /* For smaller screens, show fewer products */
+    @media (max-width: 768px) {
+      .custom-col-2 {
+        flex: 0 0 30%; /* show 3 products on smaller screens */
+      }
+    }
+
+    /* For even smaller screens, show even fewer products */
+    @media (max-width: 480px) {
+      .custom-col-2 {
+        flex: 0 0 50%; /* show 2 products on very small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="custom-slider-container-2">
+    <div class="custom-slider-2">
+      {% for item in new_products %}
+      <div class="custom-col-2 mb-3">
+        <div class="product-card">
+          <div class="product-images">
+            {% if item.variant == "no" %}
+            <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
+            {% elif item.variant == "yes" %}
+            <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
+            {% endif %}  
+            {% if item.product.image %}
+            <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
+            {% else %}
+            <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
+            {% endif %}
+            <div class="product-icons">
+              <i class="fa-regular fa-heart"></i>
+            </div>
+            <button class="add-to-cart">
+              {% if item.variant == "no" %}
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class=" ">Add To Cart</a>
+              {% elif item.variant == "yes" %}
+              <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class=" ">Add To Cart</a>
+              {% endif %}
+            </button>
+          </div>
+          <div class="product-details">
+            <h4>{{ item.product.name|truncatechars:17 }}</h4>
+            <p class="price">
+              {% if item.variant == "no" %}
+              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% if item.simple_product.product_max_price %}
+              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+              {% endif %}
+              {% else %}
+              <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
+              {% if item.variant_product.product_max_price %}
+              <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
+              {% endif %}
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="custom-prev-btn-2">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="custom-next-btn-2">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <script>
+    const customSlider2 = document.querySelector('.custom-slider-2');
+    const customPrevBtn2 = document.querySelector('.custom-prev-btn-2');
+    const customNextBtn2 = document.querySelector('.custom-next-btn-2');
+
+    let cardWidth2 = customSlider2.children[0].offsetWidth; // Width of one card
+    let scrollPosition2 = 0;
+
+    customPrevBtn2.addEventListener('click', () => {
+      scrollPosition2 -= cardWidth2; // Scroll by one card
+      if (scrollPosition2 < 0) scrollPosition2 = 0; // Prevent scrolling past the first card
+      customSlider2.scrollLeft = scrollPosition2;
+    });
+
+    customNextBtn2.addEventListener('click', () => {
+      scrollPosition2 += cardWidth2; // Scroll by one card
+      if (scrollPosition2 > customSlider2.scrollWidth - customSlider2.clientWidth) {
+        scrollPosition2 = customSlider2.scrollWidth - customSlider2.clientWidth; // Prevent scrolling past the last card
+      }
+      customSlider2.scrollLeft = scrollPosition2;
+    });
+  </script>
+</body>
+</html>

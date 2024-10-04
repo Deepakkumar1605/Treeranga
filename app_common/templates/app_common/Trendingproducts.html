@@ -1,0 +1,166 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    .unique-slider-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .unique-slider {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding: 0 20px; 
+    }
+
+    .unique-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .unique-col {
+      flex: 0 0 22%; 
+      margin: 0 4px;
+    }
+
+    .unique-prev-btn, .unique-next-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #00836bef;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .unique-prev-btn {
+      left: 0;
+    }
+
+    .unique-next-btn {
+      right: 0;
+    }
+    
+    @media (max-width: 980px) {
+      .unique-col {
+        flex: 0 0 28.57%; /* 3.5 cards */
+        margin: 0 5px;
+      }
+      .unique-slider {
+        padding: 0 4px; /* adjust padding for smaller screens */
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .unique-col {
+        flex: 0 0 30%; /* show 3 products on smaller screens */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .unique-col {
+        flex: 0 0 50%; /* show 2 products on very small screens */
+      }
+    }
+    </style>
+</head>
+<body>
+    <div class="unique-slider-container">
+        <div class="unique-slider">
+ {% for item in trending_products %}
+  <div class="unique-col mb-3">
+    <div class="product-card">
+        <div class="product-images">
+          {% if item.variant == "no" %}
+          <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
+          {% elif item.variant == "yes" %}
+              <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
+          {% endif %}            
+          {% if item.product.image %}
+            <img src="{{ MEDIA_URL }}{{ item.product.image }}" class="card-img-top" alt="{{ item.product.name }}">
+          {% else %}
+            <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image available">
+          {% endif %}
+        </a>
+            <div class="product-icons">
+                <i class="fa-regular fa-heart"></i>
+            </div>
+            <button class="add-to-cart">
+              {% if item.variant == "no" %}
+              <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class=" ">Add To Cart</a>
+            {% elif item.variant == "yes" %}
+              <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class=" ">Add To Cart</a>
+            {% endif %}
+            </button>
+        </div>
+        <div class="product-details">
+            <h4>{{ item.product.name|truncatechars:25 }}</h4>
+            <p class="price">              {% if item.variant == "no" %}
+              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
+              {% if item.simple_product.product_max_price %}
+              <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% endif %}
+            {% else %}
+              <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
+              {% if item.variant_product.product_max_price %}
+              <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
+              {% endif %}
+            {% endif %}
+          </p>
+        </div>
+    </div>
+  </div>
+  {% endfor %}
+        </div>
+        <button class="unique-prev-btn">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="unique-next-btn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+      </div>
+
+      <script>
+        const uniqueSliderContainer = document.querySelector('.unique-slider-container');
+        const uniqueSlider = document.querySelector('.unique-slider');
+        const uniquePrevBtn = document.querySelector('.unique-prev-btn');
+        const uniqueNextBtn = document.querySelector('.unique-next-btn');
+        
+        let uniqueCardWidth = uniqueSlider.children[0].offsetWidth; // Width of a single card
+        let uniqueScrollPosition = 0; // Initialize the scroll position
+        
+        // Function to scroll to a specific position smoothly
+        function scrollToPosition(position) {
+          uniqueSlider.scrollTo({
+            left: position,
+            behavior: 'smooth' // This enables smooth scrolling
+          });
+        }
+        
+        // Event listener for the previous button
+        uniquePrevBtn.addEventListener('click', () => {
+          uniqueScrollPosition -= uniqueCardWidth; // Move back one card width
+          if (uniqueScrollPosition < 0) uniqueScrollPosition = 0; // Prevent scrolling beyond the start
+          scrollToPosition(uniqueScrollPosition); // Scroll smoothly
+        });
+        
+        // Event listener for the next button
+        uniqueNextBtn.addEventListener('click', () => {
+          uniqueScrollPosition += uniqueCardWidth; // Move forward one card width
+          if (uniqueScrollPosition > uniqueSlider.scrollWidth - uniqueSlider.clientWidth) {
+            uniqueScrollPosition = uniqueSlider.scrollWidth - uniqueSlider.clientWidth; // Prevent scrolling beyond the end
+          }
+          scrollToPosition(uniqueScrollPosition); // Scroll smoothly
+        });
+        </script>
+        
+</body>
+</html>
