@@ -12,7 +12,7 @@ Product Details - {{ product_obj.name }}
         <div class="row">
             <!-- Side Image Gallery -->
             <div class="col-lg-7 d-flex ">
-                <div class="gallery-container">
+                <div class="gallery-container d-lg-block d-none"">
                     <div class="gallery-wrapper">
                         <div class="gallery-items">
                             {% if images %}
@@ -38,7 +38,34 @@ Product Details - {{ product_obj.name }}
                     </div>
                 </div>
 
-                <div class="product-image " id="mediaContainer">
+                     <!-- Small Screen container Image field showing -->
+
+                     <div class="gallery-container d-lg-none d-block">
+                        <div class="gallery-slider">
+                            {% if images %}
+                                    {% for image in images %}
+                                        <div class="gallery-item">
+                                            <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image" class="thumb" onclick="displayMedia(this)">
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p>No media available.</p>
+                                {% endif %}
+                                {% if videos %}
+                                    {% for video in videos %}
+                                        <div class="gallery-item">
+                                            <video controls class="thumb" onclick="displayMedia(this)">
+                                                <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                        </div>
+                    </div>
+     
+
+                <div class="product-image d-lg-block d-none" id="mediaContainer">
                     {% if images %}
                         <img src="{{ MEDIA_URL }}{{ images.0 }}" alt="{{ product_obj.name }}" id="mainImage">
                     {% elif product_obj.image %}
@@ -60,10 +87,7 @@ Product Details - {{ product_obj.name }}
                             Add to Wishlist
                         </a>
                     {% endif %}
-                    <div class="">
-                        <img id="myimage" src="img_girl.jpg" width="300" height="240">
-                        <div id="myresult" class="img-zoom-result"></div>
-                      </div>
+                   
                 </div>
             </div>
 

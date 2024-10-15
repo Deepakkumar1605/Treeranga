@@ -1344,6 +1344,10 @@ input[type="radio"]:hover {
 	height: 100%;
 	object-fit: cover;
 }
+.product-image {
+	position: relative;
+  }
+  
 
 video {
 	width: 100%;
@@ -1697,11 +1701,65 @@ video {
 	width: 80%;
 }
 
-.form-group.group-form input:focus, .form-group.group-form textarea:focus {
+.form-group.group-form input:focus,
+.form-group.group-form textarea:focus {
 	border-color: #807e7e;
 	box-shadow: 0 0 8px rgba(193, 247, 198, 0.5);
 	outline: none;
 }
+
+/*----------------------------Manage Address Page------------------------------ */
+.Add_New_addres {
+	font-family: var(--rubik);
+	font-size: 14px;
+	font-weight: 500;
+	font-style: normal;
+	line-height: 23px;
+	color: #2874f0;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 80px;
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	top: 0;
+	right: 0;
+	font-size: 14px;
+	text-align: center;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+
+.dropdown-content a:hover {
+	background-color: #f1f1f1;
+	color: #2874f0;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.dropdown-button {
+	color: rgb(107, 107, 107);
+	padding: 5px;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+}
+
 
 /*----------------------------All Address Page------------------------------ */
 .card.Address-Page {
@@ -2030,7 +2088,7 @@ footer {
 .product-images img {
 	width: 100%;
 	height: 100%;
-	object-fit: cover; /* Ensures the image maintains aspect ratio and covers the area */
+	object-fit: fill; /* Ensures the image maintains aspect ratio and covers the area */
 	transition: transform 0.4s ease-in-out;
 }
 

@@ -1,63 +1,54 @@
 {% extends 'app_common/base.html' %}
 {% load static %} 
-{% block title %} AllAddress {% endblock title %} 
+{% block title %}Manange Addresses {% endblock title %} 
 {% block content %}
-<style>
- 
- 
-</style>
-<div class="">
- 
+
+<section class="Card_product_details">
   <div class="row mx-0">
     {% include 'users/user/index.html' %}
-    <div class="col-sm-9 col-lg-9 mt-5">
-      <h5 class="card-title mb-2 ms-3 mt-3" >
-        {{request.user.full_name}} Your Address
+    <div class="col-sm-9 col-lg-8 m-lg-2 bg-white ">
+      <h5 class="card-title py-3 ps-lg-4 adress_page" >
+       Manange Addresses
       </h5>
-      <div class="row px-0 mx-0 mt-3">
-        {% for i in addresses %}
-        <div class="col-md-6">
-          <div class="card  my-lg-3 my-2 Address-Page">
-                        
-            <div class=" d-flex justify-content-around pt-lg-3" >
-               <div>
-                <ul class="p-0 address-details ">
-                    <li>Address 1: </li>
-                    <li>Address 2: </li>
-                    <li>Mobile:</li>
-                    <li>City:</li>
-                    <li>State:</li>
-                    <li>Country: </li>
-                    <li>pincode: </li>
-                </ul>
-               </div>
-               <div>
-                <ul class="p-0 address-detailss">
-                    <li>{{i.Address1}}</li>
-                    <li>{{i.Address2}}</li>
-                    <li>{{i.mobile_no}}</li>
-                    <li>{{i.city}}</li>
-                    <li>{{i.state}}</li>
-                    <li>{{i.country}}</li>
-                    <li>{{i.pincode}}</li>
-                </ul>
-               </div>
-               
-            </div>
-            <div class="d-flex justify-content-center p-lg-4">
-              <a
-              href="{% url 'users:profile_update_address' i.id %}"class="u-button pencil w-50 me-lg-4 ">
-              <i class="fas fa-pencil">Edit</i>
-              </a>
-                <a href="{% url 'cart:delete_address' i.id %}" class="u-button trash w-50 ">
-                    <i class="bi bi-trash"> Delete</i>
-                </a>
-            </div>
+      <a href="{% url 'users:profile_addaddress' %}">
+        <div class="Add_New_addres p-3 my-2 mx-lg-3 border adress_page">
+            <i class="fa-solid fa-plus"></i> 
+          &nbsp; &nbsp;
+          ADD A NEW ADDRESS
         </div>
+      </a>
+      {% for i in addresses %}
+      <div class=" border  p-3 my-2 mx-lg-3">
+        <div class="d-flex justify-content-between ">
+          <div>Home</div>
+          <div>
+            <div class="dropdown">
+              <button class="dropdown-button">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+              <div class="dropdown-content">
+                <a href="{% url 'users:profile_update_address' i.id %}">Edit</a>
+                <a href="{% url 'users:profile_delete_address' i.id %}" onclick="return confirm('Are you sure you want to delete this address?');">Delete</a>
+
+              </div>
+            </div>
+            
+          </div>
         </div>
-        {% endfor %}
+        <div class="fw-semibold lh-lg adress_page">
+          <div>{{ user.full_name }} &nbsp; &nbsp;
+         {{i.mobile_no}}</div>
+        </div>
+        <div class="lh-lg w-100 overflow-auto adress_page">
+          {{i.Address1}},{{i.Address2}},{{i.city}},{{i.state}},
+          {{i.country}},<span class="fw-medium">{{i.pincode}}</span>
+        </div>
       </div>
+      {% endfor %}
+
+  
     </div>
   </div>
-</div>
+</section>
+
 {% endblock content %}

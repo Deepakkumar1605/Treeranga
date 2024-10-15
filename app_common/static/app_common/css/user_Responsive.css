@@ -612,7 +612,7 @@ text-align: center;
 
 	/* ============================User Product detail page CSS================ */
 	.product-image img {
-		object-fit: contain;
+		object-fit: cover;
 	}
 
 	.gallery-container {
@@ -629,10 +629,20 @@ text-align: center;
 	}
 
 	.gallery-item img, .gallery-item video {
-		width: 80px;
-		height: 80px;
+		width: 100%;
+		height: 400px;
+		object-fit: fill;
 	}
-
+	#shareButton{
+		position: absolute;
+		top:0%;
+		right: 0%;
+		color: var(--p);
+	}
+.modal-backdrop.show{
+	width: 100%;
+	height: 100%;
+}
 	/* Product Details */
 	.product-details h1 {
 		font-size: 22px;
@@ -649,29 +659,27 @@ text-align: center;
 
 	.quantity-selector {
 		display: flex;
-		justify-content: space-evenly;
+		flex-direction: column;
 	}
 
 	.quantity-selector .input-group {
 		width: 50%;
 	}
 
-	#quantityHelp {
-		display: flex;
-		justify-content: center;
-	}
+	
 
-	 #addToCartButton {
+	 .buttons #addToCartButton.cart-btn {
 		background-color: var(--secondary);
 		color: var(--para);
 		width: 100%;
-		padding: 10px 122px;
 		font-family: "Inter", sans-serif;
 		font-style: normal;
 		font-weight: 500;
 		line-height: 28px;
 		font-size: 17px;
 		margin: 0 auto;
+		display: block;
+		text-align: center;
 	}
 
 	.wishlist-btn i {
@@ -747,7 +755,6 @@ text-align: center;
 		width: 100%;
 		height: auto;
 	}
-
 	/*----------------------------Add Address Page------------------------------ */
 	.form_body {
 		width: 100%;
@@ -777,7 +784,11 @@ text-align: center;
 	}
 	/* landing products responsive */
 
-
+	.product-images {
+		position: relative;
+		height: 230px; 
+		overflow: hidden;
+	}
 }
 
 /* ------------------Between sm to md------------ */
@@ -875,7 +886,11 @@ text-align: center;
 		padding: ;
 	}
 	
-	
+	.product-images {
+		position: relative;
+		height: 250px; 
+		overflow: hidden;
+	}
 }
 
 
