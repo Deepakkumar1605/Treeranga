@@ -1,0 +1,122 @@
+{% extends 'app_common/base.html' %} 
+{% load static %} 
+{% block title%}Wishlist{% endblock title %} 
+{% block content %}
+
+<section class="py-lg-4 px-lg-4 min-vh-100">
+    <div class="container">
+        <div class="My_wishlist_head">
+            <h5>My Wishlist(4)</h5>
+        </div>
+        {% if wishlist_items %}
+        {% for product in wishlist_items %}
+
+        <div class=" My_wishlist_body">
+            <div class="card-body">
+                <div class="row mx-0 my-0 px-0 py-0">
+                    <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                        <div class="wishlist_images hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                            {% if product.image %}
+                            <a href="{% if product.is_variant == 'yes' %}{% url 'product:product_detail' product.id %}?variant=yes{% else %}{% url 'product:product_detail' product.id %}?variant=no{% endif %}" class="product-name">
+                                <img src="{{ product.image }}"  alt="Product Image" />
+                            </a>
+                            {% else %} No image {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-md-6 mb-4 mb-lg-0 wish_details wishlist_details">
+                        <a href="{% if product.is_variant == 'yes' %}{% url 'product:product_detail' product.id %}?variant=yes{% else %}{% url 'product:product_detail' product.id %}?variant=no{% endif %}" class="product-name">
+                            <h6>{{ product.name }}</h6>
+                            <p>{{ product.short_description }}</p>
+                            <div class="discount-price mt-lg-3">
+                                ₹{{ product.price }} {% if product.max_price %}
+                                <span class="original-price"><s>₹{{ product.max_price }}</s></span>
+                                {% endif %}
+                            </div>
+                        </a>
+                        
+                    <div class="mt-3">
+                        {% if product.is_variant == "no" %}
+                            <a href="{% url 'cart:addtocart' product.id %}?variant=no" class=" btn btn-success  ">Add To Cart</a>
+                        {% elif product.is_variant == "yes" %}
+                            <a href="{% url 'cart:addtocart' product.id %}?variant=yes" class="btn btn-success ">Add To Cart</a>
+                        {% endif %}
+                    </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-6 mb-4 mb-lg-0">
+                        <button class="btn btn-lg fs-6 mt-2 rwl-btn text-secondary" data-product-id="{{ product.id }}"
+                            id="remove-wishlist-btn-{{ product.id }}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %} {% else %}
+        <p class="text-center">Your wishlist is empty!</p>
+        {% endif %}
+    </div>
+</section>
+
+
+
+
+<script>
+    document
+        .querySelectorAll('[id^="remove-wishlist-btn-"]')
+        .forEach((button) => {
+            button.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent default button behavior
+                const productId = this.getAttribute("data-product-id");
+                console.log(productId, "Removing from wishlist");
+
+                fetch('{% url "wishlist:remove_from_wishlist" %}', {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}", // Ensure CSRF token is passed
+                        "Content-Type": "application/json", // Sending JSON data
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                    }),
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        if (data.message) {
+                            // Remove the item from the page
+                            const card = this.closest(".My_wishlist_body");
+                            card.remove();
+
+                            // Check if the wishlist is now empty
+                            const remainingCards = document.querySelectorAll(".My_wishlist_body");
+                            if (remainingCards.length === 0) {
+                                const emptyMessage = document.querySelector(".text-center");
+                                if (emptyMessage) {
+                                    emptyMessage.innerText = "Your wishlist is empty!";
+                                } else {
+                                    const messageElement = document.createElement("p");
+                                    messageElement.className = "text-center";
+                                    messageElement.innerText = "Your wishlist is empty!";
+                                    document
+                                        .querySelector(".wish_container")
+                                        .appendChild(messageElement);
+                                }
+                            }
+                        } else {
+                            console.error("Unexpected response:", data);
+                        }
+                        window.location.reload();
+                    })
+                    .catch((error) => console.error("Error:", error));
+            });
+        });
+</script>
+
+{% endblock content %}

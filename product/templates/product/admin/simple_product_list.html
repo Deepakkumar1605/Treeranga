@@ -1,0 +1,99 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} All Products {% endblock title %}
+{% block content %}
+<section class="py-2">
+    <div class="container">
+        <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Simple Products</h4>
+        <div class="vstack">
+            <!-- Search form and other UI elements here -->
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th id="tb-head" scope="col">Name</th>
+                                <th id="tb-head" scope="col">Product ID</th>
+                                <th id="tb-head" scope="col">Image</th>
+                                <th id="tb-head" scope="col">Brand</th>
+                                <th id="tb-head" scope="col">Max Price</th>
+                                <th id="tb-head" scope="col">Discounted Price</th>
+                                <th id="tb-head" scope="col">Stock</th>
+                                <th id="tb-head" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test_table_tbody">
+                            {% for product in page_obj %}
+                            <tr {% if product.simple_products.first.stock <= 10 %} style="background: #f6a4a4;"
+                                {% endif %}>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.pk }}</div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.product.name|truncatewords:5 }}</div>
+                                </td>
+                                <td class="tb-body p-1">
+                                    <div>
+                                        {% if product.product.image %}
+                                        <img class="cat-img2" src="{{ product.product.image.url }}" alt="Image">
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.product.brand }}</div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.product_max_price }}</div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.product_discount_price }}</div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">{{ product.stock }}</div>
+                                </td>
+                                <td class="d-flex justify-content-evenly delete_edit_button">
+                                    <div>
+                                        <a href="{% url 'product:simple_product_update' product.pk %}">
+                                            <i class='bx bx-edit text-primary'></i>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'product:simple_product_delete' product.pk %}">
+                                            <button type="button" class="border-0 bg-transparent">
+                                                <i class='bx bx-trash text-danger'></i>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="py-lg-2">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}">&lsaquo; Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <a href="#" class="active">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next &rsaquo;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

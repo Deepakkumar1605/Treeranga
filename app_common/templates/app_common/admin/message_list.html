@@ -1,0 +1,84 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="py-2">
+  <div class="container">
+    <h4 class="headings_h4 text-center my-lg-4 p-lg-3">Contact Message</h4>
+    <div class="vstack gap-4">
+      <div class="tablecard">
+        <div class="table-responsive">
+          <table class="table table-hover table-nowrap">
+            <thead class="table-light">
+              <tr>
+                <th id="tb-head" scope="col">Name</th>
+                <th id="tb-head" scope="col">E-Mail</th>
+                <th id="tb-head" scope="col">Contact</th>
+                <th id="tb-head" scope="col">Date & Time</th>
+                <th id="tb-head" scope="col">User Type</th>
+                <th id="tb-head" scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="test_table_tbody">
+              {% for message in messages %}
+              <tr>
+                <td class="tb-body">
+                  <div class="tb-body_sub">{{ message.name }}</div>
+                </td>
+                <td class="tb-body">
+                  <div class="tb-body_sub">{{ message.email }}</div>
+                </td>
+                <td class="tb-body">
+                  <div class="tb-body_sub">{{ message.contact }}</div>
+                </td>
+                <td class="tb-body">
+                  <div class="tb-body_sub">{{ message.created_at }}</div>
+                </td>
+                <td class="tb-body">
+                  <div class="tb-body_sub">
+                    {% if message.user %}
+                    Authenticated
+                    {% else %}
+                    Unauthenticated
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="tb-body">
+                  <div class="tb-body_sub">
+                    <a href="{% url 'app_common:admin_message_detail' message.id %}" class="text-info">View Details</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="py-lg-2">
+      <div class="pagination">
+        {% if messages.has_previous %}
+        <a href="?page={{ messages.previous_page_number }}">&laquo;</a>
+        {% else %}
+        <span>&laquo;</span>
+        {% endif %}
+
+        {% for page_num in messages.paginator.page_range %}
+        {% if messages.number == page_num %}
+        <span class="active">{{ page_num }}</span>
+        {% else %}
+        <a href="?page={{ page_num }}">{{ page_num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if messages.has_next %}
+        <a href="?page={{ messages.next_page_number }}">&raquo;</a>
+        {% else %}
+        <span>&raquo;</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

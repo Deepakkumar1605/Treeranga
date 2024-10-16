@@ -1,0 +1,302 @@
+from django.shortcuts import render, redirect , HttpResponse
+from django.urls import reverse
+from django.utils import timezone
+from django.views import View
+from django.http import JsonResponse
+import json
+from django.contrib import messages
+from django.contrib import auth
+from app_common.error import render_error_page
+from users.forms import SignUpForm,LoginForm,ForgotPasswordForm,ResetPasswordForm
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import logout,login,authenticate
+from users import models
+from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.views.generic.edit import FormView
+from users import forms
+from django.views.generic.base import TemplateView
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.views.generic.edit import FormView
+from django.core.exceptions import ValidationError
+from django.urls import reverse_lazy
+from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from cart.cart_views.user_cart_views import transfer_session_cart_to_user
+from users.user_views.emails import send_template_email
+
+app = "users/"
+
+# authentications
+class Registration(View):
+    model = models.User
+    template = app + 'authtemp/registration.html'
+
+    def get(self, request):
+        try:
+            form = SignUpForm()
+            next_url = request.GET.get('next', reverse('app_common:home'))
+            return render(request, self.template, {'form': form, 'next': next_url})
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+    def post(self, request):
+        try:
+            form = SignUpForm(request.POST)
+            next_url = request.POST.get('next', reverse('app_common:home'))
+
+            if form.is_valid():
+                email = form.cleaned_data.get('email')
+                password = form.cleaned_data.get('password')
+                contact = form.cleaned_data.get('contact')
+                full_name = form.cleaned_data.get('full_name')
+
+                try:
+                    # Create new user
+                    new_user = self.model(email=email, full_name=full_name, contact=contact)
+                    new_user.set_password(password)
+                    new_user.save()
+
+                    # Authenticate the new user
+                    new_user_login = authenticate(request, username=email, password=password)
+                    if new_user_login is not None:
+                        login(request, new_user_login)
+
+                        # Transfer session cart to user cart
+                        transfer_session_cart_to_user(request, new_user_login)
+
+                        # Send registration confirmation email
+                        context = {
+                            'full_name': full_name,
+                            'email': email,
+                        }
+                        send_template_email(
+                            subject='Registration Confirmation',
+                            template_name='users/email/register_email.html',
+                            context=context,
+                            recipient_list=[email]
+                        )
+
+                        # Redirect to checkout if `next` is checkout or else redirect to `next_url`
+                        if 'checkout' in next_url:
+                            return redirect(next_url)
+                        return redirect(next_url)
+                    else:
+                        raise Exception("Authentication failed. Please try again.")
+                except Exception as e:
+                    error_message = f"An unexpected error occurred: {str(e)}"
+                    return render_error_page(request, error_message, status_code=400)
+
+            return render(request, self.template, {'form': form, 'next': next_url})
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+
+class Login(View):
+    model = models.User
+    template = app + 'authtemp/login.html'
+
+    def get(self, request):
+        try:
+            form = LoginForm()
+            forgot_password_form = ForgotPasswordForm()
+            next_url = request.GET.get('next', None)  # Capture the 'next' parameter from the GET request
+            return render(request, self.template, {
+                'form': form,
+                'form2': forgot_password_form,
+                'next': next_url  # Pass 'next' to the template
+            })
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+    def post(self, request):
+        try:
+            form = LoginForm(request.POST)
+            forgot_password_form = ForgotPasswordForm()
+            next_url = request.POST.get('next', reverse('app_common:home'))  # Default to home if 'next' is not provided
+
+            if form.is_valid():
+                email = form.cleaned_data.get('email')
+                password = form.cleaned_data.get('password')
+                user = auth.authenticate(request, username=email, password=password)
+
+                if user is not None:
+                    try:
+                        # Login the user
+                        auth.login(request, user)
+
+                        # Transfer session cart to user cart after login, except for superusers
+                        if not user.is_superuser:
+                            transfer_session_cart_to_user(request, user)
+
+                        # If user is a superuser, redirect to the admin dashboard
+                        if user.is_superuser:
+                            return redirect('users:admin_dashboard')
+
+                        # Redirect to 'next' URL if provided
+                        if next_url and next_url != reverse('users:login'):
+                            return redirect(next_url)
+
+                        # Default redirect to home page if 'next' URL is not valid or not provided
+                        return redirect(reverse('app_common:home'))
+
+                    except Exception as e:
+                        error_message = f"An unexpected error occurred: {str(e)}"
+                        return render_error_page(request, error_message, status_code=400)
+
+                else:
+                    raise Exception("Incorrect email or password.")
+            
+            # Handle form validation error
+            raise Exception("Form submission error. Please check the provided details.")
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+class Logout(View):
+    def get(self, request):
+        try:
+            if 'confirm' in request.GET:
+                logout(request)
+                return redirect('app_common:home')  # Redirect to home or appropriate page
+            
+            if 'cancel' in request.GET:
+                if request.user.is_superuser:
+                    return redirect('users:admin_dashboard')  # Redirect to the admin dashboard
+                return redirect(request.META.get('HTTP_REFERER', 'app_common:home'))
+
+            # Default redirect if neither confirm nor cancel
+            return redirect('app_common:home')
+        
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+class ForgotPasswordView(View):
+    template_name = app + 'authtemp/forgot_password.html'
+
+    def get(self, request):
+        try:
+            form2 = forms.ForgotPasswordForm()
+            return render(request, self.template_name, {'form2': form2})
+        except Exception as e:
+            error_message = f"An unexpected error occurred while rendering the form: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+    def post(self, request):
+        
+            try:
+                form2 = forms.ForgotPasswordForm(request.POST)
+                if form2.is_valid():
+                    email = form2.cleaned_data['email']
+                    user = models.User.objects.get(email=email)
+                    token = user.generate_reset_password_token()
+                    reset_link = f"{settings.SITE_URL}/Reset-Password/{token}/"
+                    context = {
+                        'full_name': user.full_name,
+                        'reset_link': reset_link,
+                    }
+                    send_template_email(
+                        subject='Reset Your Password',
+                        template_name='users/email/reset_password_email.html',
+                        context=context,
+                        recipient_list=[email]
+                    )
+                    return HttpResponse("Password reset email sent successfully.")
+            except models.User.DoesNotExist:
+                error_message = f"An unexpected error occurred"
+                return render_error_page(request, error_message, status_code=400)
+            except Exception as e:
+                error_message = f"An unexpected error occurred: {str(e)}"
+                return render_error_page(request, error_message, status_code=400)
+            return render(request, self.template_name, {'form2': form})
+
+
+class ResetPasswordView(View):
+    template_name = app + 'authtemp/reset_password.html'
+
+    def get(self, request, token):
+        try:
+            form = forms.ResetPasswordForm()
+            return render(request, self.template_name, {'form': form})
+        except Exception as e:
+            error_message = f"An unexpected error occurred while rendering the form: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+    def post(self, request, token):
+        form = forms.ResetPasswordForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            confirm_password = form.cleaned_data['confirm_password']
+            if new_password != confirm_password:
+                return HttpResponse("Passwords do not match.")
+            try:
+                user = models.User.objects.get(token=token)
+                if user:
+                    user.set_password(new_password)
+                    user.token = None  # Clear the token after password reset
+                    user.save()
+                    messages.success(request, "Password reset successfully.")
+                    return redirect('users:login')
+                else:
+                    return HttpResponse("Invalid token.")
+            except models.User.DoesNotExist:
+                error_message = f"An unexpected error occurred: {str(e)}"
+                return render_error_page(request, error_message, status_code=400)
+
+            except Exception as e:
+                error_message = f"An unexpected error occurred: {str(e)}"
+                return render_error_page(request, error_message, status_code=400)
+        return render(request, self.template_name, {'form': form})
+
+
+
+class AccountDeletionView(LoginRequiredMixin, View):
+    template_name = app + 'authtemp/account_deletion.html'  # Adjust the path as necessary
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user = request.user
+            days_remaining = (user.deletion_date - timezone.now()).days if user.deletion_requested else None
+            return render(request, self.template_name, {'user': user, 'days_remaining': days_remaining})
+        except Exception as e:
+            error_message = f"An unexpected error occurred while retrieving account deletion details: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            user = request.user
+            data = json.loads(request.body)
+            action = data.get('action')
+
+            if action == 'cancel_deletion' and user.deletion_requested:
+                user.cancel_deletion()
+                messages.success(request, "Account deletion canceled.")
+                return JsonResponse({'success': True, 'message': 'Account deletion canceled.'})
+
+            elif action == 'request_deletion' and not user.deletion_requested:
+                user.request_deletion()
+                messages.success(request, "Your account will be deleted in 30 days.")
+                return JsonResponse({'success': True, 'message': 'Your account will be deleted in 30 days.'})
+
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid action or state.'}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            error_message = f"An unexpected error occurred while processing account deletion request: {str(e)}"
+            return JsonResponse({'success': False, 'message': error_message}, status=500)

@@ -1,0 +1,81 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Support | NiwaAgro.com
+{% endblock title %}
+
+{% block content %}
+
+<section>
+  <div  id="conatct_us">
+    <div class="container">
+      <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'app_common:home' %}">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+        </ol>
+      </nav>
+    <h3 class="text-center border-bottom pb-lg-3">Contact Us </h3>
+    </div>
+
+    <div class="contact_us_image">
+        <img src="{% static 'app_common\images\contact.png' %}" alt="">
+    </div>
+
+    <div class="container">
+      <div class="row contactus-page mt-lg-4 mt-0">
+       
+        <div class="col col-lg-7 col-xl-8">
+          <div class="contact-form ">
+                
+            <h4 class="">Let's get in touch</h4>
+            <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-field">
+               {{ field }}
+              </div>
+                {% endfor %}
+                
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="u-button  text-uppercase">Send Message</button>
+                </div>
+            </form>
+        </div>
+        </div>
+        <div class="col col-lg-5 col-xl-4">
+          <div class="Address-page">
+           
+              <h5>Name</h5>
+              <p> Fashionfest Pvt. Ltd.</p>
+              <h5>Address</h5>
+              <p>Panikoili, Jajpur, 755043
+                Orissa <br>
+                Telephone:
+                +91-6372100300
+              </p>
+              <h5>E-mail:</h5>
+              <p> 
+                contactus@treeranga.com</p>
+              <h5>Follow us</h5>
+              <p class="social-icons">
+                <a href="https://www.facebook.com/profile.php?id=61562153391273&mibextid=LQQJ4d" target="_blank">
+                  <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#">
+                  <i class="fab fa-twitter"></i>
+              </a>
+              <a href="https://www.instagram.com/treeranga_?igsh=MTd5YzN5MWplNGtoYg%3D%3D&utm_source=qr " target="_blank">
+                  <i class="fab fa-instagram"></i>
+              </a>
+              <a href="http://www.youtube.com/@Treeranga" target="_blank">
+                  <i class="fab fa-youtube"></i>
+              </a>
+              </p>
+        </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

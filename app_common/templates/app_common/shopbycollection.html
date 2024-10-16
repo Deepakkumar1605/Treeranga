@@ -1,0 +1,114 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    .slider-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 0 20px; 
+}
+
+.slider::-webkit-scrollbar {
+  display: none;
+}
+
+.col {
+  flex: 0 0 22%; 
+  margin: 0 4px;
+}
+
+.prev-btn, .next-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #00836bef;
+  border: none;
+  padding: 7px 14px ;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+}
+
+.prev-btn {
+  left: 0;
+}
+
+.next-btn {
+  right: 0;
+}
+/* for smaller screens, show fewer products */
+@media (max-width: 768px) {
+  .col {
+    flex: 0 0 30%; /* show 3 products on smaller screens */
+  }
+}
+
+/* for even smaller screens, show even fewer products */
+@media (max-width: 480px) {
+  .col {
+    flex: 0 0 50%; /* show 2 products on very small screens */
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider">
+          {% for category in categories %}
+          <div class="col mb-2">
+            <div class="product-card">
+              <div class="product-images p-1">
+                <a href="{% url 'product:products_of_category' category.title %}">
+                  <img src="{{ category.image.url }}" class="rounded-1" alt="{{ category.title }}">
+                </a>
+              </div>
+              <div class="product-details my-3">
+                <h5>{{ category.title }}</h5>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button class="prev-btn">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="next-btn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+      </div>
+
+<script>
+const sliderContainer = document.querySelector('.slider-container');
+const slider = document.querySelector('.slider');
+const prevBtn = document.querySelector('.prev-btn');
+const nextBtn = document.querySelector('.next-btn');
+
+let sliderWidth = slider.offsetWidth;
+let cardWidth = slider.children[0].offsetWidth;
+let visibleCards = Math.floor(sliderWidth / cardWidth);
+let scrollPosition = 0;
+
+prevBtn.addEventListener('click', () => {
+  scrollPosition -= cardWidth * visibleCards;
+  slider.scrollLeft = scrollPosition;
+});
+
+nextBtn.addEventListener('click', () => {
+  scrollPosition += cardWidth * visibleCards;
+  slider.scrollLeft = scrollPosition;
+});
+</script>
+</body>
+</html>

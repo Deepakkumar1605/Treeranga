@@ -1,0 +1,71 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="py-lg-2">
+  <div class="conatiner row d-flex justify-content-center">
+      <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">User Details</h4>
+      <div class="product-form-container col-lg-7">
+          <div class="card-header text-center">
+            <h5>User Deatils</h5>
+            <hr>
+          </div>
+          <div class="card-body m-lg-4">
+            <div class="row">
+              <div class=" col col-4 lh-lg">
+                <div class="fw-medium "> Full Name :</div>
+                <div class="fw-medium"> E-Mail :</div>
+                <div class="fw-medium"> Contact :</div>
+              </div>
+              <div class=" col col-8 lh-lg ">
+                <div class="">{{ user_obj.full_name }}</div>
+                <div>{{ user_obj.email }}</div>
+                <div>{{ user_obj.contact }}</div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Order History Card -->
+    <div class="container w-75">
+      <div class="card tablecard">
+        <div class="card-header text-center">
+          <h5>Order History</h5>
+        </div>
+        <div class="card-body m-lg-4">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total Value</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <td>{{ order.uid }}</td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.order_status }}</td>
+                <td>{{ order.order_value }}</td>
+                <td><a href="{% url 'orders:admin_order_details' order.uid %}" class="btn btn-primary btn-sm">View Details</a></td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center">No orders found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+{% endblock content %}

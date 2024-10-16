@@ -1,0 +1,47 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+    Rozer Pay
+{% endblock title %}
+
+{% block content %}
+    <button id="rzp-button1">Pay with Razorpay</button>
+{% endblock content %}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{api_key}}", // Enter the Key ID generated from the Dashboard
+        "amount": "{{amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Niwa Agro",
+        "description": "Payment Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{rz_order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "callback_url": "{% url 'payment:paymentsuccess' %}",
+        "prefill": {
+            "contact": "{{request.user.contact}}"
+        },
+        "notes": {
+            "address": "Demo Address"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+ 
+<script>
+    window.onload = function() {
+        // Get the button element
+        var button = document.getElementById('rzp-button1');
+        
+        // Simulate a click on the button when the page loads
+        button.click();
+    };
+</script>

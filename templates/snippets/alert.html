@@ -1,0 +1,50 @@
+<style>
+    .alert-success {
+        background: none;
+        border: none;
+        color: rgb(77, 224, 77);
+    }
+    .alert-info {
+        background: none;
+        border: none;
+        color: rgb(255, 0, 0);
+    }
+    .alert-danger {
+        background: none;
+        border: none;
+        color: rgb(255, 0, 0);
+    }
+    .fade-out {
+        opacity: 1;
+        transition: opacity 1s ease-out;
+    }
+    .fade-out.disappear {
+        opacity: 0;
+    }
+</style>
+
+{% if messages %}
+    <div id="message-container">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} fade-out m-0 p-0 text-capitalize" role="alert">
+                <p class="p-0 m-0 snippets_alert">{{ message }}.</p>
+            </div>
+        {% endfor %}    
+    </div>
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all message alerts
+        const alerts = document.querySelectorAll('#message-container .alert');
+        
+        alerts.forEach(alert => {
+            // Set a timeout to add the 'disappear' class after 3 seconds
+            setTimeout(() => {
+                alert.classList.add('disappear');
+                // Optionally, remove the alert from the DOM after the fade-out transition
+                setTimeout(() => alert.remove(), 1000); // Match the duration of the CSS transition
+            }, 5000);
+        });
+    });
+</script>

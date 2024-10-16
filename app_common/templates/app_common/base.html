@@ -1,0 +1,535 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %}</title>
+
+  <!-- ---------CSS FILES--------- -->
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/User_Side_All.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/user_Responsive.css' %}">
+
+  <!------------ ICONS FILE------ -->
+  <link rel="icon" href="{% static 'app_common/images/logo5.jpeg' %}">
+  <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+
+
+  <!------------ BOOTSTRAP FILE------ -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+
+   
+    
+  <!------------ ADDITIONAL FILES------ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-oS4TFIAtFt5S6Gx2coZRwyOomJ5z1iX6Cn5u9z9Bks4b7mHr3y7QqD1gBsxs9f2e" crossorigin="anonymous" />
+ 
+
+  <script src="
+  https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+     <!-- ---=========--======-----===========Authenticated========== --========----------->
+  {% if user.is_authenticated %}
+
+  <header class="p-xxl-4 p-xl-4 py-lg-2 px-lg-4 p-md-3 p-sm-2 p-2">
+    <div class="container">
+      <div class="row align-items-center" id="header_rows">
+        <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6" id="menu-bar">
+          <!-- logo -->
+          <button class="btn" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button"><i
+              class="fa-solid fa-bars"></i>
+          </button>
+
+          <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
+            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="list-unstyled">
+                <li><a class="nav-link" href="{% url 'app_common:home' %}"><i class="fa-solid fa-house me-4"></i>Home</a></li>
+                <li><a class="nav-link" href="{% url 'app_common:about_us' %}"><i class="fa-solid fa-user me-3"></i>About us</a></li>
+                <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}"><i class="fa-solid fa-blog me-5"></i>Blogs</a></li>
+                <li><a class="nav-link" href="{% url 'orders:orders' %}"> <i class="fa-solid fa-box me-3"></i>My Orders</a></li>
+                <li><a class="nav-link" href="{% url 'users:profile_addaddress' %}"> <i class="fa-solid fa-address-book me-2"></i>Add Address</a></li>
+                <li><a class="nav-link" href="{% url 'users:alladdress' %}"> <i class="fa-solid fa-id-card me-2"></i>My Address</a></li>
+              </ul>
+            </div>
+          </div>
+          <a class="navbar-brand" href="{% url 'app_common:home' %}">
+            <img src="{% static 'app_common/images/logo5.jpeg' %}" alt="Logo" >
+          </a>
+        </div>
+
+        <!-- ==================Auth full screen header================== -->
+
+         <div class="col-lg-6 d-none mt-lg-1 d-lg-block" id="nav_buttons">
+          <!-- <ul class="d-flex justify-content-around align-items-center list-unstyled text-uppercase HeaderButton">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'app_common:about_us' %}">About</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a>
+            </li>
+              
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'app_common:our_services' %}">Services</a>
+            </li>
+              
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a>
+            </li>
+            
+          </ul> -->
+          <div class="SEARCH-CONTAINER">
+            <i class="fa fa-search SEARCH-ICON"></i>
+            <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
+            <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
+          </div>
+          
+          
+        </div>
+
+     
+
+        <!-- ----------===========Auth Nav buttons========== ------------->
+
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
+          <button type="button" class="btn " id="search-icon">
+            <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
+          </button> 
+          <a href="{% url 'users:account_details' %}" class="text-decoration-none btn">
+            <i class="fa-regular fa-user HeaderIcons text-success"></i> 
+          </a>
+          <a href="{% url 'wishlist:wishlist_items' %}" class="btn">
+            <i class="fa-regular fa-heart HeaderIcons text-success"></i>
+          </a>
+          <a href="{% url 'cart:showcart' %}" class="btn">
+            <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cart_count }}
+            </span>
+          </i>
+          </a>
+        </div>
+          
+         
+        
+        <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
+          {% csrf_token %}
+          <div class="input-group">
+            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+          </div>
+          <div id="search-suggestions"></div>
+        </form>
+      <!-- ---=========--======-----===========end Auth Nav buttons========== --========----------->
+      </div>
+    </div>
+  </header>
+
+   <!-- ---=========--======-----===========UnAuthenticated========== --========----------->
+  {% elif not user.is_authenticated %}
+
+  <header class="px-lg-3 py-lg-2">
+    <div class="container">
+      <div class="row align-items-center" id="header_rows">
+        <div class="col-lg-1 col-6" id="menu-bar">
+          <button class="btn" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
+          id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+          <div class="offcanvas-header">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="list-unstyled">
+              <li><a class="nav-link" href="{% url 'app_common:home' %}">Home</a></li>
+              <li><a class="nav-link" href="{% url 'app_common:about_us' %}">About</a></li>
+              <li><a class="nav-link" href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
+              <li><a class="nav-link" href="{% url 'app_common:our_services' %}">Services</a></li>
+              <li><a class="nav-link" href="{% url 'app_common:contact_support' %}">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+    
+          <a class="navbar-brand" href="{% url 'app_common:home' %}">
+            <img src="{% static 'app_common/images/logo5.jpeg' %}" alt="Logo" >
+          </a>
+        </div>
+
+
+     <!-- ==================Unauth full screen header================== -->
+
+     <div class="col-lg-7 col-xl-6 d-none mt-lg-1 d-lg-block d-flex justify-content-center align-items-center" id="NAV_BUTTONS">
+      <div class="SEARCH-CONTAINER">
+        <i class="fa fa-search SEARCH-ICON"></i>
+        <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
+        <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
+      </div>
+    </div>
+    
+
+              <!-- ==============Unauth Nav buttons============== -->
+
+     
+        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
+          <!-- <button type="button" class="btn" id="search-icon">
+            <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
+          </button> -->
+          <a href="{% url 'users:login' %}" class="text-decoration-none btn  ">
+            <i class="fa-regular fa-user HeaderIcons text-success"></i> 
+          </a>
+          <a href="{% url 'users:login' %}" class="text-decoration-none btn  ">
+            <i class="fa-regular fa-heart HeaderIcons text-success"></i> 
+          </a>
+          <a href="{% url 'cart:showcart' %}" class="">
+            <i class="fa-solid fa-cart-shopping HeaderIcons text-success position-relative">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ cart_count }}
+              </span>
+            </i>
+        </a>
+        </div>
+
+        <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
+          {% csrf_token %}
+          <div class="input-group">
+            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+          </div>
+          <div id="search-suggestions"></div>
+        </form>
+        
+          <!-- ---=========--======-----===========end Unauth Nav buttons========== --========----------->
+      </div>
+    </div>
+  </header>
+  {% endif %}
+ 
+
+  <div>
+    {% block content %}
+    
+    {% endblock content %}
+  </div>
+ 
+  
+  <!-- --------- 
+
+  <div>
+    <form action="" method="post" class="d-flex" role="search"
+      style="padding-right: 80px; width: 550px;">
+      {% csrf_token %}
+      <div class="input-group input-group-lg">
+        <input name="search-box" type="search" class="form-control me-4" id="search" placeholder="Search Books"
+          aria-label="Search">
+
+        <button type="submit" class="btn btn-outline-success" id="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <div id="search-suggestions" class="position-absolute border mx-auto" style="display: none;"></div>
+  </div>
+  </div>
+  </div>
+  </nav> -->
+  <!-- end header -->
+  
+  <!-- end page 4 -->
+
+
+  <a href="https://api.whatsapp.com/send/?phone=916372100300" class="whatsapp-button" target="_blank">
+    <i class="fab fa-whatsapp fa-2x"></i>
+</a>
+
+  <!-- -------------------------Footer------------------------- -->
+
+  <footer class=" ">
+    <div class="container  border-bottom border-secondary ">
+      <div class="row mb-lg-4 ">
+  
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+          <div class="row row-cols-2 row-cols-sm-2 footer_div_ul ">
+            <div class="m-auto">
+              <ul class="p-0">
+                <h6>About Us</h6>
+                <li><a href="{% url 'app_common:our_services' %}">Our Services</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'app_common:contact_support' %}">Support</a></li>
+                {% elif not user.is_authenticated %}
+                <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
+                {% endif %}
+                <li><a href="{% url 'app_common:locate_us' %}">Locate Us</a></li>
+                <li class="text-dark">.</li>
+              </ul>
+            </div>
+            <div class="">
+              <ul class="p-0">
+                <h6>Navigation</h6>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="">All Products</a></li>
+                  <li><a href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
+                </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+          <div class="row row-cols-2 row-cols-sm-2 footer_div_ul">
+            <div class="d-none d-md-block d-lg-block">
+            
+              <ul class="ps-0">
+                <h6>Our Policy</h6>
+                  <li><a href="">Security</a></li>
+                  <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
+                  <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
+                  <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="text-start d-none d-md-block d-lg-block ">
+              <ul class="p-0">
+                <h6>Customer Care</h6>
+                <li><a href="">Track Order</a></li>
+                <li><a href="">Shipping Policy</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 px-0 col-xxl-4">
+          <div class="row row-cols-2 row-cols-sm-2 px-0  ms-lg-2  footer_div_ul mb-2">
+            <div class="  border-white ">
+              <h6>Get in Touch</h6>
+              <p><i class="fa-solid fa-phone"></i>+91-6372100300</p>
+              <p><i class="fa-solid fa-envelope"></i>contactus@treeranga.com</p>
+              
+              <h6>Socials:</h6>
+              <p class="fs-5 mt-3">
+                <a href="https://www.facebook.com/profile.php?id=61562153391273&mibextid=LQQJ4d" class="text-decoration-none " target="_blank"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#" class="text-decoration-none "><i class="fab fa-twitter fa-lg" target="_blank"></i> </a>
+                <a href="https://www.instagram.com/treeranga_?igsh=MTd5YzN5MWplNGtoYg%3D%3D&utm_source=qr " class="text-decoration-none " target="_blank"><i class="fab fa-instagram fa-lg" ></i> </a>
+                <a href="http://www.youtube.com/@Treeranga" class="text-decoration-none " target="_blank"><i class="fab fa-youtube fa-lg"></i> </a>
+               
+              </p>
+            </div>
+            <div class=" foot_last_div">
+              <h6>Registered Office Address</h6>
+              <p>
+                
+                PaniKoili,<br> Jajpur <br> 755043,<br>
+                Odisha</p>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+    <div class="text-center mt-4 ps-3 pe-3 mt-lg-3 footer_subhead">
+      <p class="">This Website is Designed and Developed by ❤ Techavia IT Solutions.  @Copyright 2024 Fashionfest Pvt. Ltd.</p>
+    </div>
+  </footer>
+  
+       
+  {% block js %}
+
+  {% endblock js %}
+  
+  <script> 
+    
+    document.addEventListener("DOMContentLoaded", function() {
+    const formOpenBtn = document.querySelector("#form_open"),
+          home = document.querySelector(".home"),
+          formContainer = document.querySelector(".form_container"),
+          formCloseBtn = document.querySelector(".form_close"),
+          signupBtn = document.querySelector("#SignUp"),
+          loginBtn = document.querySelector("#SignIn");
+
+    formOpenBtn.addEventListener("click", () => {
+        home.classList.add("show");
+    });
+
+    formCloseBtn.addEventListener("click", () => {
+        home.classList.remove("show");
+        formContainer.classList.remove("active");
+    });
+
+    signupBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        formContainer.classList.add("active");
+    });
+
+    loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        formContainer.classList.remove("active");
+    });
+});
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+      // AJAX live search for suggestions
+      $('#search').keyup(function () {
+          var search_term = $(this).val();
+          if (search_term.length >= 1) {
+              $.ajax({
+                  type: 'POST',
+                  url: '{% url "product:search_product_names" %}',  // Use the correct URL for search suggestions
+                  data: {
+                      'search_term': search_term,
+                      csrfmiddlewaretoken: '{{ csrf_token }}'  // Include CSRF token
+                  },
+                  beforeSend: function() {
+                      // Optionally show a loading spinner or feedback
+                      $('#search-suggestions').html('<div>Loading...</div>').show();
+                  },
+                  success: function (response) {
+                      var suggestionsHtml = '';
+                      response.forEach(function (product) {
+                          suggestionsHtml += '<div class="suggestion border-bottom border-1 cursor-pointer suggestion-hover" data-id="' + product.id + '">' + product.title + '</div>';
+                      });
+                      $('#search-suggestions').html(suggestionsHtml).show();
+                  }
+              });
+          } else {
+              $('#search-suggestions').hide();
+          }
+      });
+  
+      // Navigate to search results page when a suggestion is clicked
+      $(document).on('click', '.suggestion', function () {
+          var searchTerm = $('#search').val();  // Get the search term from the input field
+          var searchUrl = '{% url "product:search_items" %}?search_title=' + encodeURIComponent(searchTerm);  // Redirect to search results page
+          window.location.href = searchUrl;
+      });
+  
+      // Hide suggestions when clicking outside
+      $(document).click(function (event) {
+          if (!$(event.target).closest('#search-suggestions').length && !$(event.target).is('#search')) {
+              $('#search-suggestions').hide();
+          }
+      });
+  });
+
+
+
+  const SEARCH_INPUT = document.getElementById('SEARCH-INPUT');
+const CLEAR_ICON = document.getElementById('CLEAR-SEARCH');
+
+// Show the clear icon only when there is text in the input
+SEARCH_INPUT.addEventListener('input', () => {
+  if (SEARCH_INPUT.value.length > 0) {
+    CLEAR_ICON.style.display = 'block';
+  } else {
+    CLEAR_ICON.style.display = 'none'; 
+  }
+});
+
+// Function to clear the search input when the "X" is clicked
+function clearSearch() {
+  SEARCH_INPUT.value = '';
+  CLEAR_ICON.style.display = 'none';
+  SEARCH_INPUT.focus(); 
+}
+
+</script>
+
+<!-- Script for submitting full search query -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const searchIcon = document.getElementById('search-icon');
+      const searchForm = document.getElementById('search-form');
+      
+      searchIcon.addEventListener('click', function () {
+          if (searchForm.style.display === 'block') {
+              searchForm.style.display = 'none';
+          } else {
+              searchForm.style.display = 'block';
+          }
+      });
+
+      searchForm.addEventListener('submit', function (event) {
+          event.preventDefault();  // Prevent default form submission
+          var searchTerm = document.getElementById('search').value;
+          if (searchTerm.length >= 1) {
+              window.location.href = '{% url "product:search_items" %}?search_title=' + encodeURIComponent(searchTerm);
+          }
+      });
+  });
+</script>
+
+  
+  
+    
+  <script>   
+   $(document).ready(function() {
+    $('.testimonial-slider').slick({
+        autoplay: true,
+        autoplaySpeed: 0,  // Set to 0 for continuous autoplay
+        speed: 8000,  // Adjust speed to control how fast the slide scrolls
+        cssEase: 'linear',  // Use linear easing for a uniform scrolling speed
+        draggable: false,  // Disable dragging for a smoother experience
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: false,
+        dots: false,
+        pauseOnHover: false,  // Prevents pause on hover
+        responsive: [
+            {
+                breakpoint: 991,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 575,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            }
+        ]
+    });
+});
+
+</script>
+ 
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

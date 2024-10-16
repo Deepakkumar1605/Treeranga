@@ -1,0 +1,60 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}My Profile | NiwaAgro.com{% endblock title %}
+{% block content %}
+
+<section>
+  <div class="row p-1">
+      {% include 'users/user/index.html' %}
+      <div class="col col-12 col-lg-8 d-flex justify-content-center my-lg-5 my-md-4 my-3">
+          <div class="update-form">
+            <div class="d-lg-flex form_body ">
+              <div class="col-lg-6 prof-clm  d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center">
+                  <div>
+                    {% if userobj.profile_pic %}
+                    <img src="{{ userobj.profile_pic.url }}"alt="Generic placeholder image"class="img-fluid profile-img img-thumbnail" />
+                    {% else %}
+                    <img src="{% static 'users/images/user!.webp' %}"alt="Generic placeholder image"class="img-fluid profile-img img-thumbnail" />
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 right-content mb-lg-4">
+                <div class="details mb-3">
+                  <h4 class="my-lg-2 text-center">My Profile</h4>
+                  <p class="text-muted m-0 profile-detailspara">Name</p>
+                  <p class="profile-detailsPara mt-1 mb-4 p-1 px-2">
+                    {{ userobj.full_name }}
+                  </p>
+                  
+                  <p class="text-muted m-0 profile-detailspara">E-mail</p>
+                  <p class="profile-detailsPara mt-1 mb-4 p-1 px-2">
+                    {{ userobj.email }}
+                  </p>
+                  
+                  <p class="text-muted m-0 profile-detailspara">Contact</p>
+                  <p class="profile-detailsPara mt-1 p-1 px-2">
+                    {{ userobj.contact }}
+                  </p>
+                </div>
+                <div class="w-100">
+                  <a href="{% url 'users:updateprofile' %}"class="moreBtn2 w-100 mt-lg-4" data-mdb-ripple-color="dark"> Update Profile</a>
+                </div>
+                
+              </div>
+            </div>
+            <div class="d-flex justify-content-evenly d-lg-none d-md-none d-block my-4 ">
+              <a href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-right-from-bracket me-lg-2"></i> Logout
+            </a>
+              <a href="{% url 'users:account_deletion' %}" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash-can"></i> Delete Account
+            </a>
+            </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+{% endblock content %}

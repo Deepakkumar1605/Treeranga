@@ -1,0 +1,32 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} Order Details {% endblock title %}
+{% block content %}
+<section class="py-lg-2">
+  <div class="conatiner">
+      <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Message Details</h4>
+      <div class="product-form-container">
+        <div class="">
+          <p ><strong>Name:</strong> {{ message.name }}</p>
+          <p><strong>Email:</strong> {{ message.email }}</p>
+          <p><strong>Contact:</strong> {{ message.contact }}</p>
+          <p><strong>Message:</strong> {{ message.message }}</p>
+          <p><strong>Date & Time:</strong> {{ message.created_at }}</p>
+    
+          <form method="post" class="lh-lg">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn  w-100 my-3" id="save-btn">Send Reply</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</section>
+
+
+
+
+
+{% endblock content %}

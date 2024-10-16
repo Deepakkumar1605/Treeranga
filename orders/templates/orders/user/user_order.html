@@ -1,0 +1,54 @@
+{% extends 'app_common/base.html' %} 
+{% load static %} 
+{% block title %}Order History| NiwaAgro.com {% endblock title %} 
+{% block content %}
+
+<section class="">
+  <div class="row p-1">
+    {% include 'users/user/index.html' %}
+    <div class="col-sm-12 col-12 col-lg-9 col-md-9  my-lg-5 my-md-4 my-3">
+      <div class="card table-responsive">
+        <div class="">
+          <table class="table table-hover table-nowrap">
+            <thead class="table-light">
+              <tr>
+                <th id="tb-head" scope="col">Order ID</th>
+                <th id="tb-head" scope="col">Amount</th>
+                <th id="tb-head" scope="col">Status</th>
+                <th id="tb-head" scope="col">Invoice</th>
+              </tr>
+            </thead>
+            <tbody >
+              {% for order in orders %} 
+              <tr>
+                <td class="tb-body fw-bold">
+                  <a href="{% url 'orders:order_detail' order.uid %}">{{order.uid}}</a>
+                </td>
+                <td class="tb-body">
+                  {{order.order_value}}
+                </td>
+<!-- 
+                {% comment %} 
+                <td>
+                  {{order.razorpay_payment_id}}
+                </td> 
+                {% endcomment %} -->
+
+
+                <td class="tb-body">
+                  {{order.order_status}}
+                </td>
+                <td class="tb-body">
+                  <a href="{% url 'orders:user_download_invoice' order.uid %}">Invoice</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

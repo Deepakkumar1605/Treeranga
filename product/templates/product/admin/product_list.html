@@ -1,0 +1,118 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block title %} All Products {% endblock title %}
+{% block content %}
+
+<section class="py-2">
+    <div class="container">
+        <h4 class="headings_h4 text-center my-lg-4 p-lg-3">All Products</h4>
+        <div class="vstack">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <form class="my-3 mx-2" action="{% url 'product:product_search' %}" method="post">
+                    {% csrf_token %}
+                    <div class="hstack gap-2">
+                        <select style="width: 6rem;" name="filter_by" class="form-select form-select1"
+                            aria-label="Default select example">
+                            <option selected value="pk">All</option>
+                            <option value="id">ID</option>
+                            <option value="name">Name</option>
+                        </select>
+                        <span class="input-group ">
+                            <input type="text" name="query" placeholder="Search Here" class="form-control form-select1"
+                                required />
+                            <button type="submit" class="input-group-text form-select1"><i
+                                    class='bx bx-search-alt-2'></i></button>
+                        </span>
+                    </div>
+                </form>
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
+                <div class="btn-group catagory-btn">
+                    <a href="{% url 'product:product_add' %}">
+                        <i class='bx bxs-plus-square'></i> Create New Product
+                    </a>
+                </div>
+            </div>
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="" id="tb-head" scope="col">Product ID</th>
+                                <th class="" id="tb-head" scope="col">Product Name</th>
+                                <th class="" id="tb-head" scope="col">Product Image</th>
+                                <th class="" id="tb-head" scope="col">Product Brand</th>
+                                <th class="" id="tb-head" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test_table_tbody">
+                            {% for product in products %}
+                            <tr>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">
+                                        {{ product.pk }}
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">
+                                        {{ product.name|truncatewords:5 }}
+                                    </div>
+                                </td>
+
+                                <td class=" tb-body p-1">
+                                    {% if product.image %}
+                                    <img class="cat-img2" src="{{ product.image.url }}" alt="Image">
+                                    {% endif %}
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">
+                                        {{ product.brand }}
+                                    </div>
+                                </td>
+                                <td class="d-flex justify-content-around delete_edit_button">
+                                    <div class="">
+                                        <a href="{% url 'product:product_edit' product.pk %}">
+                                            <i class='bx bx-edit text-primary'></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="py-lg-2">
+            <div class="pagination">
+                {% if products.has_previous %}
+                <a href="?page=1">&laquo;&laquo;</a>
+                <a href="?page={{ products.previous_page_number }}">&laquo;</a>
+                {% else %}
+                <span class="disabled">&laquo;&laquo;</span>
+                <span class="disabled">&laquo;</span>
+                {% endif %}
+
+                {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                <span class="active">{{ num }}</span>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">&raquo;</a>
+                <a href="?page={{ products.paginator.num_pages }}">&raquo;&raquo;</a>
+                {% else %}
+                <span class="disabled">&raquo;</span>
+                <span class="disabled">&raquo;&raquo;</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

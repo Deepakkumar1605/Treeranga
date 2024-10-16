@@ -1,0 +1,484 @@
+{% comment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .invoice_page{
+            width: 55%;
+            margin: 10px auto;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <main class="invoice_page py-3">
+        <section class="container ps-2 pe-4">
+            <h5 class="text-center text-dark fw-bold p-2" >Tax Invoice</h5>
+            <h6>Sold By:XYZ</h6>
+            <p><i>Ship-from Address :</i> vbuygiuguioghuio</p>
+            <p>OR ,</p>
+            <p>GSTIN - <span class="text-uppercase">5286665d68s56</span></p>
+            <div class="d-flex justify-content-end ">
+                <p class="text-uppercase border p-2"><b>Invoice Number</b>#hgugu6579858586598</p>
+            </div>
+            <div class="border border-dark"></div>
+            <div class="row">
+                <div class="col col-3">
+                   <div>
+                  <b>  Order ID :</b><br>
+                    5865879868968
+                   </div>
+                   <div>
+                   <b> Order Date :</b>
+                    30-04-24
+                   </div>
+                   <div>
+                    <b>Invoice Date :</b> 
+                    30-04-24
+                   </div>
+                   <div class="text-uppercase">
+                   <b> PAN :</b>
+                        jhoihiu56546j
+                   </div>
+                   <div class="text-uppercase">
+                    <b> CIN :</b>
+                         jhoihiu56546j
+                    </div>
+                </div>
+                <div class="col col-3"></div>
+                <div class="col col-3"></div>
+                <div class="col col-3"></div>
+            </div>
+            <p class="m-0">Total items : 5</p>
+            <div class="border border-dark"></div>
+            <div class="row">
+                <div class="col col-2"><b>Product</b></div>
+                <div class="col col-2"><b>Title</b></div>
+                <div class="col col-1"><b>QTY</b></div>
+                <div class="col col-1"><b>Gross Amount ₹</b></div>
+                <div class="col col-1"><b>Discounts / Coupons ₹</b></div>
+                <div class="col col-1"><b>Taxable Value₹</b></div>
+                <div class="col col-1"><b>CGST ₹</b></div>
+                <div class="col col-1"><b>SGST / UTGST ₹</b></div>
+                <div class="col col-2"><b>Total ₹</b></div>
+            </div>
+            <div class="border border-dark"></div>
+            <div class="row">
+                <div class="col col-2 ">jiuiu0ef0wer0weiweo9wio</div>
+                <div class="col col-2">jdoijfujfpdfop</div>
+                <div class="col col-1">2</div>
+                <div class="col col-1">465496</div>
+                <div class="col col-1">47465</div>
+                <div class="col col-1">56565</div>
+                <div class="col col-1">44654654</div>
+                <div class="col col-1">54656</div>
+                <div class="col col-2">566565</div>
+            </div>
+            <div class="row">
+                <div class="col col-2 "></div>
+                <div class="col col-2">CGST: <br>
+                    SGST/UTGST:
+                </div>
+                <div class="col col-1"></div>
+                <div class="col col-1"></div>
+                <div class="col col-1"></div>
+                <div class="col col-1"></div>
+                <div class="col col-1"></div>
+                <div class="col col-1"></div>
+                <div class="col col-2"></div>
+            </div>
+            <div class="row">
+                <div class="col col-2"></div>
+                <div class="col col-2 border-bottom border-dark border-2">Shipping And Handling Charges 
+                </div>
+                <div class="col col-1 border-bottom border-dark border-2">1</div>
+                <div class="col col-1 border-bottom border-dark border-2">40.00</div>
+                <div class="col col-1 border-bottom border-dark border-2">-40.00</div>
+                <div class="col col-1 border-bottom border-dark border-2">0.00</div>
+                <div class="col col-1 border-bottom border-dark border-2">0.00</div>
+                <div class="col col-1 border-bottom border-dark border-2">0.00</div>
+                <div class="col col-2 border-bottom border-dark border-2">0.00</div>
+            </div>
+            <div class="row">
+                <div class="col col-2"></div>
+                <div class="col col-2"><b>Total</b></div>
+                <div class="col col-1 "><b>1</b></div>
+                <div class="col col-1 "><b>656</b></div>
+                <div class="col col-1 ">-40.00</div>
+                <div class="col col-1 ">0.00</div>
+                <div class="col col-1 ">0.00</div>
+                <div class="col col-1 ">0.00</div>
+                <div class="col col-2 ">0.00</div>
+            </div>
+            <div class="border border-dark"></div>
+            <div class="d-flex justify-content-end">
+               <div class="d-flex gap-5">
+                <h6>Grand Total</h6>
+                <p><b>₹ 1385414.00</b></p>
+               </div>
+               
+            </div>
+           <div class="d-flex justify-content-end">
+            <span>Health & Happiness Private Limited</span>
+           </div>
+            <div class="d-flex justify-content-end mt-5">
+                <p class="m-0">Authorized Signatory</p>
+            </div>
+            <div class="border border-dark"></div>
+            <div class="d-flex justify-content-end mt-5">
+                <div>
+                    <span>
+                        NiwaAgro <img src="../../../../app_common/static/app_common/images/logo1.png" alt="logo">
+                    </span>
+                   
+                <p class="m-0">Thank You!</p>
+                </div>
+            </div>
+        </section>
+      
+    </main>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+{% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Invoice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body style="background: #e7e9ed;color: #535b61;font-family:'Poppins', sans-serif;font-size: 14px;line-height: 22px;">
+    <table class="body-wrap" style=" box-sizing: border-box; font-size: 14px; width: 100%; height:100vh; margin: 0;">
+        <tbody>
+            <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                <td style=" box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+                <td class="container" width="850"
+                    style=" box-sizing: border-box; font-size: 14px; display: block !important; max-width: 850px !important; clear: both !important; margin: 0 auto;"
+                    valign="top">
+                    <div class="content"
+                        style=" box-sizing: border-box; font-size: 14px; max-width: 850px; display: block; margin: 0 auto; padding: 20px;">
+                        <table class="main" width="100%" cellpadding="0" cellspacing="0" itemprop="action" itemscope=""
+                            itemtype="http://schema.org/ConfirmAction"
+                            style=" box-sizing: border-box; font-size: 14px; border-radius: 3px; margin: 0; border: none;">
+                            <tbody>
+                                <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                    <td class="content-wrap"
+                                        style=" box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;padding: 36px 50px;border: 2px solid #e9e8e8;border-radius: 7px; background-color: #fff;"
+                                        valign="top">
+                                        <meta itemprop="name" content="Confirm Email"
+                                            style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                        <table width="100%" cellpadding="0" cellspacing="0"
+                                            style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <tbody>
+                                                <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-block"
+                                                        style="display: flex;box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;border-bottom: 1px solid #dedede;justify-content: space-between;"
+                                                        valign="top">
+                                                        <p style="font-size: 2rem;">Niwa Agro</p>
+                                                        <div style="margin-left: auto;">
+                                                            <h3
+                                                                style="color: #0c2f54;font-size: 1.5rem;font-weight: 600;text-align: end;">
+                                                                Invoice</h3>
+                                                            <p
+                                                                style="margin-bottom:0px; margin-top:-11px;font-size:1.1em;">
+                                                                Order No - {{order.uid}}</p>
+
+                                                            <p
+                                                                style="margin-bottom:0px; margin-top:4px;font-size:1.1em;">
+                                                                {{order.date}}</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-block"
+                                                        style="display: flex;box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;padding-top: 1rem;justify-content: space-between;"
+                                                        valign="top">
+                                                        <div>
+                                                            <h4 style="margin-bottom: -9px;">Invoiced To:</h4>
+                                                            <p style="margin-bottom: -9px;">{{order.user.full_name}}</p>
+                                                            <p style="margin-bottom: -9px;">{{address.landmark1}},{{address.city}},{{address.zipcode}}
+                                                            </p>
+                                                            <p style="margin-bottom: -9px;">{{order.user.email}}</p>
+                                                            <p style="margin-bottom: -9px;">{{order.user.contact}}</p>
+                                                        </div>
+                                                        <div style="margin-left: auto;">
+                                                            <h4 style="margin-bottom: -9px;">Pay To:</h4>
+                                                            <p style="margin-bottom: -9px;">niwa Agro</p>
+                                                            <p style="margin-bottom: -9px;">address</p>
+                                                            <p style="margin-bottom: -9px;">niwacare@outlook.com</p>
+                                                            <p style="margin-bottom: -9px;">+91 77359-55569</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-block"
+                                                        style="display: flex;justify-content: space-between; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 29px;padding-top: 0rem;"
+                                                        valign="top">
+                                                        <div>
+                                                            <h4 style="margin-bottom: -9px;">Payment Status</h4>
+                                                            <p style="margin-bottom: -9px;">{{order.payment_status}}</p>
+                                                        </div>
+                                                        <div style="margin-left: auto;">
+                                                            <h4 style="margin-bottom: -9px;">Order Status</h4>
+                                                            <p style="margin-bottom: -9px;">{{order.order_status}}</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-block"
+                                                        style="display: flex;justify-content: space-between; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
+                                                        valign="top">
+
+                                                        <table
+                                                            style="width:100%; border:1px solid lightgray;border-radius:4px; border-collapse: collapse;">
+                                                            <tr>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd; background-color: #0000000f;text-align: left; padding:11px">
+                                                                    Summary</th>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd; background-color: #0000000f;">
+                                                                </th>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd; background-color: #0000000f;">
+                                                                </th>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd; background-color: #0000000f;">
+                                                                </th>
+                                                            </tr>
+ 
+                                                            <tr>
+                                                                <th
+                                                                    style=" border-bottom: 1px solid #dddddd;text-align: left; padding:11px">
+                                                                    Item-Name
+                                                                </th>
+                                                                <th
+                                                                    style=" border-bottom: 1px solid #dddddd;text-align: left;padding:11px">
+                                                                    Quantity
+                                                                </th>
+                                                                <th
+                                                                    style=" border-bottom: 1px solid #dddddd;text-align: left;padding:11px">
+                                                                    price/unit
+                                                                </th>
+                                                                <th
+                                                                    style=" border-bottom: 1px solid #dddddd;text-align: end; padding:11px">
+                                                                    Amount
+                                                                </th>
+                                                            </tr>
+ 
+                                                            {% for product,quantity,price_per_unit,total_price in productandquantity %}
+                                                                <tr>
+                                                                    <td
+                                                                        style="border-bottom: 1px solid #dddddd;padding:11px">
+                                                                        {{product}}
+                                                                    </td>
+                                                                    <td
+                                                                        style="border-bottom: 1px solid #dddddd;padding:11px">
+                                                                        {{quantity}}
+                                                                    </td>
+                                                                    <td
+                                                                        style="border-bottom: 1px solid #dddddd; padding:11px">
+                                                                        {{price_per_unit}}
+                                                                    </td>
+                                                                    <td
+                                                                        style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px">
+                                                                        {{total_price}}
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+ 
+                                                            {% for tax in invoice.tax.tax_list %}
+                                                                <tr>
+                                                                    <td
+                                                                        style="border-bottom: 1px solid #dddddd;">
+                                                                    </td>
+                                                                    <td style="border-bottom: 1px solid #dddddd;">
+                                                                    </td>
+                                                                    <th
+                                                                        style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                        {{tax.tax_name}} ({{tax.percentage}} %)
+                                                                    </th>
+                                                                    <td
+                                                                        style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                        {{tax.tax_amount}}
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    Gross Amt:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{gross_amt}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    Discount:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{discount}}
+                                                                </td>
+                                                            </tr>
+                                                            {% if applied_coupon %}
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    Coupon Discount:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{coupon_discount_amount}}
+                                                                </td>
+                                                            </tr>
+                                                            {% endif %}
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    CGST:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{cgst_amount}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    SGST:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{sgst_amount}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    Delivary Charges:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{delivery_charge}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <td
+                                                                style="border-bottom: 1px solid #dddddd;background-color: #0000000f;">
+                                                                </td>
+                                                                <th
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: left; padding-left:9px;background-color: #0000000f;">
+                                                                    Sub Total:
+                                                                </th>
+                                                                <td
+                                                                    style="border-bottom: 1px solid #dddddd;text-align: end; padding:11px;background-color: #0000000f;">
+                                                                    {{final_total}}
+                                                                </td>
+                                                            </tr>
+ 
+                                                        </table>
+                                                    </td>
+                                                </tr>
+
+                                                <tr style=" box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-block" style="box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px 0 20px;border-top:1px solid #dedede;" valign="top">
+                                                        <p style="margin-bottom: 5px;text-align: center;">
+                                                            <button id="downloadButton">Download Invoice</button>
+                                                        </p>
+                                                        <p style="margin-bottom: 5px;text-align: center;"><b>NOTE :</b> This is computer generated receipt and does not require physical signature.</p>
+                                                    </td>                
+                                                </tr>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- wrapper ends here -->
+    <script>
+        document.getElementById('downloadButton').
+            addEventListener('click', function () {
+                this.style.display = 'none';
+                window.print();
+            });
+    </script>
+</body>
+
+</html>

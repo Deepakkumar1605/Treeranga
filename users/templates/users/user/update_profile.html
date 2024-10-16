@@ -1,0 +1,31 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+    Profile Update| NiwaAgro.com
+{% endblock title %}
+
+{% block content %}
+
+
+<section class="">
+    <div class="row p-1">
+        {% include 'users/user/index.html' %}
+        <div class="col-sm-12 col-12 col-lg-9 d-flex justify-content-center my-lg-5 my-md-4 my-3">
+            <div class="update-form p-2">
+                <form method="post" enctype="multipart/form-data"class="form_body ">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-flex justify-content-center">
+                        <button class="  w-25 my-lg-3 p-lg-2 moreBtn2" type="submit">Update</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+{% endblock content %}

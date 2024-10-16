@@ -1,0 +1,104 @@
+
+{% extends 'users/authtemp/master.html' %}
+{% load static %}
+{% block title %}Login Page{% endblock title %}
+{% block content %}
+<style>
+    
+</style>
+<section class="login_background">
+  <div class="login_card">
+    <div class="card ps-lg-0">
+      <div class="row  ">
+        <div class="col-lg-6 col-md-6 col-sm-12 leftside_image m-0 p-0 d-lg-flex align-items-center justify-content-center ">
+          <img src="{% static 'app_common/images/reg2.svg' %}" alt="Login Image">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 px-lg-4 pt-lg-5 ">
+          <form method="post" action="" class="form-group">
+            {% csrf_token %}
+            <h5 class="text-center mt-lg-3 mb-lg-3 fs-1 fw-bold">Welcome!</h5>
+            <div class="d-flex justify-content-center">
+                <p class="snippets_alert"> {% include 'snippets/alert.html' %}</p>
+            </div>
+            {% for field in form %}
+                <div class="form-group position-relative">
+                    <!-- Check if the current field is the password field -->
+                    {% if field.name == 'password' %}
+                        <div class="password-container">
+                            {{ field }}
+                            <span class="toggle-password position-absolute" toggle="{{ field.id_for_label }}" style="right: 10px; top: 65%; transform: translateY(-50%); cursor: pointer; color: gray;">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="mt-lg-2 d-flex justify-content-end fs-6">
+                <button type="button" class="border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                    <u>Forgot Password?</u>
+                </button>
+            </div>
+            <button class="Login_Button" type="submit">Log in</button>
+            <div class="d-flex justify-content-between">
+                <div class="text-center w-100 sign_up">
+                    <small>Don't have an account?</small>
+                    <a href="{% url 'users:signup' %}" class="ms-lg-1 text-primary text-decoration-none">Sign up</a>
+                </div>
+            </div>
+        </form>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Reset Modal -->
+  <div class="modal fade form-group" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-success">
+          <h5 class="modal-title text-white" id="forgotPasswordModalLabel">Password Reset</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Provide the email address associated with your account to recover your password.</p>
+          <form method="post" action="{% url 'users:forgot_password' %}"> <!-- URL pointing to ForgotPasswordView -->
+              {% csrf_token %}
+              {{ form2.as_p }}  <!-- Forgot Password Form -->
+              <div class="d-flex justify-content-center lh-lg pb-lg-4">
+                  <button type="submit" class="Login_Button  mt-3 py-1">Submit</button>
+              </div>
+          </form>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const togglePassword = document.querySelectorAll('.toggle-password');
+  
+      togglePassword.forEach(function (element) {
+          element.addEventListener('click', function () {
+              const input = document.querySelector(`#${this.getAttribute('toggle')}`);
+              const icon = this.querySelector('i');
+  
+              if (input.type === 'password') {
+                  input.type = 'text';
+                  icon.classList.remove('fa-eye');
+                  icon.classList.add('fa-eye-slash');
+              } else {
+                  input.type = 'password';
+                  icon.classList.remove('fa-eye-slash');
+                  icon.classList.add('fa-eye');
+              }
+          });
+      });
+  });
+  </script>
+  
+
+{% endblock content %}

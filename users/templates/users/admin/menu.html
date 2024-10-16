@@ -1,0 +1,248 @@
+{% load static %}
+
+
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo" href="">
+                  <img src="{% static 'app_common/images/logo1.png' %}" alt="logo" width="50px"/>
+                </a>
+              </div>
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="lni lni-menu"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="#" style="color: wheat;">Niwa Agro</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="{% url 'users:admin_dashboard' %}" class="sidebar-link">
+                        <i class="lni lni-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-cart-full"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse"
+                    data-bs-target="#auth" aria-expanded="false" aria-controls="auth" onclick="toggleChevron(this)">
+                        <i class="lni lni-briefcase"></i>
+                        <span>Products <i class="lni lni-chevron-left chevron-icon"></i></span>
+                    </a>
+                    <ul class="sidebar-dropdown collapse" data-bs-parent="#sidebar" id="auth">
+                        <li class="sidebar-item">
+                            <a href="{% url 'product:category_add' %}" class="sidebar-link">Category Add</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{% url 'product:category_list' %}" class="sidebar-link">Category List</a>
+                        </li>
+                        <li class="sidebar-item"> 
+                            <a href="{% url 'product:product_list' %}" class="sidebar-link">All Products</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{% url 'product:simple_product_list' %}" class="sidebar-link">Simple Products</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-item">
+                    <a href="{% url 'orders:order_list' %}" class="sidebar-link">
+                        <i class="lni lni-library"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-stats-down"></i>
+                        <span>Reports</span>
+                    </a>
+                </li> <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-users"></i>
+                        <span>Customers</span>
+                    </a>
+                </li> <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-gift"></i>
+                        <span>Gift Crads</span>
+                    </a>
+                </li> <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-cogs"></i>
+                        <span>Settngs</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="{% url 'users:logout' %}" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div>
+               
+        </div>
+        
+    </div>
+
+
+    
+<!-- Unnesesarry <code></code> -->
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="{% static 'users\js\script.js' %}"></script>
+</body>
+
+</html>
+{% comment %}
+<!-- <body>
+ 
+    <div class="collapse navbar-collapse p-0 m-0" id="sidebarCollapse">
+        <h5 class=" px-3 py-3 mb-4" style=" color: white; background-color: rgba(240, 248, 255, 0.277);font-family: 'Poppins', sans-serif;">NIWA AGRO</h5>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3 " id="nav-link" href="{% url 'users:admin_dashboard' %}" role="button" aria-expanded="true" aria-controls="sidebar-projects">
+                    <i class="bi bi-layout-text-window-reverse mb-1"></i> Admin Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active px-3" id="nav-link" href="{% url 'users:userslist' %}" role="button" aria-expanded="true" aria-controls="sidebar-projects">
+                    <i class="bi bi-person-lines-fill mb-1"></i> User List
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3" href="#" data-bs-toggle="collapse" id="nav-link" data-bs-target="#master" role="button" aria-expanded="false" aria-controls="master">
+                    <i class="fa fa-briefcase"></i> Item Management
+                </a>
+                <div class="collapse" id="master">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                            <a href="{% url 'product:category_add' %}" class="nav-link"><i class="fa-solid fa-list"></i> Category Add</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'product:category_list' %}" class="nav-link"><i class="fa-solid fa-list"></i> Category List</a>
+                        </li>
+                        
+                         <li class="nav-item">
+                            <a href="" class="nav-link"><i class="fa-solid fa-table-list"></i> All Product List</a>
+                        </li> --
+                        <li class="nav-item">
+                            <a href="{% url 'product:product_list' %}" class="nav-link"><i class="fa-solid fa-table-list"></i> All Product List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'product:simple_product_list' %}" class="nav-link"><i class="fa-solid fa-bars-staggered"></i> Simple Product List</a>
+                        </li>
+                         <li class="nav-item">
+                            <a href="" class="nav-link"><i class="fa-solid fa-clipboard-list"></i> Variant Product List</a>
+                        </li> 
+                    </ul>
+                </div>
+            </li>
+        </ul>
+         <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3" id="nav-link" href="" role="button" aria-expanded="true" aria-controls="sidebar-projects">
+                    <i class="bi bi-tag"></i> Coupon
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3" id="nav-link" href="" role="button" aria-expanded="true" aria-controls="sidebar-projects">
+                    <i class="bi bi-card-list mb-1"></i> Orders
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3" id="nav-link" href="" role="button" aria-expanded="true" aria-controls="sidebar-projects">
+                    <i class="bi bi-envelope mb-1"></i> Contact Message
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3" id="nav-link" href="" role="button" aria-expanded="true"
+                aria-controls="sidebar-projects">
+                <i class="bi bi-images mb-1"></i> Banners 
+                </a>
+            </li>
+        </ul> 
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active px-3" id="nav-link" href="{% url 'users:logout' %}" role="button" aria-expanded="true" aria-controls="sidebar-projects">
+                    <i class="bi bi-arrow-right-circle mb-1"></i> Logout
+                </a>
+            </li>
+        </ul>
+        
+    </div>
+    <div class="hstack text-white gap-3 ms-4">
+        <div class="profile-box">
+            <img src="{% static 'app_common/img/logos/user.png'%}" alt="Profile Picture">
+            <div class="profile-info">
+                <p class="text-white"></p>
+            </div>
+        </div>
+    </div>
+    ----------Bootstrap JavaScript and dependencies -
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var collapseElement = document.getElementById('master');
+        var toggleElement = document.querySelector('[data-bs-target="#master"]');
+        
+        // Initially, set the max-height to auto if it has been expanded previously
+        var expanded = false;
+        
+        toggleElement.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (expanded) {
+                // Collapse
+                collapseElement.style.maxHeight = collapseElement.scrollHeight + "px"; // Set to current height for smooth collapse
+                setTimeout(function() {
+                    collapseElement.style.maxHeight = '0'; // Collapse
+                }, 10); // Small delay to ensure transition starts
+            } else {
+                // Expand
+                collapseElement.style.maxHeight = collapseElement.scrollHeight + "px"; // Expand
+                setTimeout(function() {
+                    collapseElement.style.maxHeight = 'auto'; // Allow content to flow naturally after transition
+                }, 300); // Match this to CSS transition duration
+            }
+            expanded = !expanded; // Toggle the state
+        });
+    });
+</script>
+ 
+
+</body> -->
+{% endcomment %}
+

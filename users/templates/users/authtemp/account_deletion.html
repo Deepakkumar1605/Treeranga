@@ -1,0 +1,94 @@
+<!-- your_app/authtemp/account_deletion.html -->
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Account Deletion | NiwaAgro.com
+{% endblock title %}
+{% block content %}
+
+
+<section class="container my-lg-5 my-3 deletion_page">
+   <div class="container-fluid">
+    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb" class="mb-lg-4 mb-md-3 mb-3">
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'app_common:home' %}">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Account Delete</li>
+        </ol>
+      </nav>
+    <h3 class="text-center m-lg-4 mb-md-4 mb-2 ">Account Deletion Process</h3>
+    <ul class="listDeletion">
+        <li>
+            <h6>Requesting Account Deletion</h6>
+            <ul>
+                <p>Users may request the deletion of their Niwa Agro account at any time by:</p>
+                <li>Accessing the account settings in the user portal.</li>
+                <li>Contacting our customer support at [support@niwaagro.com].</li>
+            </ul>
+        </li>
+        <li>
+            <h6>Processing the Request</h6>
+            <ul>
+                <p>Upon receiving an account deletion request, Niwa Agro will:</p>
+                <li>Initiate the deletion process within 7 business days. </li>
+                <li>Provide confirmation via email once the account has been successfully deleted.</li>
+            </ul>
+        </li>
+        <li>
+            <h6>Data Deletion</h6>
+            <ul>
+                <p>When an account is deleted:</p>
+                <li>All personal data associated with the account will be permanently erased from our systems, including personal details, transaction history, and usage data, unless required by law to retain certain information. </li>
+                <li>Users will no longer have access to any previously stored data, and any active subscriptions or services will be terminated.</li>
+            </ul>
+        </li>
+        <li>
+            <h6>Retention of Certain Information</h6>
+            <ul>
+                <p>In compliance with legal, regulatory, or security obligations, Niwa Agro may retain certain information even after account deletion. This may include:</p>
+                <li>Records necessary for tax, auditing, or legal reporting purposes.</li>
+                <li>Information required for resolving disputes, preventing fraud, or enforcing our policies.</li>
+            </ul>
+        </li>
+        <li>
+            <h6>Reactivation</h6>
+            <ul>
+                <p>Once an account is deleted, it cannot be reactivated. Users wishing to return to Niwa Agro will need to create a new account.</p>
+            </ul>
+        </li>
+        <li>
+            <h6>Third-Party Services</h6>
+            <ul>
+                <p>If you have linked third-party services (e.g., social media, payment platforms) to your Niwa Agro account, please note that deleting your Niwa Agro account will not affect data retained by those third parties. You must contact them directly to manage or delete your information.</p>
+            </ul>
+        </li>
+    </ul>
+    {% if user.deletion_requested %}
+    <p class="fw-medium fs-6">Your account will be deleted in {{ days_remaining }} days.</p>
+    <button onclick="sendDeletionRequest('cancel_deletion')" class="vd_button c_deletion" id="cancel-deletion">Cancel Deletion</button>
+{% else %}
+    <button onclick="sendDeletionRequest('request_deletion')" class="vd_button c_deletion">Request Account Deletion</button>
+{% endif %}
+</div>
+</section>
+
+    <script>
+        function sendDeletionRequest(action) {
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ action: action })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+{% endblock content %}
+

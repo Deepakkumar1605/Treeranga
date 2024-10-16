@@ -1,0 +1,55 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+Blog List | NiwaAgro.com
+{% endblock title %}
+{% block content %}
+
+
+<section class="">
+    <div class="container my-lg-3 my-2">
+        <h3 class="py-lg-3 py-2 text-center">Our Blogs</h3>
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb" class="d-lg-none d-block">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'app_common:home' %}">Home</a></li>
+              <li class="breadcrumb-item active " aria-current="page">Blogs</li>
+            </ol>
+          </nav>
+        <div class="row BlogLists">
+            {% for blog in blogs %}
+            <div class="col col-12 col-lg-6 col-md-6 my-lg-3 my-md-3 my-2">
+            <a href="{% url 'blog:user_blog_details' slug=blog.slug %}">
+                <div class="BlogImage">
+                    <img src="{{ blog.image.url }}" alt="blog_img">
+                </div>
+            </a>
+                <div class=" blog_title">
+                    <h5 class="mt-lg-3 mt-3">{{ blog.title }}</h5>
+                    <p>{{ blog.date }}</p>
+                    <p>
+                        {{ blog.content|truncatechars:200| safe }}
+                    </p>
+                    <a href="{% url 'blog:user_blog_details' slug=blog.slug %}">
+                    <button class="learn-more mt-3 mb-3 m-lg-0">
+                        <span class="circle" aria-hidden="true">
+                        <span class="icon arrow"></span>
+                        </span>
+                        <span class="button-text">Read More</span>
+                      </button>
+                    </a>
+                </div>
+            </div>
+
+            {% endfor %}
+           
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,203 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}
+   Shopping Cart | Niwa Agro.com
+{% endblock title %}
+
+{% block content %}
+
+<section class="container">
+    <div class="row my-lg-3">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-end border p-lg-3 my-lg-2">
+                <a href="{% url 'app_common:home' %}" class="vd_button" id="continue-shop">Continue Shopping</a>
+            </div>
+            <!-- Cart Items List -->  
+            <div class="table-responsive-sm table-responsive">
+                <table class="table table-hover my-table table-striped border">
+                    <thead>
+                        <tr class="cart-table">
+                            <th class="pb-lg-2">Product Image</th>
+                            <th class="pb-lg-2">Product & Price</th>
+                            <th class="pb-3 pb-lg-2">Quantity</th>
+                            <th class="pb-3 pb-lg-2">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-light">
+                        {% if products %}
+                            {% for key, value in products.items %}
+                            <tr>
+                                <td class="cart-product-image p-0" id="t-Body">
+                                    <a href="{% url 'product:product_detail' key %}">
+                                        <img src="{{ value.info.image }}" class="img-thumbnail" alt="product image">
+                                    </a>
+                                </td>
+                                <td id="t-Body" class="mt-lg-4">
+                                    <p class="m-0">{{ value.info.name | truncatechars:30 }}</p>
+                                    <p style="color:green!important;"><i class="bi bi-currency-rupee"></i>{{ value.info.discount_price }}</p>
+                                </td>
+                                <td>
+                                    <div class="quantity_add d-lg-flex d-flex justify-content-lg-evenly justify-content-around mt-lg-3">
+                                        <a href="{% url 'cart:managecart' value.info.uid %}?operation=min" class=" text-center">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </a>
+                                        <input class="ps-2" id="quantity-{{ value.info.uid }}" type="number" value="{{ value.quantity }}" readonly />
+                                        <a href="{% if value.quantity < 6 %}{% url 'cart:managecart' value.info.uid %}?operation=plus{% else %}javascript:void(0);{% endif %}" class="text-center {% if value.quantity >= 6 %}disabled{% endif %}" onclick="checkQuantity('{{ value.info.uid }}', {{ value.quantity }})">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mt-lg-3 mt-4 text-center">
+                                        <a href="{% url 'cart:removefromcart' key %}">
+                                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Your cart is empty !!!</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="proceed-to d-none d-lg-block d-md-block">
+                <div class="proceed-to-checkout">
+                    {% if products %}
+                    <a href="{% url 'cart:checkout' %}" class="u-button">Place order</a>
+                    {% else %}
+                    <button class="u-button" disabled>Place order</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-12">
+            <!-- Cart Summary -->
+            <div class="product-price-details my-3 my-lg-2">
+                <div class="border p-lg-3 p-3">
+                    <div class="border-bottom price-details p-2">
+                        <span class=""> PRICE DETAILS</span>
+                    </div>
+                    <div class="p-3 amount-details">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>MRP </span>
+                            <span><i class="bi bi-currency-rupee"></i>{{ totaloriginalprice }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Our Price</span>
+                            <span><i class="bi bi-currency-rupee"></i>{{ totalPrice }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span style="color:green!important;">Discount </span>
+                            <span style="color:green!important;">- <i class="bi bi-currency-rupee"></i>{{ discount_price }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span style="color:green!important;">Cupon Discount </span>
+                            <span style="color:green!important;">- <i class="bi bi-currency-rupee"></i>{{ cupon_discounted_ammount }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between p-lg-3 total-amount">
+                        <span>Total Amount </span>
+                        <span><i class="bi bi-currency-rupee"></i>{{ final_cart_value }}</span>
+                    </div>
+                </div>
+
+                <!-- Coupon Section -->
+                <div class="border mt-3 p-3">
+                    <form id="couponForm" method="POST">
+                        {% csrf_token %}
+                        <label for="coupon_code" class="form-label">Apply Coupon</label>
+                        <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+                        {% if applied_coupon %}
+                        <input type="text" name="coupon_code" id="coupon_code" class="form-control" value="{{applied_coupon}}" required>
+                        {% else %}
+                        <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Enter coupon code" required>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success mt-2">Apply</button>
+                    </form>
+                    {% if applied_coupon %}
+                    <!-- Display applied coupon info and remove button -->
+                    <p class="mt-3 text-success">Coupon <strong>{{ applied_coupon }}</strong> applied successfully! Discount: ₹{{ cupon_discounted_ammount }}</p>
+                    
+                    <!-- Remove Coupon Button -->
+                    <form method="POST" action="{% url 'cart:remove_coupon' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger mt-2">Remove Coupon</button>
+                    </form>
+                    {% endif %}
+                    <p id="coupon-message" class="mt-3 text-danger">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </p>
+                </div>
+                <span class="d-flex mt-3 p-2" id="t-Head">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="proceed-to d-block d-sm-block d-lg-none d-md-none my-3 p-0">
+        <div class="proceed-to-checkout">
+            {% if products %}
+            <a href="{% url 'cart:checkout' %}" class="u-button">Place order</a>
+            {% else %}
+            <button class="u-button" disabled>Place order</button>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var couponForm = document.getElementById('couponForm');
+        if (couponForm) {
+            couponForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                var couponCode = document.getElementById('coupon_code').value;
+                var csrfToken = document.getElementById('csrf_token').value;
+
+                // Validation for coupon code length
+                if (couponCode.length < 5) {
+                    document.getElementById('coupon-message').innerText = "Coupon code is too short!";
+                    return;
+                }
+
+                fetch('{% url "cart:apply_coupon" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken // Using the CSRF token
+                    },
+                    body: JSON.stringify({
+                        coupon_code: couponCode
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // This will show what the backend returns in the console
+                    if (data.success) {
+                        document.getElementById('coupon-message').innerText = "Coupon applied successfully!";
+                        document.querySelector('.total-amount span:nth-child(2)').innerHTML = `<i class="bi bi-currency-rupee"></i>${data.final_price}`;
+                        window.location.reload()
+                    } else {
+                        document.getElementById('coupon-message').innerText = data.message || "Invalid coupon code.";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('coupon-message').innerText = "Error applying the coupon. Please try again.";
+                });
+            });
+        }
+    });
+</script>
+
+{% endblock content %}

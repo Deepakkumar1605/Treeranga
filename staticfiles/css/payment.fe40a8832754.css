@@ -1,0 +1,77 @@
+
+body {
+    text-align: center;
+    padding: 40px 0;
+    background: #EBF0F5;
+  }
+    h1 {
+      color: #3ab51b;
+      font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+      font-weight: 900;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #6e766f;
+      font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+      font-size:20px;
+      margin: 0;
+    }
+
+  .card {
+    background: white;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px #C8D0D8;
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+
+
+  .button  {
+padding: 10px 20px;
+margin: 30px auto;
+border: none;
+border-radius: 5px;
+font-weight: bold;
+letter-spacing: 3px;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 1000ms;
+position: relative;
+overflow: hidden;
+outline: 2px solid #2caf30;
+  }
+  .button a{
+    color: #2caf30;
+    font-size: 13px;
+
+  }
+  
+button:hover{
+color: #ffffff;
+transform: scale(1.1);
+outline: 2px solid  #2caf30;
+box-shadow: 4px 5px 17px -4px #2caf30;
+}
+button:hover a{
+color: #ffffff;
+
+}
+button::before {
+content: "";
+position: absolute;
+left: -50px;
+top: 0;
+width: 0;
+height: 100%;
+background-color:  #2caf30;
+transform: skewX(45deg);
+z-index: -1;
+transition: width 1000ms;
+}
+
+button:hover::before {
+width: 250%;
+}

@@ -1,0 +1,42 @@
+<!-- templates/error.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .error-page h1 {
+            font-size: 6rem;
+            font-weight: 700;
+        }
+        .error-page p {
+            font-size: 1.25rem;
+            margin-top: 1rem;
+        }
+        .error-page .btn {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container error-page">
+        <h1 class="display-1">Oops!</h1>
+        <p class="lead">Something went wrong. We are working to fix this issue.</p>
+        <p>Error details: <strong>{{ error_message }}</strong></p>
+        <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-primary">Go Back</a>
+    </div>
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

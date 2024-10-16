@@ -1,0 +1,91 @@
+{% load static %}
+
+<head>
+    <style>
+        .dash_body {
+            background-color: #00836c;
+            min-height: 100vh;
+            font-size: 14px;
+            width: 240px;
+            color: white;
+        }
+       
+        .prof-btn {
+            text-decoration: none;
+            color: white;
+            padding: 8px 0;
+
+        }
+
+        .prof-btn:hover {
+            background-color: rgba(240, 248, 255, 0.323);
+            color: rgb(236, 235, 235);
+        }
+        .snippets_alert{
+            display: none;
+        }
+    </style>
+</head>
+
+<div class=" col-lg-3  px-0 m-0 p-0  d-none d-lg-block d-md-block">
+    <ul class="list-unstyled  m-0 dash_body">
+        <!-- <li class="d-grid pt-lg-5">
+            <a href="{% url 'app_common:home' %}" class="prof-btn ps-4 mb-3">
+                <i class="fas fa-home text-white me-2"></i> Go to Home
+            </a>
+        </li> -->
+        <div class=" d-flex pt-lg-5 "style="">
+            <div class="mx-lg-3">
+                <img src="{% static 'users/images/png-c.png'%}" alt="" height="50px" class="bg-white rounded-5">
+            </div>
+            <div>
+                <p class="p-0 m-0">Hello,</p>
+                <h6>{{ user.full_name }}</h6>
+            </div>
+        </div>
+        <li class="d-grid pt-lg-5  ">
+            <a href="{% url 'users:account_details' %}" class="prof-btn ps-4 mb-3">
+                <i class="fas fa-user text-white me-2"></i> My Profile
+            </a>
+        </li>
+        <li class="d-grid">
+            <a href="{% url 'orders:orders' %}" class="prof-btn ps-4  mb-3">
+                <i class="fa-solid fa-list me-lg-2"></i> My Orders
+            </a>
+        </li>
+        <li class="d-grid">
+            <a href="{% url 'users:profile_addaddress' %}" class="prof-btn ps-4 mb-3">
+                <i class="fas fa-address-card text-white me-2"></i> Add New Address
+            </a>
+        </li>
+        <li class="d-grid">
+            <a href="{% url 'users:alladdress' %}" class="prof-btn ps-4 mb-3">
+                <i class="fas fa-address-book text-white me-2"></i> My Addresses
+            </a>
+        </li>
+
+        <li class="d-grid">
+            <a href="{% url 'users:account_deletion' %}" class="prof-btn ps-4 mb-3">
+                <i class="fa-solid fa-trash-can me-lg-2"></i> Delete Account
+            </a>
+        </li>
+        <li class="d-grid">
+            <a href="{% url 'users:logout' %}?confirm" onclick="return myFunction()" class="prof-btn ps-4 mb-3">
+                <i class="fa-solid fa-arrow-right-from-bracket me-lg-2"></i> Logout
+            </a>
+                
+            </a>
+        </li>
+    </ul>
+</div>
+
+<script>
+    function myFunction() {
+        if (confirm("Are you sure you want to logout?")) {
+            return true;  // Proceed with the link's href
+        } else {
+            console.log("Logout canceled");
+            return false;  // Prevent the default action
+        }
+    }
+</script>

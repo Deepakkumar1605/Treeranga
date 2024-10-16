@@ -1,0 +1,107 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<section class="py-2">
+    <div class="container">
+        <h4 class="headings_h5 text-center my-lg-4 p-lg-3">All Blogs</h4>
+        <div class="vstack">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <form class="my-3 mx-2" action="{% url 'blog:blog_search' %}" method="post">
+                    {% csrf_token %}
+                    <div class="hstack gap-2">
+                        <select style="width: 6rem;" name="filter_by" class="form-select form-select1" aria-label="Default select example">
+                            <option selected value="pk">All</option>
+                            <option value="id">ID</option>
+                            <option value="name">Name</option>
+                        </select>
+                        <span  class="input-group ">
+                            <input type="text" name="query" placeholder="Search Here" class="form-control form-select1" required />
+                            <button type="submit" class="input-group-text form-select1"><i class='bx bx-search-alt-2' ></i></button>
+                        </span>
+                    </div>
+                </form>
+                <p class="snippets">{% include 'snippets/alert.html' %}</p>
+                <div class="btn-group catagory-btn">
+                    <a href="{% url 'blog:blog_add' %}">
+                        <i class='bx bxs-plus-square'></i>
+                         Create a New Blog
+                    </a>
+                </div>
+            </div>
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="" id="tb-head" scope="col">Blog ID</th>
+                                <th class="" id="tb-head" scope="col">Blog Title</th>
+                                <th class="" id="tb-head" scope="col">Blog Author</th>
+                                <th class="" id="tb-head" scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                        <tbody id="test_table_tbody">
+                            {% for blog in blog_list %}
+                            <tr>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub">
+                                        <a class="text-heading text-primary-hover fw-bold"
+                                            href="{% url 'blog:blog_update' blog.id %}">
+                                            {{ blog.id }}
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub text-capitalize">
+                                        {{ blog.title |truncatewords:8 }}                                  
+                                    </div>
+                                </td>
+                                <td class="tb-body">
+                                    <div class="tb-body_sub text-uppercase">
+                                        {{ blog.author }}                                 
+                                    </div>
+                                </td>
+                                <td class="d-flex justify-content-evenly p-3">
+                                    <div class="">
+                                        <a href="{% url 'blog:blog_update' blog.id %}">
+                                        <i class='bx bx-edit text-primary'></i>    
+                                    </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="{% url 'blog:blog_delete' blog.id %}">
+                                        <i class='bx bx-trash text-danger'></i>    
+                                    </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </form>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="py-lg-2">
+            <div class="pagination">
+                {% if blog_list.has_previous %}
+                    <a href="?page={{ blog_list.previous_page_number }}">&laquo;</a>
+                {% endif %}
+                {% for i in blog_list.paginator.page_range %}
+                    {% if blog_list.number == i %}
+                        <a href="?page={{ i }}" class="active">{{ i }}</a>
+                    {% elif i > blog_list.number|add:'-3' and i < blog_list.number|add:'3' %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if blog_list.has_next %}
+                    <a href="?page={{ blog_list.next_page_number }}">&raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
