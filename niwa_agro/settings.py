@@ -153,12 +153,10 @@ STATIC_URL = 'static/'
 SITE_URL = 'http://127.0.0.1:8000/users'
 PRODUCTION = str(os.getenv('PRODUCTION'))
 
-if PRODUCTION == 'True':
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
-    STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
 
-else:
-    pass
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
+STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
+
 
 
 MEDIA_URL = '/media/'
