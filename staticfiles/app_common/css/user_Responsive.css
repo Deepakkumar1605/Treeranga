@@ -1,0 +1,1476 @@
+/*======================================== Media Queries for Responsiveness=========================================================== */
+
+/* Extra-Small: 	          None	                  <576px
+Small:	                sm	                    ≥576px
+Medium:	                md	                    ≥768px
+Large:	                lg	                    ≥992px
+Extra-large:	          xl	                    ≥1200px
+Extra-extra-large:	    xxl	                    ≥1400px */
+
+/* ------------------Between 0point  to sm------------ */
+@media (min-width:0px) and (max-width:575.9px) {
+
+	/* ==  header  === */
+	header {
+		padding: 8px;
+	}
+
+	#menu_button {
+		display: block;
+		margin-left: -10px;
+		font-size: 20px;
+	}
+
+	#menu-bar {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	#offcanvasWithBothOptions .offcanvas-body {
+		padding: 0;
+	}
+
+	#offcanvasWithBothOptions .offcanvas-body ul li a {
+		padding: 10px 5px;
+		margin: 10px 5px;
+		background-color: var(--primary);
+		text-align: center;
+		color: var(--white);
+		font-size: 16px;
+		text-transform: uppercase;
+	}
+
+	.navbar-brand {
+		display: flex;
+		justify-content: center;
+		position: relative;
+	}
+
+	.navbar-brand img {
+		height: 40px;
+		width: 100px;
+		position: absolute;
+		right: 0%;
+		bottom: 10%;
+	}
+
+	.HeaderIcons {
+		font-size: 14px;
+	}
+
+	/* ==  footer  === */
+	footer {
+		padding: 20px;
+	}
+
+	.footer_div_ul div p i {
+		padding: 2px;
+	}
+
+	.footer_div_ul div p .fa-phone, .footer_div_ul div p .fa-envelope {
+		font-size: 15px;
+		margin: 0px 0px 0 0;
+	}
+
+	/* ==================  Banner section  ======================== */
+	#carouselExampleFade {
+		max-width: 100%;
+	
+	}
+
+	.carousel-inner .carousel-item img {
+		width: 100%;
+		height: 250px;
+		
+	}
+
+	.carousel-control-prev, .carousel-control-next {
+		width: 30px;
+	}
+
+	.carousel-control-prev i, .carousel-control-next i {
+		font-size: 15px;
+	}
+
+	/* ---------------App Download Section----------------------------------*/
+	.AppDownload div {
+		font-family: var(--sub-heading);
+		font-weight: 500;
+		font-size: 13px;
+	}
+
+	.AppDownload div a {
+		font-family: var(--sub-heading);
+		font-weight: 500;
+		font-size: 13px;
+	}
+
+	/* ------------Shop By Collection  Section----------------------------------*/
+	.image-wrapper {
+		height: 170px;
+		width: 170px;
+	}
+
+	.content-wrapper h4 {
+		font-size: 15px;
+		font-weight: 400;
+		margin: 10px 0;
+	}
+
+	/*------------------- New arrivals & Trending Products-------------- */
+	.new-head {
+		height: 346px;
+		width: 170px;
+		overflow: hidden;
+		margin: auto;
+	}
+
+	#new-products {
+		height: 340px;
+		width: 165px;
+		overflow: hidden;
+		margin: auto;
+	}
+
+	#new-products a img {
+		height: 165px;
+		width: 165px;
+		object-fit: contain;
+	}
+
+	#new-products .card-body h5 {
+		font-weight: 700;
+		font-size: 14px;
+		line-height: 21px;
+		margin-top: 10px;
+	}
+
+	#new-products .card-body .rating {
+		font-weight: 700;
+		font-style: normal;
+		font-size: 13px;
+		line-height: 20px;
+	}
+
+	#new-products .card-body .rating span {
+		font-weight: 400;
+		font-size: 13px;
+		line-height: 20px;
+	}
+
+	.vd_button.addto-cart {
+		background-color: var(--button);
+		color: var(--white);
+		padding: 6px;
+		font-family: var(--heading);
+		font-size: 15px;
+		font-weight: 400;
+		font-style: normal;
+		line-height: 23px;
+	}
+
+	#discount_price {
+		font-family: var(--heading);
+		color: var(--primary);
+		font-weight: 700;
+		font-size: 14px;
+		line-height: 15px;
+	}
+
+	#max_price {
+		font-family: var(--heading);
+		color: var(--p);
+		font-weight: 400;
+		font-size: 12px;
+		line-height: 15px;
+		font-style: normal;
+	}
+
+	/* -------------------------------Why choose niwa----------------------- */
+	.chooseniwa_logo div img {
+		height: 50px;
+		width: 50px
+	}
+
+	.chooseniwa_logo div h6 {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 23px;
+		padding: 10px 0;
+	}
+
+	/* -------------------------------About us landing page----------------------- */
+	.aboutniwa_bg {
+		background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), url("https://cdn.pixabay.com/photo/2015/01/13/13/20/guy-598180_1280.jpg");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+	}
+
+	.aboutniwa1 {
+		max-width: 100%;
+	}
+
+	.aboutniwa1 p {
+		font-size: 14px;
+		font-weight: 300;
+		word-spacing: 6px;
+		line-height: 1.6;
+		letter-spacing: 1.1px;
+		color: rgb(240, 237, 237);
+		/* background: linear-gradient(90deg, rgb(255, 255, 255) 25%, rgb(26, 22, 22) 65%, rgb(0, 0, 0) 0%);
+		-webkit-text-fill-color: transparent;
+		-webkit-background-clip: text; */
+	}
+/*----------- gallery---------- */
+.overlay h2 {
+	font-size: 1.5rem;
+}
+.left-image {
+	height: 100%;
+}
+
+.right-image {
+	height: auto;
+	margin-bottom: 15px;
+}
+.overlay {
+position: absolute;
+top: 65%;
+left: 50%;
+transform: translate(-50%, -50%);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+.overlay1 {
+position: absolute;
+top: 80%;
+left: 50%;
+transform: translate(-50%, -50%);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+}
+
+/*----------- gallery---------- */
+	/* < --------------------------Testimonial------------------------------- --> */
+
+	/* none */
+
+	/*------------------- Accordian page CSS  Details============================== */
+
+	/* none */
+
+	/*------------------- Account Deletion page CSS  Details============================== */
+
+	.deletion_page {
+		padding: 15px;
+	}
+
+	.container-fluid {
+		padding: 0 10px;
+	}
+
+	nav.breadcrumb {
+		font-size: 14px;
+		padding: 0;
+	}
+
+	.listDeletion > li {
+		font-size: 16px;
+		line-height: 1.5;
+	}
+
+	.listDeletion > li li {
+		font-size: 15px;
+		margin-left: 15px;
+		line-height: 1.5;
+	}
+
+	.vd_button {
+		width: 100%;
+		padding: 12px 0;
+		font-size: 14px;
+	}
+
+	.vd_button#cancel-deletion {
+		margin-top: 15px;
+	}
+
+	p.fw-medium.fs-6 {
+		text-align: center;
+		font-size: 16px;
+	}
+
+	/* -------------------------------User_blog List & Single  CSS  Page----------------------- */
+	.BlogImage {
+		height: 200px;
+		overflow: hidden;
+		width: 100%;
+		object-fit: cover;
+	}
+
+	.blog_title h5 {
+		font-size: 20px;
+		color: var(--para);
+		font-weight: 400;
+		line-height: 30px;
+	}
+
+	.blog_title h4 {
+		font-size: 22px;
+		color: var(--para);
+		font-weight: 300;
+		line-height: 23px;
+	}
+
+	.blog_title h3 {
+		font-size: 24px;
+		color: var(--para);
+		font-weight: 400;
+		line-height: 23px;
+	}
+
+	.blog_title h2 {
+		font-size: 24px;
+		color: var(--para);
+		font-weight: 300;
+		line-height: 23px;
+	}
+
+	.blog_title h1 {
+		font-size: 24px;
+		color: var(--para);
+		font-weight: 300;
+		line-height: 23px;
+	}
+
+	.blog_title p {
+		font-size: 15px;
+		color: var(--para);
+		font-weight: 300;
+		line-height: 25px;
+	}
+
+	/*                      --------------- */
+	.Main_Image {
+		height: 250px;
+		overflow: hidden;
+		width: auto;
+		object-fit: cover;
+	}
+
+	/* ----------------------------About us Page css------------------------- */
+	#about {
+		margin: 20px auto 40px;
+	}
+
+	#about div h3 {
+		font-size: 22px;
+	}
+
+	#about div p {
+		font-size: 15px;
+		margin: 12px 0;
+	}
+
+	.side_img img {
+		max-width: 100%;
+		height: auto;
+		margin-top: 20px;
+	}
+
+	.aboutus_card {
+		border: 1px solid var(--p);
+		padding: 15px;
+		border-radius: 5px;
+	}
+
+	/* ----------------------------Return Policy Page css------------------------- */
+	#return {
+		width: 100%;
+		margin: 10px auto 40px;
+		padding: 0 10px;
+	}
+
+	#return div p {
+		font-size: 14px;
+		margin: 15px 0;
+		line-height: 1.8;
+	}
+
+	#return div h3 {
+		font-size: 22px;
+	}
+
+	#return div h5 {
+		font-size: 14px;
+		margin: 10px 0;
+	}
+
+	#return div ul li {
+		font-size: 14px;
+		line-height: 2.2;
+	}
+
+	#return div ul li ul li {
+		font-size: 14px;
+		line-height: 2.2;
+	}
+
+	/* ----------------------------Privacy Policy Page css------------------------- */
+	#Privacy {
+		width: 100%;
+		margin: 10px auto 40px;
+	}
+
+	#Privacy div p, #Privacy div ul li ul li {
+		font-size: 14px;
+		line-height: 1.8;
+	}
+
+	#Privacy div h3 {
+		font-size: 22px;
+		text-align: center;
+	}
+
+	#Privacy div h4 {
+		font-size: 18px;
+		margin-top: 15px;
+	}
+
+	#Privacy div ul li ul li {
+		margin: 8px 0;
+	}
+
+	.breadcrumb {
+		font-size: 12px;
+	}
+
+	/* ----------------------------Contact Us Page css------------------------- */
+	.contactus-page {
+		padding: 20px 2px;
+	}
+
+	.Address-page {
+		padding: 10px 15px;
+	}
+
+	.contactus-page .Address-page h5 {
+		font-size: 18px;
+		line-height: 25px;
+	}
+
+	.contactus-page .Address-page p {
+		font-size: 14px;
+		line-height: 22px;
+		margin-bottom: 20px;
+	}
+
+	.contactus-page .Address-page .social-icons {
+		font-size: 18px;
+		line-height: 35px;
+	}
+
+	.contactus-page .Address-page .social-icons i {
+		margin: 10px 10px;
+		font-size: 25px;
+	}
+
+	.contact_us_image {
+		height: 250px;
+	}
+
+	.contact_us_image img {
+		height: 350px;
+	}
+
+	.contact-form h4 {
+		font-size: 22px;
+		margin-bottom: 20px;
+	}
+
+	.contact-form form button {
+		font-size: 12px;
+		width: 100%;
+	}
+
+	.contact-form form .form-field {
+		margin: 10px 0;
+	}
+
+	.contact-form form .form-field input, .contact-form form .form-field textarea {
+		font-size: 14px;
+	}
+
+	.contact-form form .form-field input:focus, .contact-form form .form-field textarea:focus {
+		box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 6px;
+	}
+
+	/* ---------------------Showcart Page CSS------------------------- */
+	.product-price-details {
+		position: static;
+		height: auto;
+	}
+
+	.proceed-to {
+		position: sticky;
+		bottom: 0%;
+		z-index: 10;
+		background-color: transparent !important;
+		box-shadow: none !important;
+	}
+
+	.proceed-to-checkout a {
+		background-color: var(--sub_button);
+		color: var(--white);
+		text-transform: uppercase;
+		padding: 15px 80px;
+		word-spacing: 5px;
+		width: 100%;
+	}
+
+	.cart-product-image a img {
+		height: 80px;
+		width: 160px;
+	}
+
+	.quantity_add {
+		padding: 5px 10px;
+		margin: 20px 0px;
+	}
+
+	.quantity_add input {
+		width: 40px;
+		border: none;
+		background-color: transparent;
+		text-align: center;
+	}
+
+	.quantity_add a i {
+		color: var(--p);
+		font-size: 14px;
+	}
+
+	/* ---------------------Proceed to Payment With Address?------------------------- */
+	.modal-content {
+		height: auto;
+		width: 100% !important;
+	}
+
+	/* ============================User Product of catagory  Page CSS================ */
+	#products_of_category {
+		padding: 10px;
+	}
+
+	.product-head {
+		width: 100%;
+		height: auto;
+	}
+
+	#product-cards {
+		width: 100%;
+		height: auto;
+	}
+
+	#product-cards a img {
+		width: 100%;
+		height: auto;
+	}
+
+	#product-cards div h5 {
+		font-size: 14px;
+		line-height: 20px;
+	}
+
+	#discount_price {
+		font-size: 15px;
+	}
+
+	#max_price {
+		font-size: 12px;
+	}
+
+	#product-cards .card-body a {
+		width: 100%;
+		padding: 8px;
+	}
+
+	/* Change layout to single-column */
+	.row-cols-lg-5 {
+		display: block;
+	}
+
+	.product-head {
+		margin-bottom: 20px;
+	}
+
+	/* ============================User Product detail page CSS================ */
+	.product-image img {
+		object-fit: cover;
+	}
+
+	.gallery-container {
+		width: 100%;
+		height: auto;
+		display: flex;
+		flex-direction: row;
+		overflow-x: scroll;
+		margin-bottom: 10px;
+	}
+
+	.gallery-items {
+		flex-direction: row;
+	}
+
+	.gallery-item img, .gallery-item video {
+		width: 100%;
+		height: 400px;
+		object-fit: fill;
+	}
+	#shareButton{
+		position: absolute;
+		top:0%;
+		right: 0%;
+		color: var(--p);
+	}
+.modal-backdrop.show{
+	width: 100%;
+	height: 100%;
+}
+	/* Product Details */
+	.product-details h1 {
+		font-size: 22px;
+		line-height: 32px;
+	}
+
+	.discount-price {
+		font-size: 18px;
+	}
+
+	.original-price {
+		font-size: 12px;
+	}
+
+	.quantity-selector {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.quantity-selector .input-group {
+		width: 50%;
+	}
+
+	
+
+	 .buttons #addToCartButton.cart-btn {
+		background-color: var(--secondary);
+		color: var(--para);
+		width: 100%;
+		font-family: "Inter", sans-serif;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 28px;
+		font-size: 17px;
+		margin: 0 auto;
+		display: block;
+		text-align: center;
+	}
+
+	.wishlist-btn i {
+		font-size: 20px;
+	}
+
+	/* Description */
+	.description {
+		font-size: 14px;
+		line-height: 24px;
+	}
+
+	.description h5 {
+		font-size: 16px;
+	}
+
+	/* Similar Products */
+	.similar-products .product-card {
+		height: auto;
+		margin-bottom: 20px;
+	}
+
+	.similar-products .product-card a img {
+		height: 150px;
+	}
+
+	/* Review Section */
+	.review-item p {
+		font-size: 14px;
+	}
+
+	.review-item div span {
+		font-size: 18px;
+	}
+
+	.review-summary h4 {
+		font-size: 18px;
+	}
+
+	/* Form Elements */
+	.Rating_forms label {
+		font-size: 14px;
+	}
+
+	.Rating_forms input {
+		font-size: 14px;
+		padding: 5px;
+	}
+
+	.u-button.Review {
+		font-size: 14px;
+		padding: 10px 15px;
+	}
+
+	/* General adjustments */
+	.container {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	/* Buttons */
+	.btn {
+		padding: 10px 15px;
+		font-size: 14px;
+	}
+
+	.product-image {
+		width: 100%;
+		height: auto;
+	}
+
+	.gallery-container {
+		width: 100%;
+		height: auto;
+	}
+	/*----------------------------Add Address Page------------------------------ */
+	.form_body {
+		width: 100%;
+		padding: 30px;
+	}
+
+	.update-form {
+		width: 100%;
+	}
+
+	/*----------------------------All Address Page------------------------------ */
+	.card.Address-Page {
+		width: 100%;
+	}
+	.add-to-cart {
+        font-size: 12px; /* Smaller font size for very small screens */
+        padding: 6px 12px; /* Reduced padding to ensure the button fits */
+    }
+    .product-details .price {
+        font-size: 12px ;
+    }
+
+	/* landing products responsive */
+	.products_row_alignment{
+		display: flex;
+        justify-content: center;
+	}
+	/* landing products responsive */
+
+	.product-images {
+		position: relative;
+		height: 230px; 
+		overflow: hidden;
+	}
+}
+
+/* ------------------Between sm to md------------ */
+@media (min-width:576px) and (max-width:767.9px) {
+  
+}
+
+/* ------------------Between md to lg------------ */
+@media (min-width:768px) and (max-width:991.9px) {
+	
+}
+
+/* ------------------Between lg to xl------------ */
+@media (min-width:992px) and (max-width:1199.9px) {
+	.image-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		overflow: hidden;
+		transition: transform 0.5s;
+		height: 170px;
+		width: 170px;
+	}
+	.image-wrapper a img {
+		height: 100%;
+		width: 100%;
+		object-fit: contain;
+		transition: transform 0.5s;
+		transform: scale(1.15);
+	}
+	#new-products {
+		height: 387px;
+		width: 100%;
+		overflow: auto;
+	}
+	
+	#new-products a img {
+		height: 220px;
+		width: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+	
+#product-cards {
+	height: 450px;
+	width: 100%;
+	overflow: hidden;
+}
+
+#product-cards a img {
+	height: 257px;
+	width: 100%;
+	object-fit: contain;
+}
+
+	.vd_button.addto-cart {
+		
+			padding: 8px;
+			width:100%;
+			margin: 0 auto;
+			font-weight: 500;
+			
+			font-style: normal;
+			font-size: 14px;
+			overflow: hidden;
+		
+	
+	}
+	
+	.vd_button.addto-cart:hover {
+		background-color: var(--button);
+		color: var(--white);
+	}
+	.foot_last_div{
+		
+	}
+	.product-btn{
+		font-size: 14px !important;
+	}
+	.address-details li {
+		display: flex;
+	}
+	
+	.address-details li::before {
+		content: attr(data-label);
+		min-width: 70px; /* Adjust width according to your design */
+		font-weight: bold;
+	}
+	
+	.address-details li span {
+		flex: 1;
+	}
+	.u-button{
+		padding: ;
+	}
+	
+	.product-images {
+		position: relative;
+		height: 250px; 
+		overflow: hidden;
+	}
+}
+
+
+
+
+
+/* ------------------Between xl to xxl------------ */
+@media (min-width:1200px) and (max-width:1400px) {
+	.vd_button.addto-cart {
+		padding: 8px;
+		width:100%;
+		margin: 0 auto;
+		font-weight: 500;
+		line-height: 23px;
+		font-style: normal;
+		font-size: 14px;
+		overflow: hidden;
+	
+	}
+	
+
+}
+
+@media (max-width:1024px) {
+	#nav_buttons ul li a {
+		font-size: 11px;
+		padding: 0 2px;
+	}
+
+}
+
+/* 
+@media (max-width: 768px) {
+
+  #menu_button {
+    display: block;
+  margin-left: -40px;
+  font-size: 1.5rem;
+  }
+  #offcanvasWithBothOption{
+    width: 75%;
+  }
+
+
+  .row div ul li a {
+    font-size: 12px; 
+  }
+
+  .row div li {
+    margin: 1px; 
+  }
+
+  footer {
+    padding: 2rem 1rem;
+    font-size: 5px;
+  }
+
+  .row div p, .row div h6 {
+    font-size: 10px; 
+  }
+  .row div p i{
+    padding: 3px;
+    margin-top: 5px;
+  }
+  
+  .modal-content {
+    margin-top:10vh;
+    max-width: 90%;
+  }
+  .navbar-brand{
+display: flex;
+justify-content: center;
+position: relative;
+
+  }
+  .navbar-brand img{
+    height: 40px;
+    width: 50px;
+    position: absolute;
+    right: 0%;
+    bottom: 20%;
+  }
+  .modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  
+}
+/* ------------------End Tablets( md)------------ */
+
+/* ------------------Mobile( sm)------------ 
+
+  @media screen and (max-width: 576px) {
+
+    .row div ul li a {
+      font-size: 12px; 
+    }
+  
+    .row div li {
+      margin-bottom: 0.4rem;
+    }
+  
+    footer {
+      padding: 1rem 0;
+    }
+  
+    .row div p, .row div h6 {
+      font-size: 14px; 
+    }
+    .modal-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      margin-top: 30vh;
+      max-width: 90%;
+    }
+    #nav_buttons {
+      display: none;
+    }
+    
+  .HeaderIcons {
+    font-size: 1.2rem;
+  }
+      #menu-bar{
+   display: flex;
+   justify-content:space-between;
+  }
+    #menu_button {
+      display: block;
+    margin-left: -40px;
+    font-size: 1.5rem;
+  
+
+    }
+    header{
+      padding: 2rem;
+    }
+    #searchButtons{
+    width: 100%;
+}
+    
+    .modal-dialog {
+      max-width: 90%;
+    }
+
+    .modal-content {
+      width: 100%;
+      padding: 1rem;
+      margin: auto;
+    }
+
+    .modal-header img {
+      height: 50px;
+      width: 50px;
+    }
+
+    .loginHeader {
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .btn {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .modal-body h5 {
+      font-size: 1.25rem;
+    }
+
+    .modal-footer {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .modal-footer small, .modal-footer a {
+      font-size: 0.875rem;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 20%;
+      right: 5%;
+    }
+    .modal-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      margin-top: 10vh;
+      max-width: 90%;
+    }
+    
+  }
+
+  /* ------------------end Mobile( sm)------------ */
+
+/* Media Queries for Responsiveness */
+
+/* ------------------Laptop( xl)------------ *
+@media (min-width: 1025px){
+
+}
+/* ------------------Laptop( lg)------------ *
+@media (max-width: 1024px){
+.card-body h6{
+  font-size: .78rem;
+  text-align: left;
+  margin: -2px;
+ }
+ .card-body small{
+  font-size: 0.72rem;
+  margin: -2px;
+  color: #0d6d30;
+ }
+ .card-body button{
+  font-size: 0.7rem;
+ }
+ .carousel-item {
+  min-height: 300px;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+  .carousel-img1 {
+width: 120px;
+height: 120px;
+position: absolute;
+left:50%;
+transform: translateX(-50%);
+top: 0%;
+border-radius: 10% 10%;
+overflow: hidden;
+object-fit: fill;
+  }
+  .carousel-img1 img{
+  height: 100%;
+  width: 100%;
+  }
+.carousel-caption {
+  text-align: center;
+}
+
+.testimonial-name {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  text-transform: capitalize;
+  color: var(--para);
+}
+.testimonial-icon {
+  font-size: 25px;
+}
+.carousel-caption p {
+  background: var(--gradient2);
+  background-clip: text;
+  color: transparent;
+  font-size: 15px;
+}
+
+}
+
+/* ------------------End Laptop( lg)------------ *
+
+/* ------------------Tablets( md)------------ *
+
+@media (max-width: 768px)  {
+.carousel-item img{
+  height: 19rem;
+  }
+
+.carousel-control-next i,.carousel-control-prev i{
+background-color: #0d6d30;
+/* padding: 10px; *
+border-radius: 45%;
+font-size: .7rem;
+color: white;
+
+}
+.content-wrapper h4{
+font-family: 'poppins', sans-serif;
+color: #0f6d3e;
+font-size: .8rem;
+line-height:1rem;
+font-weight: 500;
+}
+.container div h3{
+font-size: 1.1rem;
+}
+
+.card-body h6{
+font-size: .8rem;
+text-align: left;
+margin: -2px;
+}
+.card-body small{
+font-size: 0.7rem;
+margin: -2px;
+color: #0d6d30;
+}
+.card-body button{
+font-size: 0.7rem;
+}
+
+.chooseniwa_logo div img{
+height: 15px;
+width:15px
+}
+.chooseniwa_logo div h5{
+font-size: 0.8rem;
+}
+.aboutniwa img {
+height: 200px;
+width: 400px;
+}
+
+.aboutniwa h6 {
+font-size: 2.4rem;
+width: 300px;
+}
+
+.aboutniwa1 p {
+font-size: 0.9rem;
+}
+.aboutniwa1 .btn {
+font-size: 0.7rem;
+}
+.section-heading {
+font-size: 24px;
+}
+.carousel-item {
+min-height: 300px;
+margin: 10px;
+position: relative;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+}
+.carousel-img1 {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  top: 0%;
+  border-radius: 10% 10%;
+  overflow: hidden;
+  object-fit: fill;
+}
+.carousel-img1 img{
+height: 100%;
+width: 100%;
+}
+  .carousel-caption {
+text-align: center;
+  }
+  
+  .testimonial-name {
+font-size: 14px;
+font-weight: 500;
+font-family: 'Poppins', sans-serif;
+text-transform: capitalize;
+color: var(--para);
+  }
+  .testimonial-icon {
+font-size: 22px;
+}
+.carousel-caption p {
+background: var(--gradient2);
+background-clip: text;
+color: transparent;
+font-size: 14px;
+}
+}
+/* ------------------End Tablets( md)------------ */
+
+/* ------------------Mobile(L)------------ *
+
+
+@media (max-width:425px) {
+  .aboutniwa {
+  flex-direction: column;
+  align-items: center;
+  }
+
+  .aboutniwa img {
+  height: 150px;
+  width: 300px;
+  }
+
+  .aboutniwa h6 {
+  font-size: 2rem;
+  width: 250px;
+  top: 60%;
+  }
+
+  .aboutniwa1 p {
+  font-size: 0.8rem;
+  }
+
+  .aboutniwa1 .btn {
+  font-size: 0.7rem;
+  }
+  .carousel-item {
+min-height: 300px;
+margin: 10px;
+position: relative;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+  }
+.carousel-img1 {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  top: 0%;
+  border-radius: 10% 10%;
+  overflow: hidden;
+  object-fit: fill;
+}
+.carousel-img1 img{
+height: 100%;
+width: 100%;
+}
+  .carousel-caption {
+    text-align: center;
+  }
+  
+  .testimonial-name {
+    font-size: 5px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    text-transform: capitalize;
+    color: var(--para);
+  }
+  .testimonial-icon {
+font-size: 20px;
+}
+.carousel-caption p {
+  background: var(--gradient2);
+  background-clip: text;
+  color: transparent;
+  font-size: 12px;
+}
+}
+/* ------------------end Mobile( sm)------------ */
+
+/* ------------------Extra Mobile( md)------------ *
+@media (max-width: 375px) {
+
+
+  .aboutniwa img {
+  height: 120px;
+  width: 240px;
+  }
+
+  .aboutniwa h6 {
+  font-size: 1.6rem;
+  width: 200px;
+  top: 50%;
+  }
+
+  .aboutniwa1 p {
+  font-size: 0.7rem;
+  }
+
+  .aboutniwa1 .btn {
+  font-size: 0.7rem;
+  }
+  .carousel-item {
+min-height: 250px;
+margin: 5px;
+position: relative;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+  }
+.carousel-img1 {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  top: 0%;
+  border-radius: 10% 10%;
+  overflow: hidden;
+  object-fit: fill;
+}
+.carousel-img1 img{
+height: 100%;
+width: 100%;
+}
+  .carousel-caption {
+    text-align: center;
+  }
+  
+  .testimonial-name {
+    font-size: 5px;
+    font-weight: 200;
+    font-family: 'Poppins', sans-serif;
+    text-transform: capitalize;
+    color: var(--para);
+  }
+  .testimonial-icon {
+font-size: 16px;
+}
+.carousel-caption p {
+  background: var(--gradient2);
+  background-clip: text;
+  color: transparent;
+  font-size: 10px;
+}
+}
+
+
+
+
+
+/* ------------------start extra small Mobile( none)------------ *
+
+
+
+@media (max-width:320px) {
+  .carousel-control-next i,.carousel-control-prev i{
+background-color:var(--Carouselbutton);
+padding: 20px;
+border-radius: 45%;
+font-size: 1rem;
+color: var(--third);
+}
+.carousel-item img{
+height:20rem;
+width:40rem;
+margin-left: -10px;
+}
+.AppDownload{
+  margin-top: -10px;
+}
+  .section-heading {
+font-size: 20px;
+  }
+
+  .carousel-img {
+width: 80px;
+height: 80px;
+  }
+  .testimonial-name {
+font-size: 5px;
+font-weight: 200;
+font-family: 'Poppins', sans-serif;
+text-transform: capitalize;
+color: var(--para);
+  }
+
+ 
+
+  .carousel-caption p {
+font-size: 12px;
+  }
+
+  .testimonial-icon {
+font-size: 25px;
+  }
+}
+
+------------------end extra small Mobile( none)------------ */
