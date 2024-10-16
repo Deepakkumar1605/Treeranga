@@ -4,14 +4,15 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+from dotenv import dotenv_values
+env_vars = dotenv_values(".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+DEBUG = env_vars['DEBUG']
+
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -101,15 +102,17 @@ DATABASES = {
 }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'niwa_agro',
-#         'USER': 'postgres',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',  
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env_vars["DB_NAME"],
+        "USER": env_vars["DB_USER"],
+        "PASSWORD": env_vars["DB_PASSWORD"],
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
+
 
 
 # Password validation
@@ -188,8 +191,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'noreplyf577@gmail.com'
-EMAIL_HOST_PASSWORD = 'lxlb pidz ggno lujv'
+EMAIL_HOST_USER = 'contactus@treeranga.com'
+EMAIL_HOST_PASSWORD = 'yawc tadt bocq rbyi'
 DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 
