@@ -84,7 +84,7 @@ Product Details - {{ product_obj.name }}
                         
                     {% else %}
                         <a href="{% url 'users:login' %}" class="btn-wishlist position-absolute top-0 end-0 m-2">
-                            Add to Wishlist
+                            <i class="fa-regular fa-heart text-dark"></i>
                         </a>
                     {% endif %}
                    

@@ -10,7 +10,7 @@
   <!-- ---------CSS FILES--------- -->
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/User_Side_All.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/user_Responsive.css' %}">
-
+  <link rel="stylesheet" type="text/css" href="{% static 'users/css/login.css' %}">
   <!------------ ICONS FILE------ -->
   <link rel="icon" href="{% static 'app_common/images/logo5.jpeg' %}">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
@@ -105,11 +105,11 @@
             </li>
             
           </ul> -->
-          <div class="SEARCH-CONTAINER">
+          <!-- <div class="SEARCH-CONTAINER">
             <i class="fa fa-search SEARCH-ICON"></i>
             <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
             <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
-          </div>
+          </div> -->
           
           
         </div>
@@ -188,11 +188,11 @@
      <!-- ==================Unauth full screen header================== -->
 
      <div class="col-lg-7 col-xl-6 d-none mt-lg-1 d-lg-block d-flex justify-content-center align-items-center" id="NAV_BUTTONS">
-      <div class="SEARCH-CONTAINER">
+      <!-- <div class="SEARCH-CONTAINER">
         <i class="fa fa-search SEARCH-ICON"></i>
         <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
         <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
-      </div>
+      </div> -->
     </div>
     
 
@@ -200,9 +200,9 @@
 
      
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
-          <!-- <button type="button" class="btn" id="search-icon">
+          <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
-          </button> -->
+          </button>
           <a href="{% url 'users:login' %}" class="text-decoration-none btn  ">
             <i class="fa-regular fa-user HeaderIcons text-success"></i> 
           </a>
@@ -293,7 +293,7 @@
             <div class="">
               <ul class="p-0">
                 <h6>Navigation</h6>
-                  <li><a href="#">Home</a></li>
+                  <li><a href="{% url 'app_common:home' %}">Home</a></li>
                   <li><a href="">All Products</a></li>
                   <li><a href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
                 </ul>

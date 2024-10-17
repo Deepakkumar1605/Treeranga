@@ -4,15 +4,15 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from dotenv import dotenv_values
-env_vars = dotenv_values(".env")
+# from dotenv import dotenv_values
+# env_vars = dotenv_values(".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
-DEBUG = env_vars['DEBUG']
+# DEBUG = env_vars['DEBUG']
 
-
+DEBUG=True
 
 ALLOWED_HOSTS = ['*']
 
@@ -103,16 +103,16 @@ DATABASES = {
 }
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env_vars["DB_NAME"],
-        "USER": env_vars["DB_USER"],
-        "PASSWORD": env_vars["DB_PASSWORD"],
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": env_vars["DB_NAME"],
+#         "USER": env_vars["DB_USER"],
+#         "PASSWORD": env_vars["DB_PASSWORD"],
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 
