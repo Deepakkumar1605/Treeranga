@@ -75,7 +75,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Image</th>
+                        {% comment %} <th>Image</th> {% endcomment %}
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Price</th>
@@ -84,9 +84,9 @@
                 <tbody>
                     {% for key, product in order_details.products.items %}
                     <tr>
-                        <td class="ps-4">
+                        {% comment %} <td class="ps-4">
                             <img src="{{ product.image.url }}" style="height: 50px; width: 50px;" alt="{{ product.name }}"/>
-                        </td>
+                        </td> {% endcomment %}
                         <td>{{ product.name }}</td>
                         <td>{{ product.quantity }}</td>
                         <td>{{ product.product_discount_price }}</td>
@@ -112,7 +112,7 @@
             <p>If you have any questions, feel free to contact us.</p>
         </div>
         <div class="footer">
-            <p>Thank you,<br>Niwa Agro</p>
+            <p>Thank you,<br>Treeranga</p>
         </div>
     </div>
 </body>
