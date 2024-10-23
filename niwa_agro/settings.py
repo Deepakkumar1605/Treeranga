@@ -191,8 +191,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'contactus@treeranga.com'
-EMAIL_HOST_PASSWORD = 'yawc tadt bocq rbyi'
+EMAIL_HOST_USER = 'noreplyf577@gmail.com'
+EMAIL_HOST_PASSWORD = 'lxlb pidz ggno lujv'
 DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 
@@ -201,6 +201,10 @@ DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 RAZORPAY_API_KEY = 'rzp_test_kugvSxFkbuJKAI'
 RAZORPAY_API_SECRET = 'kI8OEz5kKfMRBcnTmQ14GDHy'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+#delhivery
+DELHIVERY_API_KEY  = '96eb7a5d79f87f5139d18917789627672163a2c3'
+DELHIVERY_API_URL = 'https://api.delhivery.com'
 
 
 
