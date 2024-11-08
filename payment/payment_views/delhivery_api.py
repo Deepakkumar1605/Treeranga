@@ -143,3 +143,35 @@ def cancel_delhivery_order(waybill):
     
     except requests.RequestException as e:
         return {"success": False, "message": f"Error during order cancellation: {str(e)}"}
+    
+
+
+# ==============================================
+# Check pin service
+# ==============================================
+    
+def check_pincode_serviceability(pincode):
+    """Check if the given pincode is serviceable by Delhivery."""
+    # Use the production environment URL
+    url = f"https://track.delhivery.com/c/api/pin-codes/json/?filter_codes={pincode}"
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": f"Token {settings.DELHIVERY_API_KEY}"  # Use your API token here
+    }
+
+    try:
+        response = requests.get(url, headers=headers)  # Use GET method for fetching serviceability
+        response.raise_for_status()
+        response_data = response.json()
+
+        # Assuming the API response contains serviceability details
+        # Check if the response contains 'serviceable' or equivalent keys
+        if 'serviceability' in response_data and isinstance(response_data['serviceability'], dict):
+            # Depending on the response structure, modify the following line
+            return response_data['serviceability'].get('serviceable', False)
+        else:
+            return False  # If the API indicates failure, treat as non-serviceable
+
+    except requests.RequestException as e:
+        return {"success": False, "message": f"Error checking pincode serviceability: {str(e)}"}

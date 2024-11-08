@@ -23,6 +23,7 @@ from payment import razorpay
 from product_variations.models import VariantProduct
 from django.utils import timezone
 
+from payment.payment_views.delhivery_api import check_pincode_serviceability
 
 class ShowCart(View):
     def get(self, request):
@@ -362,6 +363,13 @@ class AddAddress(View):
             mobile_no = request.POST["mobile_no"]
             pincode = request.POST["pincode"]
 
+            # Check if the pincode is serviceable
+            is_serviceable = check_pincode_serviceability(pincode)
+            print(is_serviceable,"*******************************")
+            if not is_serviceable:
+                messages.error(request, 'The provided pincode is not serviceable.')
+                return redirect('cart:checkout')
+
             address_id = str(uuid4())
             address_data = {
                 "id": address_id,
@@ -380,11 +388,13 @@ class AddAddress(View):
             user.address = addresses
             user.save()
 
+            messages.success(request, 'Address added successfully.')
             return redirect('cart:checkout')
 
         except Exception as e:
             error_message = f"An unexpected error occurred while adding address: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
 
 def update_address_view(request):
     try:
