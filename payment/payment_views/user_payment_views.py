@@ -100,15 +100,9 @@ class PaymentSuccess(View):
                     order_items = []
 
                     for product_key, product in order.products.items():
-                        order_items.append({
-                            "name": product["info"]["name"],  
-                            "sku": product["info"]["sku"],    
-                            "units": product["quantity"],     
-                            "selling_price": product["info"]["discount_price"],  
-                            "discount": product["info"]["max_price"] - product["info"]["discount_price"],  
-                            "tax": "",  
-                            "hsn": ""   
-                        })
+                        item_string = f"name: {product['info']['name']}, sku: {product['info']['sku']}, units: {product['quantity']}, selling_price: {product['info']['discount_price']}, discount: {product['info']['max_price'] - product['info']['discount_price']}, tax: {product['info'].get('tax', '')}, hsn: {product['info'].get('hsn', '')}"
+
+                        order_items.append(item_string)
 
                     
 
@@ -131,7 +125,7 @@ class PaymentSuccess(View):
                                     "return_add": "",
                                     "return_state": "",
                                     "return_country": "",
-                                    "products_desc": order_items,
+                                    "products_desc": ', '.join(order_items),
                                     "hsn_code": "",
                                     "cod_amount": float(t_price),
                                     "order_date": "",
@@ -201,19 +195,11 @@ class PaymentSuccess(View):
                 order_items = []
 
                 for product_key, product in order.products.items():
-                    order_items.append({
-                        "name": product["info"]["name"],  
-                        "sku": product["info"]["sku"],    
-                        "units": product["quantity"],     
-                        "selling_price": product["info"]["discount_price"],  
-                        "discount": product["info"]["max_price"] - product["info"]["discount_price"],  
-                        "tax": "",  
-                        "hsn": ""   
-                    })
+                    item_string = f"name: {product['info']['name']}, sku: {product['info']['sku']}, units: {product['quantity']}, selling_price: {product['info']['discount_price']}, discount: {product['info']['max_price'] - product['info']['discount_price']}, tax: {product['info'].get('tax', '')}, hsn: {product['info'].get('hsn', '')}"
 
+                    order_items.append(item_string)
                 
-
-                # Prepare and send order creation request to Delhivery
+                #Prepare and send order creation request to Delhivery
                 delhivery_order_response = create_delhivery_order({
                         "shipments": [
                             {
@@ -232,7 +218,7 @@ class PaymentSuccess(View):
                                 "return_add": "",
                                 "return_state": "",
                                 "return_country": "",
-                                "products_desc": order_items,
+                                "products_desc": ', '.join(order_items),
                                 "hsn_code": "",
                                 "cod_amount": float(t_price),
                                 "order_date": "",

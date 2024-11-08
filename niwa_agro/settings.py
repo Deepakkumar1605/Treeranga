@@ -159,6 +159,7 @@ PRODUCTION = str(os.getenv('PRODUCTION'))
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
 STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
 
+SITE_URL = 'http://127.0.0.1:8000'
 
 
 MEDIA_URL = '/media/'

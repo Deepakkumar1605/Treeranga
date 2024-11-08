@@ -147,7 +147,7 @@ class AddToCartAPIView(APIView):
             product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_key = str(product_obj.id)
             product_info = {
-                'product_id': product_obj.product.id,
+                
                 'uid': product_uid,
                 'name': product_obj.product.name,
                 'image': product_obj.product.image.url if product_obj.product.image else None,
