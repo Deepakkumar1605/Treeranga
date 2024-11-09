@@ -28,7 +28,11 @@
                             {% for key, value in products.items %}
                             <tr>
                                 <td class="cart-product-image p-0" id="t-Body">
-                                    <a href="{% url 'product:product_detail' key %}">
+                                    {% if value.info.variant == "no" %}
+                                        <a href="{% url 'product:product_detail' key %}?variant=no">
+                                    {% elif value.info.variant == "yes" %}
+                                        <a href="{% url 'product:product_detail' key %}?variant=yes">
+                                    {% endif %}
                                         <img src="{{ value.info.image }}" class="img-thumbnail" alt="product image">
                                     </a>
                                 </td>
@@ -70,7 +74,8 @@
                     {% if products %}
                     <a href="{% url 'cart:checkout' %}" class="u-button">Place order</a>
                     {% else %}
-                    <button class="u-button" disabled>Place order</button>
+                    <a class="u-button" disabled>Place order</a>
+                    
                     {% endif %}
                 </div>
             </div>

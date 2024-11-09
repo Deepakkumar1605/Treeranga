@@ -286,7 +286,7 @@ Checkout
                             "key": "{{ api_key }}",
                             "amount": "{{ amount }}",
                             "currency": "INR",
-                            "name": "TREERANGE",
+                            "name": "Treeranga",
                             "description": "Payment Transaction",
                             "image": "",
                             "order_id": "{{ rz_order_id }}",
@@ -306,7 +306,7 @@ Checkout
                                     "razorpay_order_id": response.razorpay_order_id,
                                     "razorpay_signature": response.razorpay_signature,
                                     "address_id": selectedAddress,
-                                    "payment_method":"razorpay"
+                                    "payment_method":"prepaid"
                                 };
                                 $.ajax({
                                     url: '{% url "payment:paymentsuccess" %}',

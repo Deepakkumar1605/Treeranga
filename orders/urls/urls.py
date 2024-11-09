@@ -19,6 +19,7 @@ urlpatterns = [
     #user/order
     path('MyOders/',user_orders_views.UserOrder.as_view(),name='orders'),
     path('Orderdetail/<str:order_uid>', user_orders_views.OrderDetail.as_view(), name='order_detail'),
+    
     path('DownloadInvoice/<str:order_uid>', user_orders_views.UserDownloadInvoice.as_view(), name='user_download_invoice'),
 
 ]

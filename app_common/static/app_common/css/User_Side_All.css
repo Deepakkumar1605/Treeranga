@@ -308,7 +308,7 @@ header {
 }
 
 .carousel-item img {
-	height: 50vh;
+	height: 53vh;
 	object-fit: fill;
 	width: 100%;
 }
@@ -518,7 +518,7 @@ header {
   }
 .abt-img {
 	width: 450px;
-	height: 300px;
+	height: 350px;
  }
 
 /* ---------------------testimonial---------------------------- */
@@ -1342,7 +1342,7 @@ input[type="radio"]:hover {
 .product-image img {
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: fill;
 }
 .product-image {
 	position: relative;
@@ -1377,7 +1377,7 @@ video {
 .gallery-slide img, .gallery-slide video {
 	width: 100%;
 	height: auto;
-	object-fit: cover;
+	object-fit: fill;
 }
 
 .slick-dots {
@@ -1411,7 +1411,7 @@ video {
 .gallery-item img, .gallery-item video {
 	width: 140px;
 	height: 120px;
-	object-fit: cover;
+	object-fit: fill;
 	cursor: pointer;
 	padding: 2px 0;
 }
@@ -1812,6 +1812,7 @@ video {
 	font-weight: 500;
 	font-style: normal;
 	line-height: 23px;
+	width: auto !important;
 }
 
 #tb-body {
@@ -2302,15 +2303,31 @@ text-align: center;
 
 .right-image img {
     height: 100%;
-    object-fit: fill;
+    object-fit: fill !important;
     width: 100%;
 }
 
+
+.women_img{
+	height: 49vh !important;
+	object-fit: fill !important;
+}
 /* Styling the overlay with the centered heading and button */
 .overlay {
     position: absolute;
-    top: 60%;
+    top: 50%;
     left: 60%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.overlay2 {
+    position: absolute;
+    top: 80%;
+    left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -2320,7 +2337,7 @@ text-align: center;
 }
 .overlay1 {
     position: absolute;
-    top: 84%;
+    top: 90%;
     left: 74%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -2329,7 +2346,6 @@ text-align: center;
     align-items: center;
     text-align: center;
 }
-
 .overlay  h5 {
     color: rgb(0, 0, 0);
     margin-bottom: 10px;
@@ -2351,4 +2367,4 @@ text-align: center;
     
 }
 
-/* =============Product Card Treenga=============== */
+/* =============Product Card Treeranga=============== */

@@ -8,6 +8,10 @@ from orders.serializer import OrderSerializer
 from django.views import View
 from orders.models import Order
 from product.models import Products
+
+from payment.payment_views.delhivery_api import track_delhivery_order
+
+
 app = "orders/user/"
 
 class UserOrder(View):
@@ -24,11 +28,18 @@ class UserOrder(View):
 
 
 class OrderDetail(View):
-    template = app + 'order_details.html'  # Update 'app' with the correct path
+    template = app + 'order_details.html'  
 
     def get(self, request, order_uid):
         try:
             order = get_object_or_404(Order, uid=order_uid)
+            
+            # Fetch order metadata and use order.uid as ref_id
+            ref_id = str(order.uid)  # Using the order UID for tracking
+            # Call the Delhivery tracking function with ref_id
+            tracking_response = track_delhivery_order(ref_id=ref_id)
+            # Get the tracking data from the response
+            tracking_data = tracking_response.get('data', []) if tracking_response.get('success') else []
 
             product_list = []
             product_quantity = []
@@ -81,13 +92,17 @@ class OrderDetail(View):
                 'sgst_amount': total_sgst,
                 'delivery_charge': delivery_charge,
                 'payment_method': order.payment_method,
-                "MEDIA_URL": settings.MEDIA_URL
+                "MEDIA_URL": settings.MEDIA_URL,
+                'tracking_data': tracking_data  # Add tracking data to context
             }
             return render(request, self.template, context)
 
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+        
+        
+
 
 
 class UserDownloadInvoice(View):

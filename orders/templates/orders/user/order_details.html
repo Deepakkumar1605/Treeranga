@@ -5,14 +5,57 @@
 {% endblock title %}
 
 {% block content %}
+<style>
 
+
+
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h2, h3 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+h4 {
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.tracking-info p, .tracking-info ul {
+    margin: 15px 0;
+    font-size: 16px;
+}
+
+.tracking-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tracking-info ul li {
+    background: #f5f5f5;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+/* Buttons */
+.u-button {
+    width: 200px;
+    margin-top: 10px;
+}
+
+</style>
 
 
 <section class="container">
     <div class="row mx-0">
       <div class="col-lg-12  my-lg-5 ">
-        <div class="card table-responsive">
-          <div class="">
+        <div class="card ">
+          <div class="table-responsive">
             <table class="table table-hover table-nowrap">
               <thead class="table-light">
                 <tr>
@@ -70,173 +113,81 @@
   </section>
   
 
-<section class="container">
-  <div class="card p-lg-3">
-    <h3>Order Summary</h3>
-    <p></p>
-    <div class="row">
-      <div class="col-8 d-flex flex-column lh-lg">
-     
-        <div>Delivery Charge</div>
-        <div>Payment Method</div>
-        <div class="text-success">Discount</div>
-        {% if applied_coupon %}
-        <div class="text-success">Coupon Discount</div>
-        {% endif %}
-        <div>CGST</div>
-        <div>SGST</div>
-        <div class="fw-bold">Total</div>
-      </div>
-
-      <div class="col-2 d-flex flex-column ">
-  
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-
-      <div class="col-2 d-flex flex-column align-items-end lh-lg">
-
-        <div>{{ delivery_charge|default:"Free Shipping" }}</div>
-        <div class="text-uppercase">{{ payment_method|default:"N/A" }}</div>
-        <div class="text-success">- ₹ {{ discount_amount|default:"N/A" }}</div>
-        {% if applied_coupon %}
-        <div class="text-success">- ₹ {{ coupon_discount_amount|default:"N/A" }}</div>
-        {% endif %}
-        <div>₹ {{ cgst_amount|floatformat:2 }}</div>
-        <div>₹ {{ sgst_amount|floatformat:2 }}</div>
-        <div class="fw-bold">₹ {{ grand_total|default:"N/A" }}</div>
-      </div>
-      <div class="card-footer">
-        {% if order.order_status == 'Cancel' %}
-            <button type="button" class="btn btn-secondary u-button" disabled>Order Canceled</button>
-        {% else %}
-              <button type="button" class="btn btn-danger w-25 u-button" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
-        {% endif %}
-      </div>
-    </div>
-
-
-
-   
-  </div>
-</section>
-
-
-{% comment %}
-<main class="py-6 container" style="min-height: 60vh;">
-    <div class="row mt-5">
-        <div class="col-lg-12">
-            <div class="vstack gap-4">
-                
-
-                <!-- Additional Information Section -->
-                <div class="additional-info">
-                    <h3>Order Summary</h3>
-                    <table class="table w-100" id="amt_table">
-                        <tbody>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">Payment Method:</th>
-                                <td class="ps-4">{{ payment_method|default:"N/A" }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">Gross Amt:</th>
-                                <td class="ps-4" colspan="4">{{ gross_cart_value|default:"N/A" }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">Discount:</th>
-                                <td class="ps-4" colspan="4">{{ discount_amount|default:"N/A" }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">CGST:</th>
-                                <td class="ps-4" colspan="4">{{ cgst_amount|floatformat:2 }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">SGST:</th>
-                                <td class="ps-4" colspan="4">{{ sgst_amount|floatformat:2 }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">Delivery Charges:</th>
-                                <td class="ps-4" colspan="4">{{ delivery_charge|default:"N/A" }}</td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <td class="ps-4"></td>
-                                <th class="ps-4" id="t_heaD">Sub Total:</th>
-                                <td class="ps-4" colspan="4">{{ grand_total|default:"N/A" }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    {% if order.order_status == 'Cancel' %}
-                        <button type="button" class="btn btn-secondary" disabled>Order Canceled</button>
-                    {% else %}
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
-                    {% endif %}
-
-
-                    <!-- Cancel Order Modal -->
-                    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form method="post" action="">
-                                    {% csrf_token %}
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="cancelReason">Reason for Cancellation:</label>
-                                            <select class="form-control" id="cancelReason" name="reason" required>
-                                                <option value="product_damage">Product Damage</option>
-                                                <option value="wrong_product">Wrong Product</option>
-                                                <option value="not_satisfied">Not Satisfied</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="additionalInfo">Additional Information (optional):</label>
-                                            <textarea class="form-control" id="additionalInfo" name="additional_info" rows="3"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-danger">Cancel Order</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <section class="container mt-lg-0 mt-2">
+    <div class="row mx-0">
+      <div class="col-12">
+        <div class="card p-3">
+          <h3>Order Summary</h3>
+          <div class="row">
+            <div class="col-8 col-sm-8 d-flex flex-column lh-lg">
+              <div>Delivery Charge</div>
+              <div>Payment Method</div>
+              <div class="text-success">Discount</div>
+              {% if applied_coupon %}
+              <div class="text-success">Coupon Discount</div>
+              {% endif %}
+              <div>CGST</div>
+              <div>SGST</div>
+              <div class="fw-bold">Total</div>
             </div>
+  
+            <div class="col-4 col-sm-4 d-flex flex-column align-items-end lh-lg">
+              <div>{{ delivery_charge|default:"Free Shipping" }}</div>
+              <div class="text-uppercase">{{ payment_method|default:"N/A" }}</div>
+              <div class="text-success">- ₹ {{ discount_amount|default:"N/A" }}</div>
+              {% if applied_coupon %}
+              <div class="text-success">- ₹ {{ coupon_discount_amount|default:"N/A" }}</div>
+              {% endif %}
+              <div>₹ {{ cgst_amount|floatformat:2 }}</div>
+              <div>₹ {{ sgst_amount|floatformat:2 }}</div>
+              <div class="fw-bold">₹ {{ grand_total|default:"N/A" }}</div>
+            </div>
+          </div>
+  
+          <div class="card-footer text-center text-lg-start">
+            {% if order.order_status == 'Cancel' %}
+              <button type="button" class="btn btn-secondary u-button " disabled>Order Canceled</button>
+            {% else %}
+              <button type="button" class="btn btn-danger  u-button" data-toggle="modal" data-target="#cancelModal">Cancel Order</button>
+            {% endif %}
+          </div>
         </div>
+  
+        <!-- Order Tracking Section -->
+        <div class="card p-3 mt-3 mb-3">
+          <h3>Order Tracking</h3>
+          {% if tracking_data %}
+            {% for shipment in tracking_data %}
+              <h4>Shipment Details</h4>
+              <p><strong>AWB:</strong> {{ shipment.Shipment.AWB }}</p>
+              <p><strong>Sender Name:</strong> {{ shipment.Shipment.SenderName }}</p>
+              <p><strong>Destination:</strong> {{ shipment.Shipment.Destination }}</p>
+              <p><strong>Order Type:</strong> {{ shipment.Shipment.OrderType }}</p>
+              <p><strong>Invoice Amount:</strong> ₹ {{ shipment.Shipment.InvoiceAmount }}</p>
+              <h4>Current Status</h4>
+              <p><strong>Status:</strong> {{ shipment.Shipment.Status.Status }}</p>
+              <p><strong>Current Location:</strong> {{ shipment.Shipment.Status.StatusLocation }}</p>
+              <p><strong>Status Date:</strong> {{ shipment.Shipment.Status.StatusDateTime }}</p>
+              
+              <h4>Tracking History</h4>
+              <ul class="ps-3">
+                {% for scan in shipment.Shipment.Scans %}
+                <li>
+                  <strong>{{ scan.ScanDetail.ScanDateTime }} - {{ scan.ScanDetail.ScannedLocation }}</strong>: {{ scan.ScanDetail.Instructions }}
+                </li>
+                {% endfor %}
+              </ul>
+            {% endfor %}
+          {% else %}
+            <p>No tracking information available for this order.</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
-</main>
-{% endcomment %}
+  </section>
+  
+
+
 
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>

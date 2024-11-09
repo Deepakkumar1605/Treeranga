@@ -124,6 +124,7 @@ class AddToCartView(View):
         product_key = str(product_obj.id)
         product_info = {
             'product_id': product_obj.id,
+            'sku':product_obj.product.sku_no,
             'uid': product_uid,
             'name': product_obj.product.name,
             'image': product_obj.product.image.url if product_obj.product.image else None,

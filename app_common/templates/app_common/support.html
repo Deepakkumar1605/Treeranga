@@ -23,7 +23,6 @@ Support {% endblock title %}
 
     <div class="container">
       <div class="row contactus-page mt-lg-4 mt-0">
-       
         <div class="col col-lg-7 col-xl-8">
           <div class="contact-form ">
                 
@@ -32,10 +31,9 @@ Support {% endblock title %}
               {% csrf_token %}
               {% for field in form %}
               <div class="form-field">
-               {{ field }}
+              {{ field }}
               </div>
                 {% endfor %}
-                
                 <div class="d-flex justify-content-center">
                   <button type="submit" class="u-button  text-uppercase">Send Message</button>
                 </div>
