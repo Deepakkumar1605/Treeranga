@@ -123,6 +123,7 @@ class ProductAdd(View):
 
     def get(self, request):
         form = self.form_class()
+        
         context = {
             "form": form,
         }
