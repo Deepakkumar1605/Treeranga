@@ -21,6 +21,91 @@ from product.models import Category, SimpleProduct
 from product_variations.models import VariantProduct
 from users.serializers import AddressSerializer
 
+# class ShowCartAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     @swagger_auto_schema(
+#         tags=["Cart"],
+#         operation_description="Show cart",
+#         responses={
+#             200: 'Successfully show cart',
+#             401: 'Unauthorized',
+#             404: 'Category not found'
+#         }
+#     )
+#     def get(self, request):
+#         user = request.user
+#         cupon_discounted_amount = Decimal('0.00')
+
+#         if user.is_authenticated:
+#             cart_items = models.Cart.objects.filter(user=user).first()
+#             if cart_items:
+#                 products = cart_items.products if hasattr(cart_items, 'products') else {}
+#                 final_cart_value = cart_items.total_price if cart_items else Decimal('0.00')
+#                 discount_amount = cart_items.coupon_discount_amount if cart_items else Decimal('0.00')
+#                 applied_coupon = cart_items.applied_coupon if cart_items else None
+#                 cupon_discounted_amount += discount_amount
+
+#                 # Set coupon values if there are no products
+#                 if not products:
+#                     applied_coupon = None
+#                     cupon_discounted_amount = Decimal('0.00')
+#             else:
+#                 products = {}
+#                 final_cart_value = Decimal('0.00')
+#                 discount_amount = Decimal('0.00')
+#                 applied_coupon = None
+#                 cupon_discounted_amount = Decimal('0.00')
+#         else:
+#             products = request.session.get('cart', {}).get('products', {})
+#             final_cart_value = Decimal(request.session.get('total_price', '0.00'))
+#             discount_amount = Decimal(request.session.get('coupon_discount_amount', '0.00'))
+#             applied_coupon = request.session.get('applied_coupon', None)
+#             cupon_discounted_amount += discount_amount
+
+#             # Set coupon values if there are no products
+#             if not products:
+#                 applied_coupon = None
+#                 cupon_discounted_amount = Decimal('0.00')
+
+#         # Initialize totals
+#         total_original_price = Decimal('0.00')
+#         total_price = Decimal('0.00')
+#         total_discounted_amount = Decimal('0.00')
+
+#         # Calculate total price
+#         for product_key, product_info in products.items():
+#             max_price = Decimal(product_info['info'].get('max_price', '0.00'))
+#             discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
+#             quantity = product_info.get('quantity', 0)
+#             total_original_price += max_price * quantity
+#             total_price += discount_price * quantity
+#             total_discounted_amount += (max_price - discount_price) * quantity
+
+#         # Serialize the coupon object if it exists
+#         applied_coupon_data = None
+#         if applied_coupon:
+#             applied_coupon_data = {
+#                 'code': applied_coupon.code,
+#                 'discount': float(applied_coupon.discount_value ),
+#                 'valid_from': applied_coupon.valid_from.strftime('%Y-%m-%d'),
+#                 'valid_to': applied_coupon.valid_to.strftime('%Y-%m-%d'),
+#             }
+
+#         # Prepare the data for the response
+#         response_data = {
+#             'products': products,
+#             'total_original_price': float(total_original_price),
+#             'total_price': float(total_price) - float(cupon_discounted_amount),
+#             'final_cart_value': float(total_price) - float(cupon_discounted_amount),  # Final price including any discounts
+#             'discount_price': float(total_discounted_amount),
+#             'cupon_discounted_amount': float(cupon_discounted_amount),
+#             'applied_coupon': applied_coupon_data,  # Return the serialized coupon data
+#             'MEDIA_URL': settings.MEDIA_URL,
+#         }
+
+#         return Response(response_data)
+
 class ShowCartAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -74,6 +159,7 @@ class ShowCartAPIView(APIView):
         total_discounted_amount = Decimal('0.00')
 
         # Calculate total price
+        product_list = []  # Convert products to a list
         for product_key, product_info in products.items():
             max_price = Decimal(product_info['info'].get('max_price', '0.00'))
             discount_price = Decimal(product_info['info'].get('discount_price', '0.00'))
@@ -82,19 +168,24 @@ class ShowCartAPIView(APIView):
             total_price += discount_price * quantity
             total_discounted_amount += (max_price - discount_price) * quantity
 
+            # Append each product to the product_list
+            product_data = product_info.copy()
+            product_data['id'] = product_key  # Add ID as a field in the product data
+            product_list.append(product_data)
+
         # Serialize the coupon object if it exists
         applied_coupon_data = None
         if applied_coupon:
             applied_coupon_data = {
                 'code': applied_coupon.code,
-                'discount': float(applied_coupon.discount_value ),
+                'discount': float(applied_coupon.discount_value),
                 'valid_from': applied_coupon.valid_from.strftime('%Y-%m-%d'),
                 'valid_to': applied_coupon.valid_to.strftime('%Y-%m-%d'),
             }
 
         # Prepare the data for the response
         response_data = {
-            'products': products,
+            'products': product_list,  # Use the list of products instead of the dictionary
             'total_original_price': float(total_original_price),
             'total_price': float(total_price) - float(cupon_discounted_amount),
             'final_cart_value': float(total_price) - float(cupon_discounted_amount),  # Final price including any discounts
@@ -105,6 +196,7 @@ class ShowCartAPIView(APIView):
         }
 
         return Response(response_data)
+
 
 
 class AddToCartAPIView(APIView):
@@ -147,7 +239,7 @@ class AddToCartAPIView(APIView):
             product_uid = product_obj.product.uid or f"{product_obj.product.name}_{product_obj.id}"
             product_key = str(product_obj.id)
             product_info = {
-                
+                'product_id': product_obj.product.id,
                 'uid': product_uid,
                 'name': product_obj.product.name,
                 'image': product_obj.product.image.url if product_obj.product.image else None,

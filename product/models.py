@@ -50,10 +50,18 @@ class Products(models.Model):
         (Decimal('18.00'), '18%'),
         (Decimal('28.00'), '28%'),
     ]
+    
+    PRODUCT_FOR = (
+        ("Men","Men"),
+        ("Women","Women"),
+        ("Boy","Boy"),
+        ("Girl","Girl")
+    )
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     uid = models.CharField(max_length=255, null=True, blank=True)
     sku_no = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    product_for = models.CharField(max_length= 255, choices= PRODUCT_FOR ,default="Men",null=True,blank=True)
     name = models.CharField(max_length=255, null=True, blank=True, unique=True)
     brand = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(upload_to='product_image/', null=True, blank=True)
@@ -62,6 +70,7 @@ class Products(models.Model):
     trending = models.CharField(max_length=255, choices=YESNO, default="no")
     show_as_new = models.CharField(max_length=255, choices=YESNO, default="no")
     product_type = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES, default='simple')
+    
 
     # GST Fields
     gst_rate = models.DecimalField(max_digits=5, decimal_places=2, choices=GST_CHOICES, default=Decimal('0.00'))
