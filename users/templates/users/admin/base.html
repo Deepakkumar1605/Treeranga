@@ -9,7 +9,7 @@
 	<title>Admin Dashboard</title>
 
 	<!-- ------------Shrortcut Icon Links------------ -->
-	<link rel="icon" href="{% static 'app_common/images/logo5.jpeg' %}">
+	<link rel="icon" href="{% static 'app_common/images/logo5.png' %}">
 	<!-- ---------- CSS Links Files------------- -->
 	<link rel="stylesheet" href="{% static 'users/css/Admin_Responsive.css' %}">
 	<link rel="stylesheet" href="{% static 'users/css/Admin_Side_All.css' %}">
@@ -235,29 +235,29 @@
 		font-size: 35px;
 		margin-right: 10px;
 	  }
-	#content nav {
-		height: 56px;
-		background: var(--light);
-		padding: 0 24px;
-		display: flex;
-		align-items: center;
-		grid-gap: 24px;
-		font-family: var(--lato);
-		position: sticky;
-		top: 0;
-		left: 0;
-		z-index: 1000;
-	}
-	#content nav::before {
-		content: '';
-		position: absolute;
-		width: 40px;
-		height: 40px;
-		bottom: -40px;
-		left: 0;
-		border-radius: 50%;
-		box-shadow: -20px -20px 0 var(--light);
-	}
+	  #content nav {
+	height: 56px;
+	background-color: transparent;
+	padding: 0 24px;
+	display: flex;
+	align-items: center;
+	grid-gap: 24px;
+	font-family: var(--lato);
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+}
+#content nav::before {
+	content: '';
+	position: absolute;
+	width: 0px;
+	height: 0px;
+	bottom: 0px;
+	left: 0;
+	/* border-radius: 50%; */
+	/* box-shadow: -20px -20px 0 var(--light); */
+}
 	#content nav a {
 		color: var(--dark);
 	}
@@ -872,15 +872,7 @@
 				</div>
 			</form>
 			<input type="checkbox" id="switch-mode" hidden>
-			<!-- <label for="switch-mode" class="switch-mode"></label> -->
-			<a href="#" class="notification">
-				<i class='bx bxs-bell'></i>
-				<span class="num">8</span>
-			</a>
-			<a href="#" class="profile">
-				<img src="{% static 'users/images/user!.webp' %}">
-				<span class="admin_name">{{request.user.email}}</span>
-			</a>
+			
 		</nav>
 		<!-- NAVBAR -->
 

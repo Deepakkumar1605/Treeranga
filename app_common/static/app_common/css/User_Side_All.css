@@ -271,7 +271,7 @@ header {
 	outline: none;
 	border-color: #00836C;
   }
-  
+
 
 /* ------------------------search Suggestion------------- */
 #search-suggestions{
@@ -283,14 +283,14 @@ header {
 	margin: 8px 0;
 }
 .suggestions-list {
-    border-radius: 4px; /* Rounded corners for the list */
-    margin-top: 10px; /* Space between the input and suggestions list */
-    max-width: 400px; /* Maximum width of the suggestions list */
-    list-style-type: none; /* Remove default list styling */
-    padding: 15px; /* Remove default padding */
-    position: absolute; /* Position relative to the parent input */
-    background-color: var(--white); /* Background color for the list */
-    z-index: 1000; /* Ensure it appears above other content */
+    border-radius: 4px;
+    margin-top: 10px; 
+    max-width: 400px; 
+    list-style-type: none;
+    padding: 15px;
+    position: absolute; 
+    background-color: var(--white);
+    z-index: 1000; 
 }
 .suggestion:hover{
 	background-color: #baeaa6;
