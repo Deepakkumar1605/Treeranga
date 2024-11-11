@@ -1,5 +1,5 @@
 from django import forms
-from app_common.models import ContactMessage,Banner
+from app_common.models import ContactMessage,Banner, Notification
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
@@ -41,3 +41,17 @@ class BannerForm(forms.ModelForm):
     class Meta:
         model = Banner
         fields = '__all__'
+        
+        
+        
+class NotificationForm(forms.ModelForm):
+    class Meta:
+        model = Notification
+        fields = ['title', 'description', 'image', 'callback_url', 'is_active']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Notification Title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Notification Description'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'callback_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Callback URL'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
