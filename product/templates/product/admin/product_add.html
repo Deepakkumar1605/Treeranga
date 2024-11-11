@@ -69,11 +69,12 @@ Product {% endblock title %} {% block content %}
 </style>
 <section class="py-lg-2">
   <div class="container">
-    <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">
-      Add Product
-    </h4>
+  
     <div class="product-form-container">
       <form id="product-form" method="POST" enctype="multipart/form-data" action="{% url 'product:product_add' %}">
+        <h4 class="  text-center  p-lg-3">
+          Add Product
+        </h4>
         {% csrf_token %}
      <div class="card p-2 my-3">
       <div class="card p-2 my-3">

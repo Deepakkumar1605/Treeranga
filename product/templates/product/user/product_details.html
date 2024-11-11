@@ -161,28 +161,55 @@ Product Details - {{ product_obj.name }}
                     </div>
 
 
-
+                <div class="d-flex justify-content-between ">
+                   
                     <div class="variant-options">
-                        <!-- Example attributes and their values -->
-                        {% for attribute, values in attributes.items %}
-                            <div class="attribute-group mb-2">
-                                <strong>{{ attribute }} : </strong>
-                                <span class="d-inline-flex flex-wrap">
-                                    {% for value in values %}
-                                        <a href="#" class="vbtn variant-link text-capitalize {% if active_variant_attributes %}
-                                            {% for key, val in active_variant_attributes.items %}
-                                                {% if key == attribute and val == value %}
-                                                    highlighted
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endif %}" data-attribute="{{ attribute }}" data-value="{{ value }}">
-                                            {{ value }}
-                                        </a>
-                                    {% endfor %}
-                                </span>
-                            </div>
-                        {% endfor %}
+                        <div>
+                          <!-- Example attributes and their values -->
+                          {% for attribute, values in attributes.items %}
+                          <div class="attribute-group mb-2">
+                              <strong>{{ attribute }} : </strong>
+                              <span class="d-inline-flex flex-wrap">
+                                  {% for value in values %}
+                                      <a href="#" class="vbtn variant-link text-capitalize {% if active_variant_attributes %}
+                                          {% for key, val in active_variant_attributes.items %}
+                                              {% if key == attribute and val == value %}
+                                                  highlighted
+                                              {% endif %}
+                                          {% endfor %}
+                                      {% endif %}" data-attribute="{{ attribute }}" data-value="{{ value }}">
+                                          {{ value }}
+                                      </a>
+                                  {% endfor %}
+                              </span>
+                          </div>
+                      {% endfor %}
+                    
+                        </div>
+                     </div>
+                     <div class="">
+                        <button class="variant-link2" data-bs-toggle="modal" data-bs-target="#sizeChartModal">Size Chart</button>
                     </div>
+                </div>
+
+                <!-- Modal Structure -->
+                <div class="modal fade custom_ModaL" id="sizeChartModal" tabindex="-1" aria-labelledby="sizeChartModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-md custom-modal-dialog">
+                        <div class="modal-content">
+                            <!-- <div class="modal-header">
+                                <h5 class="modal-title text-black" id="sizeChartModalLabel">Size Chart</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div> -->
+                            <div class="modal-body ">
+                                <img src="{% static 'app_common/images/size.jpg' %}" class="img-fluid" alt="">
+                               
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     
                     <!-- <div class="variations">
                         {% if variant_combination %}

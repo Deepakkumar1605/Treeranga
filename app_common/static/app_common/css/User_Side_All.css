@@ -528,8 +528,10 @@ header {
 	border-radius: 8px;
 	text-align: center;
 	background: rgb(255,83,14);
-background: linear-gradient(350deg, rgba(1,162,60,1) 9%, rgb(228, 227, 227) 46%,  rgba(255,83,14,1) 90%);
+	background: linear-gradient(350deg, rgba(1,162,60,1) 9%, rgb(228, 227, 227) 46%,  rgba(255,83,14,1) 90%);
 	margin: 5px;
+	max-height: 270px;
+	min-height: 270px;
 }
 
 .testimonial-icon {
@@ -1498,6 +1500,20 @@ video {
 	word-spacing: 2px;
 	transition: transform 0.3s ease;
 }
+.variant-link2 {
+	text-decoration: none;
+	margin:5px 10px;
+	padding: 5px 10px;
+	border: 1px solid rgba(30, 30, 238, 0.731);
+	border-radius: 2px;
+	color:rgb(0, 0, 0);
+	font-family: "Poppins",sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 20px;
+	word-spacing: 2px;
+	transition: transform 0.3s ease;
+}
 .variant-link:hover{
 	color:rgb(0, 0, 0);
 }
@@ -1513,7 +1529,9 @@ video {
 	font-weight: 600;
 	box-shadow: var(--sm-shadow);
 }
-
+.custom_ModaL{
+	top: 80%;
+}
 #addToCartButton.cart-btn {
 	background-color: var(--secondary);
 	color: var(--white);

@@ -5,11 +5,11 @@
  
 <section class="py-lg-2">
     <div class="container">
-        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Update Category</h4>
         <div class="d-flex justify-content-center m-0 p-0">
             <p class="m-0 p-0">{% include 'snippets/alert.html' %}</p>
         </div>
-        <div class="product-form-container w-50">
+        <div class="product-form-container w-50 mt-5">
+        <h4 class="text-center p-lg-3">Update Category</h4>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}

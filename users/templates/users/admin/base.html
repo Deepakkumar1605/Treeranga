@@ -767,7 +767,7 @@
 				<ul class="sidebar-dropdown collapse ms-2" data-bs-parent="#sidebar" id="auth">
 					<li class="sidebar-item">
 						<a href="{% url 'product:category_list' %}" class="sidebar-links">
-							<i class="lni lni-list"></i><span class="ms-4">All Category List</span></a>
+							<i class="lni lni-list"></i><span class="ms-4">All Categories </span></a>
 					</li>
 					<!-- <li class="sidebar-item">
                           <a href="{% url 'product:category_add' %}" class="sidebar-links">
@@ -777,22 +777,23 @@
 						<a href="{% url 'product:product_list' %}" class="sidebar-links">
 							<i class="lni lni-line-double"></i><span class="ms-4">All Products</span></a>
 					</li>
-					<li class="sidebar-item">
+					<!-- <li class="sidebar-item">
 						<a href="{% url 'product:simple_product_list' %}" class="sidebar-links">
 							<i class="lni lni-layers"></i><span class="ms-4">All Simple Products</span></a>
+					</li> -->
+					<li class="sidebar-item">
+						<a href="{% url 'product_variations:variant_product_list' %}" class="sidebar-links">
+							<i class="lni lni-layout"></i><span class="ms-4">All  Product variants</span></a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'product_variations:variation_list' %}" class="sidebar-links">
-							<i class="lni lni-slack"></i></i><span class="ms-4">Attribute</span></a>
+							<i class="lni lni-slack"></i></i><span class="ms-4">Attribute Master</span></a>
 					</li>
 					<li class="sidebar-item">
 						<a href="{% url 'product_variations:attribute_list' %}" class="sidebar-links">
-							<i class="lni lni-fitbit"></i></i><span class="ms-4">Variant</span></a>
+							<i class="lni lni-fitbit"></i></i><span class="ms-4">Variant Master</span></a>
 					</li>
-					<li class="sidebar-item">
-						<a href="{% url 'product_variations:variant_product_list' %}" class="sidebar-links">
-							<i class="lni lni-layout"></i><span class="ms-4">All variant Products</span></a>
-					</li>
+					
 
 				</ul>
 			</li>

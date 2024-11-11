@@ -38,6 +38,7 @@
                 <form action="" class="update-form p-5" method="post" enctype="multipart/form-data"  id="variantProductForm">
                     {% include 'snippets/alert.html' %}
                     {% csrf_token %}
+                    <h4 class=" text-center  p-lg-3">Edit All Product Variant</h4>
                     <div class="row">
                         {% for field in form %}
                             <div class="col-md-6 col-6 col-sm-6">
