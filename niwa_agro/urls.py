@@ -25,6 +25,7 @@ urlpatterns = [
     path("users/", include("users.urls.api_urls")),
 
     path("", include("app_common.urls.urls")),
+    path("home_api", include("app_common.urls.api_url")),
     path("product/", include("product.urls.urls")),
     path("product_api", include("product.urls.api_urls")),
     path("cart/", include("cart.urls.urls")),

@@ -128,49 +128,36 @@ class LoginApi(APIView):
             return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
 class LogoutApi(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can access this view
+    permission_classes = [IsAuthenticated]
     parser_classes = [FormParser, MultiPartParser]
 
     @swagger_auto_schema(
         tags=["authentication"],
         operation_description="Logout API",
-        manual_parameters=swagger_documentation.logout_get,
         responses={
             200: openapi.Response('Logout successful'),
             400: openapi.Response('Logout cancelled'),
             401: openapi.Response('Unauthorized'),
         }
     )
-    def get(self, request, *args, **kwargs):
-        # The IsAuthenticated permission class should prevent this,
-        # but we add an extra check to be safe.
-        if not request.user.is_authenticated:  
-            return Response({
-                "status": 401,
-                "message": "Unauthorized"
-            }, status=status.HTTP_401_UNAUTHORIZED)
-
-        confirm = request.query_params.get('confirm')
-        cancel = request.query_params.get('cancel')
+    def post(self, request, *args, **kwargs):
+        confirm = request.data.get('confirm')
+        cancel = request.data.get('cancel')
 
         if confirm:
             # Log out the user and delete their token
-            logout(request)
             Token.objects.filter(user=request.user).delete()
+            logout(request)
             return Response({
                 "status": 200,
                 "message": "Logout Successful",
             }, status=status.HTTP_200_OK)
 
         if cancel:
-            if request.user.is_superuser:
-                return Response({
-                    "status": 200,
-                    "message": "Logout Cancelled",
-                }, status=status.HTTP_200_OK)
+            message = "Logout Cancelled" if request.user.is_superuser else "Logout Cancelled"
             return Response({
                 "status": 200,
-                "message": "Logout Cancelled",
+                "message": message,
             }, status=status.HTTP_200_OK)
 
         return Response({
@@ -292,71 +279,101 @@ class UpdateProfileApiView(APIView):
         return Response({"errors": form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     
+# class AddAddressAPIView(APIView):
+#     parser_classes = [FormParser, MultiPartParser]
+
+#     @swagger_auto_schema(
+#         tags=["user"],
+#         operation_description="Add address",
+#         manual_parameters=swagger_documentation.add_address_post,
+#         responses={
+#             200: openapi.Response('Address add successfully'),
+#             400: openapi.Response('Invalid input'),
+#         }
+#     )
+#     def post(self, request):
+#         if not request.user.is_authenticated:
+#             return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+
+#         serializer = serializers.AddressSerializer(data=request.data)
+#         if serializer.is_valid():
+#             data = serializer.validated_data
+#             address_id = str(uuid4())
+            
+#             address_data = {
+#                 "id": address_id,
+#                 "Address1": data["Address1"],
+#                 "Address2": data["Address2"],
+#                 "country": data["country"],
+#                 "state": data["state"],
+#                 "city": data["city"],
+#                 'mobile_no': data["mobile_no"],
+#                 "pincode": data["pincode"],
+#             }
+
+#             user = request.user
+#             addresses = getattr(user, 'address', []) or []
+
+#             # Append the new address data to the list of addresses
+#             addresses.append(address_data)
+
+#             # Save the updated list of addresses back to the user model
+#             user.address = addresses
+#             user.save()
+
+#             return Response({"message": "Address added successfully"}, status=status.HTTP_201_CREATED)
+        
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 class AddAddressAPIView(APIView):
     parser_classes = [FormParser, MultiPartParser]
-
     @swagger_auto_schema(
         tags=["user"],
-        operation_description="Add address",
+        operation_description="Add Address API",
         manual_parameters=swagger_documentation.add_address_post,
-        responses={
-            200: openapi.Response('Address add successfully'),
-            400: openapi.Response('Invalid input'),
-        }
+        responses={201: 'Address Added successfully', 400: 'Validation error'}
     )
     def post(self, request):
-        if not request.user.is_authenticated:
-            return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
-
         serializer = serializers.AddressSerializer(data=request.data)
         if serializer.is_valid():
-            data = serializer.validated_data
             address_id = str(uuid4())
-            
             address_data = {
                 "id": address_id,
-                "Address1": data["Address1"],
-                "Address2": data["Address2"],
-                "country": data["country"],
-                "state": data["state"],
-                "city": data["city"],
-                'mobile_no': data["mobile_no"],
-                "pincode": data["pincode"],
+                "Address1": serializer.validated_data["Address1"],
+                "Address2": serializer.validated_data.get("Address2", ""),
+                "country": serializer.validated_data["country"],
+                "state": serializer.validated_data["state"],
+                "city": serializer.validated_data["city"],
+                "mobile_no": serializer.validated_data["mobile_no"],
+                "pincode": serializer.validated_data["pincode"],
             }
-
+ 
             user = request.user
-            addresses = getattr(user, 'address', []) or []
-
+            addresses = user.address or []
+ 
             # Append the new address data to the list of addresses
             addresses.append(address_data)
-
+ 
             # Save the updated list of addresses back to the user model
             user.address = addresses
             user.save()
-
+ 
             return Response({"message": "Address added successfully"}, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error':str(serializer.errors)}, status=status.HTTP_400_BAD_REQUEST)
     
 class AllAddressAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     @swagger_auto_schema(
         tags=["user"],
-        operation_description="Retrieve all addresses of the authenticated user.",
-        responses={
-                200: 'Successfully show Address',
-                401: 'Unauthorized',
-                404: 'Address not found'
-            }
-        )
+        operation_description="All Address API",
+        manual_parameters=swagger_documentation.all_address,
+        responses={201: 'Address Fetch successful', 400: 'Validation error'}
+    )
     def get(self, request):
         user = request.user
-        addresses = user.address or []  # This will return a list of addresses
-
-        # Serialize the addresses
-        serializer = serializers.AddressSerializer(addresses, many=True)
-        
-        return Response({"addresses": serializer.data}, status=status.HTTP_200_OK)
+        addresses = user.address or []
+        return Response(addresses, status=status.HTTP_200_OK)
 
 class ProfileUpdateAddressAPIView(APIView):
     permission_classes = [IsAuthenticated]
