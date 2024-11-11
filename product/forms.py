@@ -35,6 +35,9 @@ class ProductForm(forms.ModelForm):
 
     name = forms.CharField(max_length=255)
     name.widget.attrs.update({'class': 'form-control', 'type': 'text', 'required': 'required'})
+    
+    product_for = forms.ChoiceField(choices=Products.PRODUCT_FOR, initial='Men')
+    product_for.widget.attrs.update({'class': 'form-control', 'type': 'text', "required": "required"})
 
     brand = forms.CharField(max_length=255, required=True)
     brand.widget.attrs.update({'class': 'form-control', 'type': 'text'})
@@ -68,7 +71,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Products
         fields = [
-            'product_type','category', 'sku_no', 'name', 'brand', 'image', 'product_short_description',
+            'product_type','category', 'sku_no', 'name', 'product_for','brand', 'image', 'product_short_description',
             'product_long_description', 'trending', 'show_as_new', 'gst_rate','flat_delivery_fee','virtual_product'
         ]
 

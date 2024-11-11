@@ -122,6 +122,12 @@ Product {% endblock title %} {% block content %}
         <div class="row mb-2">
           <div class="col-md-6">
             <div class="lh-lg">
+              <label for="{{ form.brand.id_for_label }}">product for</label>
+              {{ form.product_for }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="lh-lg">
               <label for="{{ form.brand.id_for_label }}">Brand</label>
               {{ form.brand }}
             </div>

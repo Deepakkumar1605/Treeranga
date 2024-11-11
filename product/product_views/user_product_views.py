@@ -289,12 +289,58 @@ def has_user_ordered_product(user, product_obj):
             if str(product_info.get('product_id')) == str(product_obj.id):
                 return True
     return False
+# class AllTrendingProductsView(View):
+#     template_name = app +'user/trending_products.html'
+
+#     def get(self, request):
+#         try:
+#             trending_products = Products.objects.filter(trending="yes").order_by('-id')
+#             updated_trending_products = []
+
+#             for product in trending_products:
+#                 if product.product_type == "simple":
+#                     simple_products = SimpleProduct.objects.filter(product=product, is_visible=True)
+#                     for simple_product in simple_products:
+#                         image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+#                         images = image_gallery.images if image_gallery else []
+#                         videos = image_gallery.video if image_gallery else []
+#                         updated_trending_products.append({
+#                             'product': product,
+#                             'simple_product': simple_product,
+#                             'variant': "no",
+#                             'images': images,
+#                             'videos': videos
+#                         })
+#                 elif product.product_type == "variant":
+#                     variant_products = VariantProduct.objects.filter(product=product, is_visible=True).first()
+#                     for variant_product in variant_products:
+#                         variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+#                         images = variant_image_gallery.images if variant_image_gallery else []
+#                         videos = variant_image_gallery.video if variant_image_gallery else []
+#                         updated_trending_products.append({
+#                             'product': product,
+#                             'variant_product': variant_product,
+#                             'variant': "yes",
+#                             'images': images,
+#                             'videos': videos
+#                         })
+
+#             context = {
+#                 'trending_products': updated_trending_products,
+#                 'MEDIA_URL': settings.MEDIA_URL,
+#             }
+#             return render(request, self.template_name, context)
+
+#         except Exception as e:
+#             error_message = f"An unexpected error occurred: {str(e)}"
+#             return render_error_page(request, error_message, status_code=400)
+
 class AllTrendingProductsView(View):
-    template_name = app +'user/trending_products.html'
+    template_name = app + 'user/trending_products.html'
 
     def get(self, request):
         try:
-            trending_products = Products.objects.filter(trending="yes")
+            trending_products = Products.objects.filter(trending="yes").order_by('-id')
             updated_trending_products = []
 
             for product in trending_products:
@@ -312,8 +358,8 @@ class AllTrendingProductsView(View):
                             'videos': videos
                         })
                 elif product.product_type == "variant":
-                    variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
-                    for variant_product in variant_products:
+                    variant_product = VariantProduct.objects.filter(product=product, is_visible=True).first()
+                    if variant_product:
                         variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
                         images = variant_image_gallery.images if variant_image_gallery else []
                         videos = variant_image_gallery.video if variant_image_gallery else []
@@ -334,10 +380,58 @@ class AllTrendingProductsView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
+# class AllNewProductsView(View):
+#     template_name = app + 'user/new_product.html'
+    
+
+#     def get(self, request):
+#         try:
+#             new_products = Products.objects.filter(show_as_new="yes").order_by('id')
+#             updated_new_products = []
+
+#             for product in new_products:
+#                 if product.product_type == "simple":
+#                     simple_products = SimpleProduct.objects.filter(product=product, is_visible=True)
+#                     for simple_product in simple_products:
+#                         image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
+#                         images = image_gallery.images if image_gallery else []
+#                         videos = image_gallery.video if image_gallery else []
+#                         updated_new_products.append({
+#                             'product': product,
+#                             'simple_product': simple_product,
+#                             'variant': "no",
+#                             'images': images,
+#                             'videos': videos
+#                         })
+#                 elif product.product_type == "variant":
+#                     variant_products = VariantProduct.objects.filter(product=product, is_visible=True).first()
+#                     for variant_product in variant_products:
+#                         variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+#                         images = variant_image_gallery.images if variant_image_gallery else []
+#                         videos = variant_image_gallery.video if variant_image_gallery else []
+#                         updated_new_products.append({
+#                             'product': product,
+#                             'variant_product': variant_product,
+#                             'variant': "yes",
+#                             'images': images,
+#                             'videos': videos
+#                         })
+
+#             context = {
+#                 'new_products': updated_new_products,
+#                 'MEDIA_URL': settings.MEDIA_URL,
+#             }
+#             return render(request, self.template_name, context)
+
+#         except Exception as e:
+#             error_message = f"An unexpected error occurred: {str(e)}"
+#             return render_error_page(request, error_message, status_code=400)
+
+
 class AllNewProductsView(View):
     template_name = app + 'user/new_product.html'
     
-
     def get(self, request):
         try:
             new_products = Products.objects.filter(show_as_new="yes")
@@ -380,7 +474,6 @@ class AllNewProductsView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
-
 
 def search_product_names(request):
     try:
