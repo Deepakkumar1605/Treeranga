@@ -34,3 +34,15 @@ class Banner(models.Model):
 
     def __str__(self):
         return f"{self.title or 'Banner'} ({self.order})"
+    
+    
+    
+    
+class Notification(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='notifications/', blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+    callback_url = models.URLField(max_length=500)
+    is_active = models.BooleanField(default=True)
+    is_read = models.BooleanField(default=False)
