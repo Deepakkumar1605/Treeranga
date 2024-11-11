@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.cart_views.user_cart_views.cart_count_processor',
+                'app_common.app_common_views.app_common_views.notifications',
             ],
         },
     },
