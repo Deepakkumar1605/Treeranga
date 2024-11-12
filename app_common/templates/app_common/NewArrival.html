@@ -94,7 +94,7 @@
             </button>
           </div>
           <div class="product-details">
-            <h4>{{ item.product.name|truncatechars:17 }}</h4>
+            <h4>{{ item.product.name|truncatechars:15 }}</h4>
             <p class="price">
               {% if item.variant == "no" %}
               <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>

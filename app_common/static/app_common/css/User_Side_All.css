@@ -271,7 +271,7 @@ header {
 	outline: none;
 	border-color: #00836C;
   }
-  
+
 
 /* ------------------------search Suggestion------------- */
 #search-suggestions{
@@ -283,14 +283,14 @@ header {
 	margin: 8px 0;
 }
 .suggestions-list {
-    border-radius: 4px; /* Rounded corners for the list */
-    margin-top: 10px; /* Space between the input and suggestions list */
-    max-width: 400px; /* Maximum width of the suggestions list */
-    list-style-type: none; /* Remove default list styling */
-    padding: 15px; /* Remove default padding */
-    position: absolute; /* Position relative to the parent input */
-    background-color: var(--white); /* Background color for the list */
-    z-index: 1000; /* Ensure it appears above other content */
+    border-radius: 4px;
+    margin-top: 10px; 
+    max-width: 400px; 
+    list-style-type: none;
+    padding: 15px;
+    position: absolute; 
+    background-color: var(--white);
+    z-index: 1000; 
 }
 .suggestion:hover{
 	background-color: #baeaa6;
@@ -308,7 +308,7 @@ header {
 }
 
 .carousel-item img {
-	height: 50vh;
+	height: 53vh;
 	object-fit: fill;
 	width: 100%;
 }
@@ -518,7 +518,7 @@ header {
   }
 .abt-img {
 	width: 450px;
-	height: 300px;
+	height: 350px;
  }
 
 /* ---------------------testimonial---------------------------- */
@@ -528,8 +528,10 @@ header {
 	border-radius: 8px;
 	text-align: center;
 	background: rgb(255,83,14);
-background: linear-gradient(350deg, rgba(1,162,60,1) 9%, rgb(228, 227, 227) 46%,  rgba(255,83,14,1) 90%);
+	background: linear-gradient(350deg, rgba(1,162,60,1) 9%, rgb(228, 227, 227) 46%,  rgba(255,83,14,1) 90%);
 	margin: 5px;
+	max-height: 270px;
+	min-height: 270px;
 }
 
 .testimonial-icon {
@@ -1498,6 +1500,20 @@ video {
 	word-spacing: 2px;
 	transition: transform 0.3s ease;
 }
+.variant-link2 {
+	text-decoration: none;
+	margin:5px 10px;
+	padding: 5px 10px;
+	border: 1px solid rgba(30, 30, 238, 0.731);
+	border-radius: 2px;
+	color:rgb(0, 0, 0);
+	font-family: "Poppins",sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 20px;
+	word-spacing: 2px;
+	transition: transform 0.3s ease;
+}
 .variant-link:hover{
 	color:rgb(0, 0, 0);
 }
@@ -1513,7 +1529,9 @@ video {
 	font-weight: 600;
 	box-shadow: var(--sm-shadow);
 }
-
+.custom_ModaL{
+	top: 80%;
+}
 #addToCartButton.cart-btn {
 	background-color: var(--secondary);
 	color: var(--white);
@@ -1812,6 +1830,7 @@ video {
 	font-weight: 500;
 	font-style: normal;
 	line-height: 23px;
+	width: auto !important;
 }
 
 #tb-body {
@@ -2302,15 +2321,31 @@ text-align: center;
 
 .right-image img {
     height: 100%;
-    object-fit: fill;
+    object-fit: fill !important;
     width: 100%;
 }
 
+
+.women_img{
+	height: 49vh !important;
+	object-fit: fill !important;
+}
 /* Styling the overlay with the centered heading and button */
 .overlay {
     position: absolute;
-    top: 60%;
+    top: 50%;
     left: 60%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.overlay2 {
+    position: absolute;
+    top: 80%;
+    left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -2320,7 +2355,7 @@ text-align: center;
 }
 .overlay1 {
     position: absolute;
-    top: 84%;
+    top: 90%;
     left: 74%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -2329,7 +2364,6 @@ text-align: center;
     align-items: center;
     text-align: center;
 }
-
 .overlay  h5 {
     color: rgb(0, 0, 0);
     margin-bottom: 10px;
@@ -2351,4 +2385,4 @@ text-align: center;
     
 }
 
-/* =============Product Card Treenga=============== */
+/* =============Product Card Treeranga=============== */

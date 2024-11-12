@@ -1,9 +1,9 @@
 {% extends 'users/admin/base.html' %}
 {% load static %}
 {% block content %}
-<h1>Review Management</h1>
+<h4 class=" p-lg-3">Review Management</h4>
 
-<form method="post">
+<form method="post" class="mx-2 ">
     {% csrf_token %}
     <div class="table-responsive">
         <table class="table table-bordered table-striped">

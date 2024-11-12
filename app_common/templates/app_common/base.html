@@ -10,9 +10,9 @@
   <!-- ---------CSS FILES--------- -->
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/User_Side_All.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app_common/css/user_Responsive.css' %}">
-
+  <link rel="stylesheet" type="text/css" href="{% static 'users/css/login.css' %}">
   <!------------ ICONS FILE------ -->
-  <link rel="icon" href="{% static 'app_common/images/logo5.jpeg' %}">
+  <link rel="icon" href="{% static 'app_common/images/logo5.png' %}">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -77,7 +77,7 @@
             </div>
           </div>
           <a class="navbar-brand" href="{% url 'app_common:home' %}">
-            <img src="{% static 'app_common/images/logo5.jpeg' %}" alt="Logo" >
+            <img src="{% static 'app_common/images/logo5.png' %}" alt="Logo" >
           </a>
         </div>
 
@@ -105,11 +105,11 @@
             </li>
             
           </ul> -->
-          <div class="SEARCH-CONTAINER">
+          <!-- <div class="SEARCH-CONTAINER">
             <i class="fa fa-search SEARCH-ICON"></i>
             <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
             <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
-          </div>
+          </div> -->
           
           
         </div>
@@ -135,13 +135,36 @@
             </span>
           </i>
           </a>
+          <div class="dropdown">
+          <a href="#" class="text-decoration-none btn" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-regular fa-bell HeaderIcons text-success"></i>
+              {% if unread_notifications_count > 0 %}
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {{ unread_notifications_count }}
+                  </span>
+              {% endif %}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+              {% for notification in notifications %}
+                  <li>
+                      <a class="dropdown-item" href="{{ notification.callback_url }}" target="_blank">
+                          <strong>{{ notification.title }}</strong><br>
+                          <small>{{ notification.description }}</small><br>
+                          <span class="text-muted">{{ notification.date }}</span>
+                      </a>
+                  </li>
+              {% empty %}
+                  <li><span class="dropdown-item text-muted">No new notifications</span></li>
+              {% endfor %}
+          </ul>
+      
         </div>
           
          
         
         <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
           {% csrf_token %}
-          <div class="input-group">
+          <div class="input-group ">
             <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
           </div>
           <div id="search-suggestions"></div>
@@ -167,7 +190,7 @@
           id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
           <div class="offcanvas-header">
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
+          </div>1
           <div class="offcanvas-body">
             <ul class="list-unstyled">
               <li><a class="nav-link" href="{% url 'app_common:home' %}">Home</a></li>
@@ -180,7 +203,7 @@
         </div>
     
           <a class="navbar-brand" href="{% url 'app_common:home' %}">
-            <img src="{% static 'app_common/images/logo5.jpeg' %}" alt="Logo" >
+            <img src="{% static 'app_common/images/logo5.png' %}" alt="Logo" >
           </a>
         </div>
 
@@ -188,11 +211,11 @@
      <!-- ==================Unauth full screen header================== -->
 
      <div class="col-lg-7 col-xl-6 d-none mt-lg-1 d-lg-block d-flex justify-content-center align-items-center" id="NAV_BUTTONS">
-      <div class="SEARCH-CONTAINER">
+      <!-- <div class="SEARCH-CONTAINER">
         <i class="fa fa-search SEARCH-ICON"></i>
         <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
         <i class="fa fa-times CLEAR-ICON" id="CLEAR-SEARCH" onclick="clearSearch()"></i>
-      </div>
+      </div> -->
     </div>
     
 
@@ -200,9 +223,9 @@
 
      
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
-          <!-- <button type="button" class="btn" id="search-icon">
+          <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
-          </button> -->
+          </button>
           <a href="{% url 'users:login' %}" class="text-decoration-none btn  ">
             <i class="fa-regular fa-user HeaderIcons text-success"></i> 
           </a>
@@ -245,7 +268,7 @@
         <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
           {% csrf_token %}
           <div class="input-group">
-            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+            <input name="search-box" type="search" class="form-control pb-2" id="search" placeholder="Search Products" aria-label="Search">
           </div>
           <div id="search-suggestions"></div>
         </form>
@@ -311,18 +334,16 @@
                 <li><a href="{% url 'app_common:contact_support' %}">Contact Us</a></li>
                 {% endif %}
                 <li><a href="{% url 'app_common:locate_us' %}">Locate Us</a></li>
-                <li class="text-dark">.</li>
               </ul>
             </div>
             <div class="">
               <ul class="p-0">
                 <h6>Navigation</h6>
-                  <li><a href="#">Home</a></li>
+                  <li><a href="{% url 'app_common:home' %}">Home</a></li>
                   <li><a href="">All Products</a></li>
                   <li><a href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
                 </ul>
             </div>
-
           </div>
         </div>
 
@@ -332,7 +353,7 @@
             
               <ul class="ps-0">
                 <h6>Our Policy</h6>
-                  <li><a href="">Security</a></li>
+                  
                   <li><a href="{% url 'app_common:retrun_policy' %}">Returns Policy</a></li>
                   <li><a href="{% url 'app_common:terms_conditions' %}">Terms & Conditions</a></li>
                   <li><a href="{% url 'app_common:privacy_policy' %}">Privacy Policy</a></li>
