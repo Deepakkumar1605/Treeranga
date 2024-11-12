@@ -789,6 +789,11 @@ text-align: center;
 		height: 230px; 
 		overflow: hidden;
 	}
+
+	/* User Orders Details */
+
+
+	/* User Orders Details */
 }
 
 /* ------------------Between sm to md------------ */
@@ -890,6 +895,23 @@ text-align: center;
 		position: relative;
 		height: 250px; 
 		overflow: hidden;
+	}
+	.overlay1 .overlay .overlay2 h5 {
+		font-size: 18px !important;
+	}
+	  h5 {
+		font-size: 18px !important;
+	}
+	.overlay2 {
+		position: absolute;
+		top: 80%;
+		left: 45%;
+		transform: translate(-50%, -50%);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
 	}
 }
 
