@@ -195,102 +195,42 @@ them for a full refund
 <!-- --------------------------Testimonial------------------------------- -->
 
 <section class="section px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 testimonial-section Shop_by_Collection">
-    <div class="bg-white py-3">
-      <div class="row">
-        <div class="col-12 d-flex align-items-center justify-content-start flex-column">
-          <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
-        </div>
-      </div>
-      <div>
-        <div class="testimonial-slider">
-          <div class="testimonial-slide">
-            <div class="testimonial-box">
-              <div class="testimonial-icon">
-                <i class="bi bi-quote"></i>
-              </div>
-              <div class="testimonial-text">
-                <p>Fantastic t-shirts! High-quality fabric, great designs, and perfect fit. Will buy again!</p>
-              </div>
-              <div class="testimonial-img d-flex justify-content-center">
-                <img src="https://i.ibb.co/hKgs8gm/profile.jpg" alt="profile">
-              </div>
-              <div class="testimonial-name">
-                <h4>Mahesh Sethi</h4>
-              </div>
-            </div>
-          </div>
-    
-          <div class="testimonial-slide">
-            <div class="testimonial-box">
-              <div class="testimonial-icon">
-                <i class="bi bi-quote"></i>
-              </div>
-              <div class="testimonial-text">
-                <p>Great t-shirts, fast delivery, and excellent customer service. Will recommend to others!</p>
-              </div>
-              <div class="testimonial-img d-flex justify-content-center">
-                <img src="https://img.freepik.com/premium-photo/portrait-handsome-young-bearded-pakistani-man-casual-shirt-green-background_994418-691.jpg" alt="profile">
-              </div>
-              <div class="testimonial-name">
-                <h4>Rahul Jen</h4>
-              </div>
-            </div>
-          </div>
-    
-          <div class="testimonial-slide">
-            <div class="testimonial-box">
-              <div class="testimonial-icon">
-                <i class="bi bi-quote"></i>
-              </div>
-              <div class="testimonial-text">
-                <p>Amazing collection! Soft t-shirts, trendy designs, and delivered on time. Totally satisfied!</p>
-              </div>
-              <div class="testimonial-img d-flex justify-content-center">
-                <img src="https://www.profilebakery.com/wp-content/uploads/2024/04/Profilebakery.jpeg" alt="profile">
-              </div>
-              <div class="testimonial-name">
-                <h4>Madhab Reddy</h4>
-              </div>
-            </div>
-          </div>
-    
-          <div class="testimonial-slide">
-            <div class="testimonial-box">
-              <div class="testimonial-icon">
-                <i class="bi bi-quote"></i>
-              </div>
-              <div class="testimonial-text">
-                <p>Love these shirts! Stylish, comfortable, and affordable. Highly recommend Treenga to everyone!</p>
-              </div>
-              <div class="testimonial-img d-flex justify-content-center">
-                <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
-              </div>
-              <div class="testimonial-name">
-                <h4>Nitin Sah</h4>
-              </div>
-            </div>
-          </div>
-    
-          <div class="testimonial-slide">
-            <div class="testimonial-box">
-              <div class="testimonial-icon">
-                <i class="bi bi-quote"></i>
-              </div>
-              <div class="testimonial-text">
-                <p>Perfect t-shirts! Beautiful prints, premium fabric, and fits perfectly. Will order more soon!</p>
-              </div>
-              <div class="testimonial-img d-flex justify-content-center">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ75KKy6w0Rw_ExGPMO1ZcccgpjXaK-xKgQ&s" alt="profile">
-              </div>
-              <div class="testimonial-name">
-                <h4>Hritik Kamal</h4>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="bg-white py-3">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center justify-content-start flex-column">
+        <h3 class="text-center pb-lg-3 pb-md-3 pb-2">From Happy Customers</h3>
       </div>
     </div>
+    <div>
+      <div class="testimonial-slider">
+        {% for testimonial in testimonials %}
+          <div class="testimonial-slide">
+            <div class="testimonial-box">
+              <div class="testimonial-icon">
+                <i class="bi bi-quote"></i>
+              </div>
+              <div class="testimonial-text">
+                <p>{{ testimonial.review.review }}</p>
+              </div>
+              <div class="testimonial-img d-flex justify-content-center">
+                {% if testimonial.user.profile_pic %}
+                  <img src="{{ testimonial.user.profile_pic.url }}" alt="{{ testimonial.user.username }}'s profile picture">
+                {% else %}
+                  <img src="https://via.placeholder.com/150" alt="default profile picture">
+                {% endif %}
+              </div>
+              <div class="testimonial-name">
+                <h4>{{ testimonial.user.full_name }}</h4>
+              </div>
+              
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </section>
+
 
 
 <!-- --------------------------End Testimonial------------------------------- -->
