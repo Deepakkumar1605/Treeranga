@@ -293,10 +293,9 @@ class PaymentSuccessAPIView(APIView):
             type=openapi.TYPE_OBJECT,
             properties={
                 'address_id': openapi.Schema(type=openapi.TYPE_STRING, description="ID of the delivery address"),
-                'payment_method': openapi.Schema(type=openapi.TYPE_STRING, enum=["cod", "razorpay"], description="Payment method"),
+                'payment_method': openapi.Schema(type=openapi.TYPE_STRING, enum=["cod", "prepaid"], description="Payment method"),
                 'razorpay_payment_id': openapi.Schema(type=openapi.TYPE_STRING, description="Razorpay payment ID (required for Razorpay)"),
                 'razorpay_order_id': openapi.Schema(type=openapi.TYPE_STRING, description="Razorpay order ID (required for Razorpay)"),
-                'razorpay_signature': openapi.Schema(type=openapi.TYPE_STRING, description="Razorpay signature (required for Razorpay)"),
             },
             required=['address_id', 'payment_method'],
         ),
@@ -330,10 +329,9 @@ class PaymentSuccessAPIView(APIView):
 
         try:
             # Payment handling based on method
-            if payment_method == 'razorpay':
+            if payment_method == 'prepaid':
                 razorpay_payment_id = data.get('razorpay_payment_id')
                 razorpay_order_id = data.get('razorpay_order_id')
-                razorpay_signature = data.get('razorpay_signature')
 
                 if not verify_signature(data):
                     return Response({"error": "Payment verification failed."}, status=status.HTTP_400_BAD_REQUEST)
@@ -341,7 +339,9 @@ class PaymentSuccessAPIView(APIView):
                 # Create order for Razorpay
                 order = self.create_order(
                     user, cart, selected_address, ord_meta_data, 
-                    razorpay_payment_id, razorpay_order_id, razorpay_signature, t_price
+                    razorpay_payment_id=razorpay_payment_id, 
+                    razorpay_order_id=razorpay_order_id, 
+                    order_value=t_price
                 )
 
             elif payment_method == 'cod':
@@ -371,8 +371,7 @@ class PaymentSuccessAPIView(APIView):
     # Order creation method
     def create_order(self, user, cart, selected_address, ord_meta_data, 
                      razorpay_payment_id=None, razorpay_order_id=None, 
-                     razorpay_signature=None, payment_method='cod', 
-                     payment_status='Pending', order_value=0):
+                     payment_method='cod', payment_status='Pending', order_value=0):
         order = Order(
             user=user,
             full_name=cart.user.full_name,
@@ -383,7 +382,6 @@ class PaymentSuccessAPIView(APIView):
             order_meta_data=ord_meta_data,
             razorpay_payment_id=razorpay_payment_id,
             razorpay_order_id=razorpay_order_id,
-            razorpay_signature=razorpay_signature,
             payment_method=payment_method,
             payment_status=payment_status
         )
