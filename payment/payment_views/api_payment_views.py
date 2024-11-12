@@ -140,32 +140,186 @@ from users.user_views.emails import send_template_email
 #                 return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class PaymentSuccessAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+#     @swagger_auto_schema(
+#             tags=["Payment"],
+#             operation_description="payment",
+#             responses={
+#                 200: 'Successfully payment done',
+#                 401: 'Unauthorized',
+#                 404: 'Category not found'
+#             }
+#         )
+#     def post(self, request):
+#         user = request.user
+        
+#         # Fetch the cart
+#         cart = get_object_or_404(Cart, user=user)
+
+#         data = request.data
+#         address_id = data.get('address_id')
+#         payment_method = data.get('payment_method')
+
+#         # Fetch order details
+#         order_details = CartSerializer(cart).data
+#         ord_meta_data = {k: v for d in order_details.values() for k, v in d.items()}
+#         ord_meta_data = convert_decimals_to_str(ord_meta_data)
+
+#         t_price = float(ord_meta_data.get('final_cart_value', 0))
+        
+#         # Validate address
+#         user_addresses = user.address
+#         selected_address = next((addr for addr in user_addresses if addr['id'] == address_id), None)
+#         if not selected_address:
+#             return Response({"error": "Address not found."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             if payment_method == 'razorpay':
+#                 razorpay_payment_id = data.get('razorpay_payment_id')
+#                 razorpay_order_id = data.get('razorpay_order_id')
+#                 razorpay_signature = data.get('razorpay_signature')
+
+#                 if not verify_signature(data):
+#                     return Response({"error": "Payment verification failed."}, status=status.HTTP_400_BAD_REQUEST)
+
+#                 order = self.create_order(user, cart, selected_address, ord_meta_data, 
+#                                            razorpay_payment_id, razorpay_order_id, razorpay_signature, t_price)
+
+#             elif payment_method == 'cod':
+#                 order = self.create_order(user, cart, selected_address, ord_meta_data, 
+#                                            payment_method='cod', payment_status='Pending', order_value=t_price)
+
+#             else:
+#                 return Response({"error": "Invalid payment method."}, status=status.HTTP_400_BAD_REQUEST)
+
+#             # Reduce stock for each product in the cart
+#             self.update_product_stock(cart)
+
+#             # Send confirmation email
+#             self.send_confirmation_email(user, t_price, ord_meta_data, selected_address)
+
+#             # Clear the cart
+#             cart.delete()
+#             return Response({"message": "Order Successful!"}, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             return Response({"error": f"An unexpected error occurred while processing your order: {str(e)}"}, 
+#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#     def create_order(self, user, cart, selected_address, ord_meta_data, 
+#                      razorpay_payment_id=None, razorpay_order_id=None, 
+#                      razorpay_signature=None, payment_method='cod', 
+#                      payment_status='Pending', order_value=0):
+#         order = Order(
+#             user=user,
+#             full_name=cart.user.full_name,
+#             email=cart.user.email,
+#             products=cart.products,
+#             order_value=float(order_value),
+#             address=selected_address,
+#             order_meta_data=ord_meta_data,
+#             razorpay_payment_id=razorpay_payment_id,
+#             razorpay_order_id=razorpay_order_id,
+#             razorpay_signature=razorpay_signature,
+#             payment_method=payment_method,
+#             payment_status=payment_status
+#         )
+#         order.save()
+#         return order
+
+#     def update_product_stock(self, cart):
+#         for product_key, product_data in cart.products.items():
+#             product_id = product_data['info']['product_id']
+#             quantity = product_data['quantity']
+#             product_type = product_data['info']['variant']
+
+#             if product_type == "yes":
+#                 variant_product = get_object_or_404(VariantProduct, id=product_id)
+#                 if variant_product.stock >= quantity:
+#                     variant_product.stock -= quantity
+#                     variant_product.save()
+#                 else:
+#                     raise ValueError(f"Insufficient stock for variant product {variant_product.product.name}.")
+
+#             elif product_type == "no":
+#                 simple_product = get_object_or_404(SimpleProduct, id=product_id)
+#                 if simple_product.stock >= quantity:
+#                     simple_product.stock -= quantity
+#                     simple_product.save()
+#                 else:
+#                     raise ValueError(f"Insufficient stock for simple product {simple_product.product.name}.")
+
+#     def send_confirmation_email(self, user, order_value, order_details, address):
+#         context = {
+#             'full_name': user.full_name,
+#             'email': user.email,
+#             'order_value': order_value,
+#             'order_details': order_details,
+#             'address': address,
+#         }
+#         send_template_email(
+#             subject='Order Confirmation',
+#             template_name='users/email/order_confirmation.html',
+#             context=context,
+#             recipient_list=[user.email]
+#         )
+
+# def convert_decimals_to_str(data):
+#     if isinstance(data, dict):
+#         return {k: convert_decimals_to_str(v) for k, v in data.items()}
+#     elif isinstance(data, list):
+#         return [convert_decimals_to_str(v) for v in data]
+#     elif isinstance(data, Decimal):
+#         return str(data)
+#     return data
+
+
+from decimal import Decimal
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 class PaymentSuccessAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
     @swagger_auto_schema(
-            tags=["Payment"],
-            operation_description="payment",
-            responses={
-                200: 'Successfully payment done',
-                401: 'Unauthorized',
-                404: 'Category not found'
-            }
-        )
+        tags=["Payment"],
+        operation_description="Confirm payment and create order",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'address_id': openapi.Schema(type=openapi.TYPE_STRING, description="ID of the delivery address"),
+                'payment_method': openapi.Schema(type=openapi.TYPE_STRING, enum=["cod", "razorpay"], description="Payment method"),
+                'razorpay_payment_id': openapi.Schema(type=openapi.TYPE_STRING, description="Razorpay payment ID (required for Razorpay)"),
+                'razorpay_order_id': openapi.Schema(type=openapi.TYPE_STRING, description="Razorpay order ID (required for Razorpay)"),
+                'razorpay_signature': openapi.Schema(type=openapi.TYPE_STRING, description="Razorpay signature (required for Razorpay)"),
+            },
+            required=['address_id', 'payment_method'],
+        ),
+        responses={
+            200: 'Successfully completed payment',
+            400: 'Bad Request - Address not found or payment verification failed',
+            401: 'Unauthorized - User is not authenticated',
+            500: 'Internal Server Error - Unexpected error while processing order'
+        }
+    )
     def post(self, request):
         user = request.user
-        
+
         # Fetch the cart
         cart = get_object_or_404(Cart, user=user)
-
         data = request.data
         address_id = data.get('address_id')
         payment_method = data.get('payment_method')
-
-        # Fetch order details
+        
+        # Serialize order details
         order_details = CartSerializer(cart).data
         ord_meta_data = {k: v for d in order_details.values() for k, v in d.items()}
         ord_meta_data = convert_decimals_to_str(ord_meta_data)
-
         t_price = float(ord_meta_data.get('final_cart_value', 0))
         
         # Validate address
@@ -175,6 +329,7 @@ class PaymentSuccessAPIView(APIView):
             return Response({"error": "Address not found."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
+            # Payment handling based on method
             if payment_method == 'razorpay':
                 razorpay_payment_id = data.get('razorpay_payment_id')
                 razorpay_order_id = data.get('razorpay_order_id')
@@ -183,30 +338,37 @@ class PaymentSuccessAPIView(APIView):
                 if not verify_signature(data):
                     return Response({"error": "Payment verification failed."}, status=status.HTTP_400_BAD_REQUEST)
 
-                order = self.create_order(user, cart, selected_address, ord_meta_data, 
-                                           razorpay_payment_id, razorpay_order_id, razorpay_signature, t_price)
+                # Create order for Razorpay
+                order = self.create_order(
+                    user, cart, selected_address, ord_meta_data, 
+                    razorpay_payment_id, razorpay_order_id, razorpay_signature, t_price
+                )
 
             elif payment_method == 'cod':
-                order = self.create_order(user, cart, selected_address, ord_meta_data, 
-                                           payment_method='cod', payment_status='Pending', order_value=t_price)
+                # Create order for COD
+                order = self.create_order(
+                    user, cart, selected_address, ord_meta_data, 
+                    payment_method='cod', payment_status='Pending', order_value=t_price
+                )
 
             else:
                 return Response({"error": "Invalid payment method."}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Reduce stock for each product in the cart
+            # Update product stock
             self.update_product_stock(cart)
 
             # Send confirmation email
             self.send_confirmation_email(user, t_price, ord_meta_data, selected_address)
 
-            # Clear the cart
+            # Clear cart after successful order
             cart.delete()
             return Response({"message": "Order Successful!"}, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return Response({"error": f"An unexpected error occurred while processing your order: {str(e)}"}, 
+            return Response({"error": f"Unexpected error while processing your order: {str(e)}"}, 
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    # Order creation method
     def create_order(self, user, cart, selected_address, ord_meta_data, 
                      razorpay_payment_id=None, razorpay_order_id=None, 
                      razorpay_signature=None, payment_method='cod', 
@@ -228,6 +390,7 @@ class PaymentSuccessAPIView(APIView):
         order.save()
         return order
 
+    # Stock update method
     def update_product_stock(self, cart):
         for product_key, product_data in cart.products.items():
             product_id = product_data['info']['product_id']
@@ -241,7 +404,6 @@ class PaymentSuccessAPIView(APIView):
                     variant_product.save()
                 else:
                     raise ValueError(f"Insufficient stock for variant product {variant_product.product.name}.")
-
             elif product_type == "no":
                 simple_product = get_object_or_404(SimpleProduct, id=product_id)
                 if simple_product.stock >= quantity:
@@ -250,6 +412,7 @@ class PaymentSuccessAPIView(APIView):
                 else:
                     raise ValueError(f"Insufficient stock for simple product {simple_product.product.name}.")
 
+    # Confirmation email method
     def send_confirmation_email(self, user, order_value, order_details, address):
         context = {
             'full_name': user.full_name,
@@ -265,6 +428,7 @@ class PaymentSuccessAPIView(APIView):
             recipient_list=[user.email]
         )
 
+# Utility function to handle Decimal conversions
 def convert_decimals_to_str(data):
     if isinstance(data, dict):
         return {k: convert_decimals_to_str(v) for k, v in data.items()}
