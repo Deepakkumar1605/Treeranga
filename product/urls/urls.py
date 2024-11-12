@@ -35,6 +35,11 @@ urlpatterns = [
     path('Product/<int:p_id>/', user_product_views.ProductDetailsView.as_view(), name='product_detail'),
     path('New-Products/', user_product_views.AllNewProductsView.as_view(), name='all_new_products'),
     path('Trending-Products/', user_product_views.AllTrendingProductsView.as_view(), name='all_trending_products'),
+    
+    path('mens/collections-Products/', user_product_views.MensProductsView.as_view(), name='mens_products'),
+    path('womens/collections-Products/', user_product_views.WoMensProductsView.as_view(), name='womens_products'),
+    path('boys/collections-Products/', user_product_views.BoyProductsView.as_view(), name='boys_products'),
+    
     path('redirect-to-variant/', user_product_views.VariantRedirectView.as_view(), name='redirect_to_variant'),
     path('search_products/', user_product_views.search_product_names, name='search_product_names'),
     path('search/', user_product_views.SearchItems.as_view(), name='search_items'),
