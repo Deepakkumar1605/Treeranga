@@ -197,23 +197,37 @@ class ForgotPasswordAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ResetPasswordAPIView(APIView):
-    parser_classes = [FormParser, MultiPartParser]
-
     @swagger_auto_schema(
-            tags=["authentication"],
-            operation_description="resetpassword API",
-            manual_parameters=swagger_documentation.reset_password,
-        )
+        tags=["authentication"],
+        operation_description="Reset the user password using the provided token.",
+        request_body=serializers.ResetPasswordSerializer,
+        responses={
+            200: "Password reset successfully.",
+            400: "Invalid data or passwords do not match.",
+            404: "Invalid token or user not found."
+        }
+    )
     def post(self, request, token):
         serializer = serializers.ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
             new_password = serializer.validated_data['new_password']
-            user = get_object_or_404(models.User, token=token)
-            user.password = make_password(new_password)
+            confirm_password = serializer.validated_data['confirm_password']
+            
+            if new_password != confirm_password:
+                return Response({"error": "Passwords do not match."}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if user with token exists
+            user = models.User.objects.filter(token=token).first()
+            if not user:
+                return Response({"error": "Invalid token or user not found."}, status=status.HTTP_404_NOT_FOUND)
+            
+            # Update password and clear token
+            user.set_password(new_password)
             user.token = None  # Clear the token after password reset
             user.save()
-            return Response({"detail": "Password reset successfully."}, status=status.HTTP_200_OK)
 
+            return Response({"message": "Password reset successfully."}, status=status.HTTP_200_OK)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ProfileApiView(APIView):
