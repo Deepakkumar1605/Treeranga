@@ -455,9 +455,10 @@ class SearchProductNamesAPIView(APIView):
         search_term = request.data.get('search_term', '').strip()  # Read from request body
         if search_term:
             products = models.Products.objects.filter(name__icontains=search_term).distinct('name')
-            serializer = ProductSerializer(products, many=True)
+            serializer = ProductsSerializer(products, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response([], status=status.HTTP_200_OK)
+    
 class SearchItemsAPIView(APIView):
     
     serializer_class = ProductsSerializer
