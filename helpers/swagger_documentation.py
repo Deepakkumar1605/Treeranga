@@ -198,8 +198,7 @@ user_order_get_params = [
 
 order_detail_params = [
     openapi.Parameter('order_uid', openapi.IN_PATH, description="Unique ID of the order", type=openapi.TYPE_STRING, required=True),
-    openapi.Parameter('slug', openapi.IN_PATH, description="Slug of the product", type=openapi.TYPE_STRING, required=True),
-    openapi.Parameter('product_id', openapi.IN_PATH, description="ID of the product within the order", type=openapi.TYPE_INTEGER, required=True)
+   
 ]
 
 review_post_params = [
