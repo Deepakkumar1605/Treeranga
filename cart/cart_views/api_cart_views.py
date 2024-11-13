@@ -283,22 +283,26 @@ class AddToCartAPIView(APIView):
         
 
 class ManageCartAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Only for authenticated users, change if required.
+    permission_classes = [IsAuthenticated]  # Only for authenticated users
+
     @swagger_auto_schema(
         tags=["Cart"],
         operation_description="Manage cart operations like adding or removing products from the cart based on UID.",
         responses={
-            200: "Cart updated successfully",
-            400: "Cannot add more than the maximum allowed quantity",
-            404: "Cart or Product not found"
-        }
+            200: openapi.Response("Cart updated successfully"),
+            400: openapi.Response("Cannot add more than the maximum allowed quantity"),
+            404: openapi.Response("Cart or Product not found")
+        },
+        manual_parameters=[
+            openapi.Parameter('operation', openapi.IN_QUERY, description="Operation type ('plus' to add, 'min' to reduce)", type=openapi.TYPE_STRING),
+        ]
     )
     def get(self, request, c_p_uid):
         operation_type = request.GET.get('operation')
 
         try:
             if request.user.is_authenticated:
-                cart = get_object_or_404(models.Cart, user=request.user)
+                cart = models.Cart.objects.get(user=request.user)
                 products = cart.products or {}
             else:
                 cart = request.session.get('cart', {'products': {}})
@@ -316,7 +320,7 @@ class ManageCartAPIView(APIView):
                             product_info['total_price'] += product_info['info']['discount_price']
                         else:
                             return Response(
-                                {"detail": f"Cannot add more than {max_quantity} of this product."},
+                                {"message": f"Cannot add more than {max_quantity} of this product."},
                                 status=status.HTTP_400_BAD_REQUEST
                             )
                     elif operation_type == 'min':
@@ -329,7 +333,7 @@ class ManageCartAPIView(APIView):
 
             if not product_found:
                 return Response(
-                    {"detail": f"Product with UID {c_p_uid} not found in cart."},
+                    {"message": f"Product with UID {c_p_uid} not found in cart."},
                     status=status.HTTP_404_NOT_FOUND
                 )
 
@@ -349,17 +353,22 @@ class ManageCartAPIView(APIView):
                 request.session.modified = True
 
             return Response(
-                {"detail": "Cart updated successfully.", "cart": cart.products},
+                {
+                    "message": "Cart updated successfully",
+                    "cart": {
+                        "products": products,
+                        "total_price": cart.total_price if request.user.is_authenticated else cart['total_price'],
+                    }
+                },
                 status=status.HTTP_200_OK
             )
 
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return Response(
-                {"detail": error_message},
+                {"error": error_message},
                 status=status.HTTP_400_BAD_REQUEST
             )
-           
 
 class RemoveFromCartAPIView(APIView):
     permission_classes = [IsAuthenticated]  # Apply this only if you want it for authenticated users
