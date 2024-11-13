@@ -9,6 +9,8 @@ from helpers import utils
 from app_common.models import ContactMessage,Banner
 from app_common.forms import ReplyForm,BannerForm
 from users.user_views.emails import send_template_email
+from app_common import forms
+from app_common import models
 
 
 app = 'app_common/'
@@ -76,7 +78,7 @@ class BannerList(View):
 
     def get(self, request):
         try:
-            banner_list = self.model.objects.all().order_by('order')  # Order by 'order' field
+            banner_list = self.model.objects.all().order_by('order')  
             form = self.form_class()
             context = {
                 "banner_list": banner_list,
@@ -145,3 +147,78 @@ class BannerDelete(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
+
+
+class CreateNotificationView(View):
+    template_name =app + 'admin/create_notification.html'
+
+    def get(self, request):
+        form = forms.NotificationForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = forms.NotificationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Notification added successfully!")
+            return redirect('app_common:admin_notification_list')  # Redirect to a notification list or another page
+        else:
+            messages.error(request, "Error adding notification. Please check the form.")
+        
+        return render(request, self.template_name, {'form': form})
+    
+    
+    
+class AdminNotificationListView(View):
+    template = app + 'admin/admin_notification_list.html'  # Make sure to create this template
+
+    def get(self, request):
+        try:
+            # Fetch all notifications
+            notifications_list = models.Notification.objects.all().order_by('-date')
+            
+            # Set up pagination with 10 notifications per page
+            paginator = Paginator(notifications_list, 10)
+            page_number = request.GET.get('page')
+            notifications = paginator.get_page(page_number)
+
+            # Render the notifications in the template
+            return render(request, self.template, {'notifications': notifications})
+        except Exception as e:
+            # Handle any errors by displaying an error message
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render(request, 'error_page.html', {'error_message': error_message}, status=400)
+        
+        
+        
+        
+class AdminNotificationUpdateView(View):
+    template_name = app +'admin/update_notification.html'  # Path to your update template
+
+    def get(self, request, pk):
+        notification = get_object_or_404(models.Notification, pk=pk)
+        form = forms.NotificationForm(instance=notification)
+        return render(request, self.template_name, {'form': form, 'notification': notification})
+
+    def post(self, request, pk, ):
+        notification = get_object_or_404(models.Notification, pk=pk)
+        form = forms.NotificationForm(request.POST, instance=notification)
+        if form.is_valid():
+            form.save()
+            return redirect('app_common:admin_notification_list')  # Adjust with the correct URL name for listing notifications
+        return render(request, self.template_name, {'form': form, 'notification': notification})
+    
+    
+    
+class AdminNotificationDeleteView(View):
+    template_name = app +'admin/confirm_delete_notification.html'  # Path to your delete confirmation template
+
+    def get(self, request, pk, *args, **kwargs):
+        notification = get_object_or_404(models.Notification, pk=pk)
+        return render(request, self.template_name, {'notification': notification})
+
+    def post(self, request, pk, *args, **kwargs):
+        notification = get_object_or_404(models.Notification, pk=pk)
+        notification.delete()
+        return redirect('app_common:admin_notification_list')  # Adjust with the correct URL name for listing notifications

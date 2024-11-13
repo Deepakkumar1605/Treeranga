@@ -3,10 +3,19 @@
 {% block content %}
 <section class="py-lg-2">
     <div class="conatiner">
-        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Add Your Attribute</h4>
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'users:admin_dashboard' %}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'product_variations:variation_list' %}">Attribute Master</a></li>
+              
+              <li class="breadcrumb-item active" aria-current="page">Add Attribute Master</li>
+            </ol>
+          </nav>
         <p class="text-center"> {% include 'snippets/alert.html' %}</p>
-        <div class="product-form-container w-50">
+        <div class="product-form-container w-50 mt-5">
             <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+                <h4 class=" text-center my-lg-3 p-lg-3">Add Attribute Master</h4>
+
                 {% csrf_token %}
                 {{ form.as_p }}
                     <button type="submit" class="btn w-100 mt-3" id="save-btn">Add Your Attribute</button>

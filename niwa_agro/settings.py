@@ -12,7 +12,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 DEBUG = env_vars['DEBUG']
 
-
+DEBUG=True
 
 ALLOWED_HOSTS = ['*']
 
@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.cart_views.user_cart_views.cart_count_processor',
+                'app_common.app_common_views.app_common_views.notifications',
             ],
         },
     },
@@ -95,12 +96,12 @@ WSGI_APPLICATION = 'niwa_agro.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 DATABASES = {

@@ -1,0 +1,13 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+<h1>Update Notification</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Update Notification</button>
+</form>
+
+<a href="{% url 'app_common:admin_notification_list' %}">Back to Notifications List</a>
+{% endblock content %}

@@ -363,13 +363,6 @@ class AddAddress(View):
             mobile_no = request.POST["mobile_no"]
             pincode = request.POST["pincode"]
 
-            # Check if the pincode is serviceable
-            is_serviceable = check_pincode_serviceability(pincode)
-            print(is_serviceable,"*******************************")
-            if not is_serviceable:
-                messages.error(request, 'The provided pincode is not serviceable.')
-                return redirect('cart:checkout')
-
             address_id = str(uuid4())
             address_data = {
                 "id": address_id,
@@ -388,7 +381,6 @@ class AddAddress(View):
             user.address = addresses
             user.save()
 
-            messages.success(request, 'Address added successfully.')
             return redirect('cart:checkout')
 
         except Exception as e:

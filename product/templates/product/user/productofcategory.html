@@ -48,24 +48,24 @@ Products Of {{ category_obj.title }} Category
 
                 <!-- Product Details Section -->
                 <div class="product-details">
-                    <h4>{{ item.product.name | truncatechars:27 }}</h4>
+                    <h4>{{ item.product.name | truncatechars:14 }}</h4>
                     <p class="price">
                         <del class="original-price" id="max_price" >₹
                             {% if item.simple_product %}
-                            {{ item.simple_product.product_discount_price }}
+                            {{ item.simple_product.product_max_price }}
                         {% elif item.variant_product %}
-                            {{ item.variant_product.product_discount_price }}
+                            {{ item.variant_product.product_max_price }}
                         {% else %}
                             N/A
                         {% endif %}
                         </del>
                         <span  class="price ps-2" id="discount_price">₹
                             
-                            
+
                             {% if item.simple_product %}
-                            {{ item.simple_product.product_max_price }}
+                            {{ item.simple_product.product_discount_price }}
                             {% elif item.variant_product %}
-                                {{ item.variant_product.product_max_price }}
+                                {{ item.variant_product.product_discount_price }}
                             {% else %}
                                 N/A
                             {% endif %}

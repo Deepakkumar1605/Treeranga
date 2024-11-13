@@ -3,10 +3,11 @@
 {% block content %}
 <section class="py-lg-2">
     <div class="conatiner">
-        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Add Your Blogs</h4>
         <p class="text-center"> {% include 'snippets/alert.html' %}</p>
         <div class="product-form-container w-50">
             <form action="" method="post" enctype="multipart/form-data" class="lh-lg">
+        <h4 class=" text-center  p-lg-3">Add Your Blogs</h4>
+
                     {% csrf_token %}
                     {{ form.media }}
                     <div class="row">

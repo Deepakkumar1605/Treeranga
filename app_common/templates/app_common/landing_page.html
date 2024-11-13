@@ -49,36 +49,54 @@
 <section class="px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection">
   <div class="row ">
     <!-- Left side image (2x height) -->
-    <div class="col-lg-6 col-md-12 pe-0  ">
+    <div class="col-lg-5 col-md-12 pe-0  ">
         <div class="image-container left-image">
-            <img src="https://theme367-fashion.myshopify.com/cdn/shop/files/banner-menu3_126067f0-5b37-45cb-9f5d-8c3695867bdd.jpg?v=1677842608&width=710" alt="Clothes" class="img-fluid">
+            <img src="{% static 'app_common/images/gallery1.webp' %}" alt="Clothes" class="img-fluid">
             <div class="overlay1">
                 <h5> All Collection</h5>
-                <button class="moreBtn1">Shop Now</button>
+                <a href="{% url 'product:all_new_products' %}">
+                  <button class="moreBtn1">Shop Now</button>
+              </a>
             </div>
         </div>
     </div>
     <!-- Right side images (half-height each) -->
-    <div class="col-lg-6 col-md-12 mt-lg-0 mt-3">
+    <div class="col-lg-7 col-md-12 mt-lg-0 mt-3">
         <div class="row ">
-            <div class="col-md-12 right-image mb-lg-1">
+
+            <div class="col-md-12 right-image mb-md-1">
                 <div class="image-container">
-                    <img src="https://theme367-fashion.myshopify.com/cdn/shop/articles/Rectangle_254_4.png?v=1676553351" alt="Shoes" class="img-fluid">
-                    <div class="overlay">
-                        <h5>Women's Collection</h5>
-                        <button class="moreBtn1">Shop Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 right-image mt-lg-1">
-                <div class="image-container">
-                    <img src="https://theme367-fashion.myshopify.com/cdn/shop/files/banner2_4c0d84ae-a00f-4b67-a459-f36c1bb23581.png?v=1677768411&width=2000" alt="Accessories" class="img-fluid">
+                    <img src="{% static 'app_common/images/gallery2.webp' %}" alt="Accessories" class="img-fluid">
                     <div class="overlay">
                         <h5  class="text-white">Men's Collection</h5>
-                        <button class="moreBtn1">Shop Now</button>
+                        <a href="{% url 'product:mens_products' %}">
+                          <button class="moreBtn1">Shop Now</button>
+                      </a>
                     </div>
                 </div>
             </div>
+            <div class="col-md-6 right-image  mt-md-2   pe-md-0 ">
+              <div class="image-container ">
+                  <img src="{% static 'app_common/images/gallery3.webp' %}" alt="Shoes" class="women_img">
+                  <div class="overlay2">
+                      <h5>Women's Collection</h5>
+                      <a href="{% url 'product:womens_products' %}">
+                        <button class="moreBtn1">Shop Now</button>
+                    </a>
+                  </div>
+              </div>
+          </div>
+            <div class="col-md-6 right-image   mt-md-2">
+              <div class="image-container ">
+                  <img src="{% static 'app_common/images/gallery4.jpg' %}" alt="Shoes" class="women_img ">
+                  <div class="overlay2">
+                      <h5 class="">Kid's Collection</h5>
+                      <a href="{% url 'product:boys_products' %}">
+                        <button class="moreBtn1">Shop Now</button>
+                    </a>
+                  </div>
+              </div>
+          </div>
         </div>
     </div>
 </div>
@@ -260,7 +278,7 @@ them for a full refund
                 <i class="bi bi-quote"></i>
               </div>
               <div class="testimonial-text">
-                <p>Love these shirts! Stylish, comfortable, and affordable. Highly recommend Treenga to everyone!</p>
+                <p>Love these shirts! Stylish, comfortable, and affordable. Highly recommend Treeranga to everyone!</p>
               </div>
               <div class="testimonial-img d-flex justify-content-center">
                 <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/Profile-Image-AI.jpg" alt="profile">
@@ -316,37 +334,37 @@ them for a full refund
         </h2>
         <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
           <div class="accordion-body">
-            Treenga is a fashion brand specializing in high-quality, trendy t-shirts for all styles. You can reach us via email at contactus@treeranga.com, call us at +91-6372100300, or fill out the contact form on our website. We offer a wide range of t-shirts, including graphic tees, plain basics, and seasonal collections. Our services include personalized designs, bulk orders, and fashion consultations. All our products are crafted with premium fabrics and meet the highest quality standards for comfort and style.
+            Treeranga is a fashion brand specializing in high-quality, trendy t-shirts for all styles. You can reach us via email at contactus@treeranga.com, call us at +91-6372100300, or fill out the contact form on our website. We offer a wide range of t-shirts, including graphic tees, plain basics, and seasonal collections. Our services include personalized designs, bulk orders, and fashion consultations. All our products are crafted with premium fabrics and meet the highest quality standards for comfort and style.
           </div>
         </div>
       </div>
       <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingTwo">
           <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-            <i class="fas fa-plus me-2"></i> What fabric is used in Treenga t-shirts?
+            <i class="fas fa-plus me-2"></i> What fabric is used in Treeranga t-shirts?
           </button>
         </h2>
         <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
           <div class="accordion-body">
-            Treenga t-shirts are made from premium quality fabrics, primarily 100% organic cotton, ensuring breathability, comfort, and durability. We also offer blends such as cotton-polyester for a softer feel and extra flexibility. All materials are ethically sourced and eco-friendly.
+            Treeranga t-shirts are made from premium quality fabrics, primarily 100% organic cotton, ensuring breathability, comfort, and durability. We also offer blends such as cotton-polyester for a softer feel and extra flexibility. All materials are ethically sourced and eco-friendly.
           </div>
         </div>
       </div>
       <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingThree">
           <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-            <i class="fas fa-plus me-2"></i> How can I place an order with Treenga?
+            <i class="fas fa-plus me-2"></i> How can I place an order with Treeranga?
           </button>
         </h2>
         <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
           <div class="accordion-body">
             You can place an order through our website by browsing our collections, selecting the t-shirts you like, and proceeding with secure checkout. We also offer bulk orders for businesses, which can be placed by contacting our customer service team.
             <br><br>
-            <strong>Does Treenga offer home delivery?</strong>
+            <strong>Does Treeranga offers home delivery?</strong>
             <br>
             Yes, we provide home delivery across India and internationally. Delivery times and fees vary based on location, and we offer free shipping on orders above a certain amount.
             <br><br>
-            <strong>What payment methods does Treenga accept?</strong>
+            <strong>What payment methods does Treeranga accept?</strong>
             <br>
             We accept multiple payment methods including credit/debit cards, UPI, PayPal, and cash on delivery for select locations.
           </div>

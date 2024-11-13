@@ -13,7 +13,7 @@ from product.models import Category,Products,SimpleProduct,ImageGallery
 from cart.models import Cart
 from django.conf import settings
 from django.db.models import Prefetch
-
+from app_common import models
 
 app = "app_common/"
 
@@ -21,6 +21,20 @@ app = "app_common/"
 # static pages 
 
 
+def notifications(request):
+    # Fetch all notifications, apply filter first
+    notifications = models.Notification.objects.all().order_by('-date')
+    
+    # Now slice the queryset to get the latest 10 notifications
+    latest_notifications = notifications[:10]
+    
+    # Count unread notifications
+    unread_notifications_count = notifications.filter(is_read=False).count()
+    
+    return {
+        'notifications': latest_notifications,
+        'unread_notifications_count': unread_notifications_count,
+    }
 class HomeView(View):
     template = app + "landing_page.html"
 

@@ -1,12 +1,12 @@
-{% extends 'users/authtemp/master.html' %}
+{% extends 'app_common/base.html' %}
 {% load static %}
 {% block title %}Signup Page{% endblock title %}
  
 {% block content %}
  
  
-<section class=" login_background">
-    <div class="signup_card">
+<section class=" login_background2">
+    <div class="signup_card ">
       <div class="card " >
         <div class="row">
           <div class="col col-lg-6 px-lg-3">
@@ -33,7 +33,7 @@
                                     {% if field.name == 'password' or field.name == 'confirm_password' %}
                                         <div class="password-container">
                                             {{ field }}
-                                            <span class="toggle-password position-absolute" toggle="{{ field.id_for_label }}" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: gray;">
+                                            <span class="toggle-password position-absolute" toggle="{{ field.id_for_label }}" style="right: 10px; top: 65%; transform: translateY(-50%); cursor: pointer; color: gray;">
                                                 <i class="fa fa-eye"></i>
                                             </span>
                                         </div>
