@@ -116,8 +116,27 @@ Product Details - {{ product_obj.name }}
                         <h5>Description:</h5>
                         <p>{{ product_obj.product.product_short_description | truncatechars:200 }}</p>
                     </div>
+                    <!-- Wishlist Icon -->
+
+                    <div class="d-lg-none d-block">
+                        {% if user.is_authenticated %}
+                        <button id="wishlist-btn" class="btn-wishlist position-absolute top-0 m-2" style="right:40px" data-product-id="{{ product_obj.id }}" data-is-variant="{{ variant_param }}">
+                            {% if is_added %}
+                            <i class="fa-solid fa-heart text-danger"></i>
+                            {% else %}
+                            <i class="fa-regular fa-heart"></i>
+                            {% endif %}
+                        </button>
+                        
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn-wishlist position-absolute top-0 end-0 m-2">
+                            <i class="fa-regular fa-heart text-dark"></i>
+                        </a>
+                    {% endif %}
+                    </div>
+
                     <!-- Share Button -->
-                    <button id="shareButton" class="btn" data-bs-toggle="modal" data-bs-target="#shareModal"><i class="fa-solid fa-share"></i> Share </button>
+                    <button id="shareButton" class="btn me-2" data-bs-toggle="modal" data-bs-target="#shareModal"><i class="fa-solid fa-share"></i> </button>
 
 
                     <!-- Share Product Modal -->
@@ -207,22 +226,21 @@ Product Details - {{ product_obj.name }}
                     
                         </div>
                      </div>
-                     <div class="">
-                        <button class="variant-link2" data-bs-toggle="modal" data-bs-target="#sizeChartModal">Size Chart</button>
-                    </div>
+                     
                 </div>
-
+                <div class="">
+                    <button class="variant-link2 ms-0" data-bs-toggle="modal" data-bs-target="#sizeChartModal">Size Chart</button>
+                </div>
                 <!-- Modal Structure -->
                 <div class="modal fade custom_ModaL" id="sizeChartModal" tabindex="-1" aria-labelledby="sizeChartModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-md custom-modal-dialog">
-                        <div class="modal-content">
-                            <!-- <div class="modal-header">
+                    <div class="modal-dialog modal-md custom-modal-dialog" >
+                        <div class="modal-content ">
+                           <div class="modal-header">
                                 <h5 class="modal-title text-black" id="sizeChartModalLabel">Size Chart</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div> -->
-                            <div class="modal-body ">
+                            </div> 
+                            <div class="modal-body">
                                 <img src="{% static 'app_common/images/size.jpg' %}" class="img-fluid" alt="">
-                               
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -230,7 +248,7 @@ Product Details - {{ product_obj.name }}
                         </div>
                     </div>
                 </div>
-                    
+                
                     <!-- <div class="variations">
                         {% if variant_combination %}
                             {% for i,j in variant_combination.items %}

@@ -274,13 +274,19 @@ header {
 
 
 /* ------------------------search Suggestion------------- */
-#search-suggestions{
-	min-height: auto;
-	background-color:var(--white);
-	padding: 10px 10px;
-	box-shadow: var(--box1-box-shadow);
-	border-radius: 0 0 4px 4px;
-	margin: 8px 0;
+#search-suggestions {
+    min-height: 40vh;
+    overflow-y: scroll;
+    background-color: var(--white);
+    padding: 10px 10px;
+    box-shadow: var(--box1-box-shadow);
+    border-radius: 0 0 4px 4px;
+    margin: 8px 0;
+    scrollbar-width: none; 
+}
+
+#search-suggestions::-webkit-scrollbar {
+    display: none;
 }
 .suggestions-list {
     border-radius: 4px;
@@ -1529,8 +1535,9 @@ video {
 	font-weight: 600;
 	box-shadow: var(--sm-shadow);
 }
-.custom_ModaL{
-	top: 80%;
+#sizeChartModal .modal-dialog {
+    position: relative;
+    top: 100px; /* Adjust the value as needed */
 }
 #addToCartButton.cart-btn {
 	background-color: var(--secondary);
@@ -1580,7 +1587,7 @@ video {
 }
 
 .description {
-	min-height: 140px;
+	min-height:auto;
 	font-family: "inter", sans-serif;
 	font-style: normal;
 	font-weight: 300;
