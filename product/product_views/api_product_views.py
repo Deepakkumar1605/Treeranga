@@ -173,6 +173,7 @@ class ProductReviewAPIView(APIView):
                 {"error": serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
 class ShowProductsAPIView(APIView):
     @swagger_auto_schema(
         tags=["Product"],
@@ -209,8 +210,99 @@ class ShowProductsAPIView(APIView):
             'category': CategorySerializer(category_obj).data,
             "MEDIA_URL": settings.MEDIA_URL,
         }, status=status.HTTP_200_OK)
+    
 
+# class ShowAllProductsAPIView(APIView):
+#     @swagger_auto_schema(
+#         tags=["Product"],
+#         operation_description="Show all Product from all category",
+#         responses={
+#             200: 'Successfully retrieved the all product',
+#             401: 'Unauthorized'
+#         }
+#     )
+#     def get(self, request):
+#         try:
+#             all_products = models.Products.objects.all()
+#             products_with_variants = []
 
+#             for product in all_products:
+#                 if product.product_type == "simple":
+#                     simple_products = models.SimpleProduct.objects.filter(product=product, is_visible=True)
+#                     for simple_product in simple_products:
+#                         serializer = ProductsSerializer({
+#                             'product': product,
+#                             'simple_product': simple_product,
+#                             'is_variant': False,
+#                             'images': models.ImageGallery.objects.filter(simple_product=simple_product).first().images or [],
+#                             'videos': models.ImageGallery.objects.filter(simple_product=simple_product).first().video or []
+#                         })
+#                         products_with_variants.append(serializer.data)
+#                 elif product.product_type == "variant":
+#                     variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
+#                     for variant_product in variant_products:
+#                         serializer = ProductsSerializer({
+#                             'product': product,
+#                             'variant_product': variant_product,
+#                             'is_variant': True,
+#                             'images': VariantImageGallery.objects.filter(variant_product=variant_product).first().images or [],
+#                             'videos': VariantImageGallery.objects.filter(variant_product=variant_product).first().video or []
+#                         })
+#                         products_with_variants.append(serializer.data)
+
+#             return Response({'products_with_variants': products_with_variants}, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             error_message = f"An unexpected error occurred: {str(e)}"
+#             return Response({'error_message': error_message}, status=status.HTTP_400_BAD_REQUEST)
+
+class ShowAllProductsAPIView(APIView):
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="Show all Product from all category",
+        responses={
+            200: 'Successfully retrieved the all product',
+            401: 'Unauthorized'
+        }
+    )
+    def get(self, request):
+        try:
+            all_products = models.Products.objects.all()
+
+            # Prepare data structure for response
+            all_products_form_all_category = []
+
+            # Loop through each product and get its details
+            for product in all_products:
+                if product.product_type == "simple":
+                    # Fetch simple product details with images and videos
+                    simple_products_for_product = models.SimpleProduct.objects.filter(product=product, is_visible=True)
+                    simple_product_data = SimpleProductSerializer(simple_products_for_product, many=True).data
+                    all_products_form_all_category.append({
+                        'product': ProductsSerializer(product).data,
+                        'simple_products': simple_product_data,
+                        'is_variant': False,
+                    })
+                elif product.product_type == "variant":
+                    # Fetch variant product details with images and videos
+                    variant_products_for_product = VariantProduct.objects.filter(product=product, is_visible=True)
+                    variant_product_data = VariantProductSerializer(variant_products_for_product, many=True).data
+                    all_products_form_all_category.append({
+                        'product': ProductsSerializer(product).data,
+                        'variant_products': variant_product_data,
+                        'is_variant': True,
+                    })
+
+            return Response({
+                'all_products_form_all_category': all_products_form_all_category
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            # Handle unexpected errors
+            return Response({
+                'error': f"An unexpected error occurred: {str(e)}"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
 # class ProductDetailsApiView(APIView):
 #     @swagger_auto_schema(
 #         tags=["Product"],

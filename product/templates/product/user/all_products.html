@@ -1,0 +1,76 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+
+{% block title %}
+All Collections
+{% endblock title %}
+
+{% block content %}
+<div class="container py-4 d-flex flex-column align-items-center lh-lg">
+    <h1 class="text-capitalize">All Collections</h1>
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app_common:home' %}">Home</a></li>
+            <li class="breadcrumb-item active text-dark text-capitalize" aria-current="page">All Products</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="product-gallery container">
+    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+        {% for item in products_with_variants %}
+            <div class="col">
+                <div class="product-card p-3 border rounded shadow-sm h-100">
+                    <div class="product-images">
+                        {% if item.is_variant %}
+                            <a href="{% url 'product:product_detail' p_id=item.variant_product.id %}?variant=yes">
+                        {% else %}
+                            <a href="{% url 'product:product_detail' p_id=item.simple_product.id %}?variant=no">
+                        {% endif %}
+                            {% if item.images %}
+                                <img src="{{ MEDIA_URL }}{{ item.images.0 }}" alt="{{ item.product.name }}" class="img-fluid rounded mb-2">
+                            {% else %}
+                                <img src="{% static 'default-image.jpg' %}" alt="No image available" class="img-fluid rounded mb-2">
+                            {% endif %}
+                        </a>
+                    </div>
+                    
+                    {% if item.videos %}
+                        <div class="product-videos mb-2">
+                            {% for video in item.videos %}
+                                <video src="{{ MEDIA_URL }}{{ video }}" controls class="w-100 rounded mb-2"></video>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="product-details">
+                        <h4 class="product-title">{{ item.product.name|truncatechars:15 }}</h4>
+                        <p class="price">
+                            {% if item.is_variant %}
+                                <span class="text-muted"><s>₹{{ item.variant_product.product_max_price }}</s></span>
+                                <span class="fw-bold text-primary">₹{{ item.variant_product.product_discount_price }}</span>
+                            {% else %}
+                                <span class="text-muted"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+                                <span class="fw-bold text-primary">₹{{ item.simple_product.product_discount_price }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="product-icons">
+                        <i class="fa-regular fa-heart"></i>
+                    </div>
+                    <button class="add-to-cart btn btn-primary btn-sm">
+                        {% if item.is_variant %}
+                            <a href="{% url 'cart:addtocart' item.variant_product.id %}?variant=yes" class="text-white">Add To Cart</a>
+                        {% else %}
+                            <a href="{% url 'cart:addtocart' item.simple_product.id %}?variant=no" class="text-white">Add To Cart</a>
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No products available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
