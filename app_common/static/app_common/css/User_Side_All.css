@@ -225,7 +225,6 @@ header {
 	height: 60px;
 	width: 100px;
 }
-
 #offcanvasWithBothOption {
 	width: 30%;
 }
@@ -233,10 +232,8 @@ header {
 	position: relative;
 	max-width: 550px;
 	width: auto;
-	
-  }
-  
-  .SEARCH-ICON {
+}
+.SEARCH-ICON {
 	position: absolute;
 	left: 10px;
 	top: 50%;
@@ -244,7 +241,6 @@ header {
 	color: #999;
 	
   }
-  
   .CLEAR-ICON {
 	position: absolute;
 	right: 10px;
@@ -254,7 +250,6 @@ header {
 	display: none; /* Hidden initially */
 	cursor: pointer;
   }
-  
   #SEARCH-INPUT {
 	width: 100%;
 	padding: 5px 30px 5px 35px;
@@ -271,8 +266,6 @@ header {
 	outline: none;
 	border-color: #00836C;
   }
-
-
 /* ------------------------search Suggestion------------- */
 #search-suggestions {
     min-height: 40vh;
@@ -284,7 +277,6 @@ header {
     margin: 8px 0;
     scrollbar-width: none; 
 }
-
 #search-suggestions::-webkit-scrollbar {
     display: none;
 }
@@ -305,36 +297,28 @@ header {
 	padding: 10px; 
 	margin: 5px 0;
 }
-
-
-
 /* -------------------carousel start hero section------------------------ */
 #carouselExampleFade .carousel-inner {
 	/* margin-top: -10px; */
 }
-
 .carousel-item img {
 	height: 53vh;
 	object-fit: fill;
 	width: 100%;
 }
-
 .carousel-control-prev i, .carousel-control-next i {
 	font-size: 25px;
 	color: var(--white);
 }
-
 /* ---------------App Download Section----------------------------------*/
 .AppDownload {
 	background-color: var(--sub_button);
 }
-
 .AppDownload div {
 	font-family: var(--sub-heading);
 	font-weight: 500;
 	font-size: 15px;
 }
-
 .AppDownload div a {
 	background-color: var(--primary);
 	color: var(--white) !important;
@@ -343,15 +327,12 @@ header {
 	font-weight: 500;
 	font-size: 15px;
 }
-
 .AppDownload div a:hover {
 	opacity: 1;
 }
-
 /* ------------Shop By Collection  Section----------------------------------*/
 .Shop_by_Collection {
 	background-color: var(--pagebg);
-	
 }
 .Shop_by_Collection_row{
 	box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
@@ -366,11 +347,9 @@ header {
 	height: 210px;
 	width: 210px;
 }
-
 .image-wrapper:hover {
 	transform: scale(1.07);
 }
-
 .image-wrapper a img {
 	height: 100%;
 	width: 100%;
@@ -378,11 +357,9 @@ header {
 	transition: transform 0.5s;
 	transform: scale(1.15);
 }
-
 .image-wrapper a img:hover {
 	transform: scale(1.03);
 }
-
 .content-wrapper h4 {
 	font-family: var(--heading);
 	color: var(--para);
@@ -392,31 +369,25 @@ header {
 	font-style: normal;
 	margin: 10px 0;
 }
-
 /*------------------- New arrivals & Trending Products-------------- */
 .new-head {
 	height: 370px;
 	width: auto;
 	overflow: hidden;
 }
-
 #new-products {
 	height: 387px;
 	width: 186px;
 	overflow: hidden;
-	
 }
-
 #new-products a img {
 	height: 220px;
 	width: 100%;
 	object-fit: contain;
 }
-
 #new-products .card-body {
 	text-align: start;
 }
-
 #new-products .card-body h5 {
 	font-family: var(--heading);
 	font-weight: 700;
@@ -427,18 +398,15 @@ header {
 	min-height: 40px;
 	margin: 0;
 }
-
 #new-products .card-body h5:hover {
 	color: var(--p);
 }
-
 #new-products .card-body .rating {
 	color: var(--secondary);
 	font-weight: 700;
 	font-size: 14px;
 	line-height: 20px;
 }
-
 #new-products .card-body .rating span {
 	font-family: var(--heading);
 	color: var(--para);
@@ -447,7 +415,6 @@ header {
 	line-height: 20px;
 	font-style: normal;
 }
-
 .vd_button.addto-cart {
 	background-color: var(--button);
 	color: var(--white);
@@ -458,14 +425,11 @@ header {
 	font-family: var(--heading);
 	line-height: 23px;
 	font-style: normal;
-
 }
-
 .vd_button.addto-cart:hover {
 	background-color: var(--primary);
 	color: var(--white);
 }
-
 .viewmoreButton a {
 	background-color: var(--sub_button);
 	color: var(--white);
@@ -473,18 +437,15 @@ header {
 	margin: 16px;
 	padding: 15px 45px;
 }
-
 .viewmoreButton a:hover {
 	background-color: var(--sub_button);
 	color: var(--white);
 }
-
 /* -------------------------------Why choose niwa----------------------- */
 .chooseniwa_logo div img {
 	height: 70px;
 	width: 70px;
 }
-
 .chooseniwa_logo div h5 {
 	font-family: var(--p-fontfamily);
 	color: var(--para);
