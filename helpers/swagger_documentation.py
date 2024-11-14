@@ -122,6 +122,13 @@ update_profile = [
 
 add_address_post = [
     openapi.Parameter(
+        "Authorization",
+        openapi.IN_HEADER,
+        description="Bearer <token>",
+        type=openapi.TYPE_STRING,
+        required=True,
+    ),
+    openapi.Parameter(
         "Address1",
         openapi.IN_FORM,
         description="Primary address line 1",
@@ -170,4 +177,31 @@ add_address_post = [
         type=openapi.TYPE_STRING,
         required=True,
     ),
+]
+
+
+all_address = [
+    openapi.Parameter(
+        "Authorization",
+        openapi.IN_HEADER,
+        description="Bearer <token>",
+        type=openapi.TYPE_STRING,
+        required=True,
+    ),
+]
+
+user_order_get_params = [
+    openapi.Parameter(
+        'user_id', openapi.IN_QUERY, description="ID of the user to retrieve orders for", type=openapi.TYPE_STRING, required=True
+    )
+]
+
+order_detail_params = [
+    openapi.Parameter('order_uid', openapi.IN_PATH, description="Unique ID of the order", type=openapi.TYPE_STRING, required=True),
+   
+]
+
+review_post_params = [
+    openapi.Parameter('product_slug', openapi.IN_QUERY, description="Slug of the product to review", type=openapi.TYPE_STRING, required=True),
+    openapi.Parameter('variant_slug', openapi.IN_QUERY, description="Slug of the variant product, if applicable", type=openapi.TYPE_STRING, required=False)
 ]

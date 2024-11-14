@@ -135,17 +135,41 @@
             </span>
           </i>
           </a>
+          <div class="dropdown">
+          <a href="#" class="text-decoration-none btn" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-regular fa-bell HeaderIcons text-success"></i>
+              {% if unread_notifications_count > 0 %}
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {{ unread_notifications_count }}
+                  </span>
+              {% endif %}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+              {% for notification in notifications %}
+                  <li>
+                      <a class="dropdown-item" href="{{ notification.callback_url }}" target="_blank">
+                          <strong>{{ notification.title }}</strong><br>
+                          <small>{{ notification.description }}</small><br>
+                          <span class="text-muted">{{ notification.date }}</span>
+                      </a>
+                  </li>
+              {% empty %}
+                  <li><span class="dropdown-item text-muted">No new notifications</span></li>
+              {% endfor %}
+          </ul>
+      
         </div>
 
-        <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
-          {% csrf_token %}
-          <div class="input-group ">
-            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
-          </div>
-          <div id="search-suggestions"></div>
-        </form>
+     
       <!-- ---=========--======-----===========end Auth Nav buttons========== --========----------->
       </div>
+      <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
+        {% csrf_token %}
+        <div class="input-group ">
+          <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+        </div>
+        <div id="search-suggestions"></div>
+      </form>
     </div>
   </header>
 

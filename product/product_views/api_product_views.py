@@ -11,6 +11,8 @@ from product.serializers import CategorySerializer, ImageGallerySerializer, Prod
 from rest_framework.views import APIView
 
 from product_variations.models import VariantImageGallery, VariantProduct
+from product.product_views.user_product_views import has_user_ordered_product
+from users.serializers import ProductReviewSerializer
 from wishlist.models import WishList
 
 class CategoryListAPIView(APIView):
@@ -130,8 +132,47 @@ class ProductDetailsApiView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        
+class ProductReviewAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="Product review",
+        responses={
+            200: 'Successfully submit review',
+            401: 'Unauthorized',
+            404: 'Product not found'
+        }
+    )
+    def post(self, request, p_id):
+        user = request.user
+        variant_param = request.GET.get('variant', '')
 
+        # Determine product type and get the correct product object
+        product_obj = get_object_or_404(VariantProduct if variant_param == "yes" else models.SimpleProduct, id=p_id)
+
+        # Check if the user has purchased the product
+        if not has_user_ordered_product(user, product_obj):
+            return Response(
+                {"error": "You can only review products you have purchased."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Initialize the serializer with request data and user information
+        serializer = ProductReviewSerializer(data=request.data, user=user)
+
+        if serializer.is_valid():
+            # Save the review linked to the parent product
+            serializer.save(user=user, product=product_obj.product)  # Use parent product for the review
+            return Response(
+                {"success": "Thank you for your review!"},
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            # Return validation errors if any
+            return Response(
+                {"error": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 class ShowProductsAPIView(APIView):
     @swagger_auto_schema(
         tags=["Product"],
@@ -414,9 +455,10 @@ class SearchProductNamesAPIView(APIView):
         search_term = request.data.get('search_term', '').strip()  # Read from request body
         if search_term:
             products = models.Products.objects.filter(name__icontains=search_term).distinct('name')
-            serializer = ProductSerializer(products, many=True)
+            serializer = ProductsSerializer(products, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response([], status=status.HTTP_200_OK)
+    
 class SearchItemsAPIView(APIView):
     
     serializer_class = ProductsSerializer

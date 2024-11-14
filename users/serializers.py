@@ -1,9 +1,12 @@
 import logging
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from product.models import ProductReview
 from users import models
 from django.contrib.auth import get_user_model
 import uuid
+from app_common.models import Banner, ContactMessage
+
 
 class SignupSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -99,7 +102,7 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ["password"]
 
 class AddressSerializer(serializers.Serializer):
-    id = serializers.UUIDField(format='hex_verbose')
+    # id = serializers.UUIDField(format='hex_verbose')
     Address1 = serializers.CharField(max_length=255)
     Address2 = serializers.CharField(max_length=255, required=False, allow_blank=True)
     country = serializers.CharField(max_length=255)
@@ -107,3 +110,38 @@ class AddressSerializer(serializers.Serializer):
     city = serializers.CharField(max_length=255)
     mobile_no = serializers.CharField(max_length=20)
     pincode = serializers.CharField(max_length=10)
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'contact', 'message']
+
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = ['id', 'image', 'order', 'active']
+
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+class ProductReviewSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(max_length=255, read_only=True)
+    email = serializers.EmailField(read_only=True)
+
+    class Meta:
+        model = ProductReview
+        fields = ['full_name', 'email', 'rating', 'review']
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(ProductReviewSerializer, self).__init__(*args, **kwargs)
+        
+        if user and user.is_authenticated:
+            self.fields['full_name'].default = user.full_name
+            self.fields['email'].default = user.email
+
+    def validate_rating(self, value):
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError("Rating must be between 1 and 5 stars.")
+        return value

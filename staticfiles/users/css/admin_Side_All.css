@@ -208,7 +208,7 @@ nav .sidebar-button{
   }
 #content nav {
 	height: 56px;
-	background-color: transparent;
+	background-color: white !important;
 	padding: 0 24px;
 	display: flex;
 	align-items: center;
