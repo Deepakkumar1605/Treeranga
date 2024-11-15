@@ -208,7 +208,7 @@ nav .sidebar-button{
   }
 #content nav {
 	height: 56px;
-	background: var(--light);
+	background-color: transparent;
 	padding: 0 24px;
 	display: flex;
 	align-items: center;
@@ -226,8 +226,8 @@ nav .sidebar-button{
 	height: 40px;
 	bottom: -40px;
 	left: 0;
-	border-radius: 50%;
-	box-shadow: -20px -20px 0 var(--light);
+	/* border-radius: 50%; */
+	/* box-shadow: -20px -20px 0 var(--light); */
 }
 #content nav a {
 	color: var(--dark);

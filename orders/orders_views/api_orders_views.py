@@ -27,6 +27,7 @@ from product.models import ProductReview, Products
 from product_variations.models import VariantProduct
 from rest_framework import status
 from rest_framework.exceptions import NotFound
+from payment.payment_views.delhivery_api import track_delhivery_order
 
 class UserOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -95,40 +96,68 @@ class OrderDetailAPIView(APIView):
             404: "Order or product not found."
         }
     )
-    def get(self, request, order_uid, slug, product_id):
-        # Retrieve the specific order using the provided order_uid
+    def get(self, request, order_uid):
         try:
-            order = Order.objects.get(user=request.user, uid=order_uid)
-        except Order.DoesNotExist:
-            raise NotFound("Order not found")
+            # Retrieve the order and its metadata
+            order = get_object_or_404(Order, uid=order_uid)
+            ref_id = str(order.uid)
+            
+            # Get tracking data
+            tracking_response = track_delhivery_order(ref_id=ref_id)
+            tracking_data = tracking_response.get('data', []) if tracking_response.get('success') else []
 
-        product_data = None
+            # Initialize variables for order details
+            grand_total = float(order.order_meta_data.get('final_cart_value', '0.00'))
+            discount_amount = float(order.order_meta_data.get('discount_amount', '0.00'))
+            gross_cart_value = float(order.order_meta_data.get('gross_cart_value', '0.00'))
+            total_cart_items = int(order.order_meta_data.get('total_cart_items', 0))
+            delivery_charge = float(order.order_meta_data.get('charges', {}).get('Delivery', '0.00'))
+            applied_coupon = order.order_meta_data.get('applied_coupon', None)
+            coupon_discount_amount = order.order_meta_data.get('coupon_discount_amount', '0.00')
+            total_cgst = 0.0
+            total_sgst = 0.0
+            total_quantity = 0
 
-        # Loop through each product in the order to find the specific product
-        for product_key, product_info in order.products.items():
-            # Match both slug and product_id
-            if product_info['info']['slug'] == slug and product_info['info']['product_id'] == int(product_id):
-                product_data = product_info
-                break
+            # Gather products, quantities, and price details
+            products_data = []
+            for product_id, details in order.order_meta_data.get('products', {}).items():
+                product = get_object_or_404(Products, id=details['id'])
+                product_info = {
+                    'id': product.id,
+                    'name': product.name,
+                    'quantity': details['quantity'],
+                    'price_per_unit': details['price_per_unit'],
+                    'total_price': float(details['total_discounted_price']),
+                }
+                products_data.append(product_info)
+                total_cgst += float(details.get('cgst_amount', '0.00'))
+                total_sgst += float(details.get('sgst_amount', '0.00'))
+                total_quantity += int(details['quantity'])
 
-        if not product_data:
-            raise NotFound("Product not found in this order")
-
-        # Prepare the response data
-        response_data = {
-            'product': product_data['info'],
-            'order': {
+            # Construct response data
+            response_data = {
+                'order_id': order.id,
                 'order_uid': order.uid,
-                'order_status': order.order_status,
-                'payment_status': order.payment_status,
-                'date': order.date
-            },
-            'address': order.address,
-            'quantity': product_data['quantity'],
-            'total_price': product_data['total_price']
-        }
+                'grand_total': grand_total,
+                'discount_amount': discount_amount,
+                'gross_cart_value': gross_cart_value,
+                'total_cart_items': total_cart_items,
+                'delivery_charge': delivery_charge,
+                'applied_coupon': applied_coupon,
+                'coupon_discount_amount': coupon_discount_amount,
+                'cgst_amount': total_cgst,
+                'sgst_amount': total_sgst,
+                'total_quantity': total_quantity,
+                'payment_method': order.payment_method,
+                'products': products_data,
+                'tracking_data': tracking_data,
+                'media_url': settings.MEDIA_URL,
+            }
 
-        return Response(response_data, status=200)
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
