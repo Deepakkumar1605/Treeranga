@@ -50,7 +50,7 @@
      <!-- ---=========--======-----===========Authenticated========== --========----------->
   {% if user.is_authenticated %}
 
-  <header class="p-xxl-4 p-xl-4 py-lg-2 px-lg-4 p-md-3 p-sm-2 p-2">
+  <header class="px-lg-3 py-lg-2">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6" id="menu-bar">
@@ -159,24 +159,22 @@
           </ul>
       
         </div>
-          
-         
-        
-        <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
-          {% csrf_token %}
-          <div class="input-group ">
-            <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
-          </div>
-          <div id="search-suggestions"></div>
-        </form>
+
+     
       <!-- ---=========--======-----===========end Auth Nav buttons========== --========----------->
       </div>
+      <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
+        {% csrf_token %}
+        <div class="input-group ">
+          <input name="search-box" type="search" class="form-control" id="search" placeholder="Search Products" aria-label="Search">
+        </div>
+        <div id="search-suggestions"></div>
+      </form>
     </div>
   </header>
 
-   <!-- ---=========--======-----===========UnAuthenticated========== --========----------->
+  <!-- ---=========--======-----===========UnAuthenticated========== --========----------->
   {% elif not user.is_authenticated %}
-
   <header class="px-lg-3 py-lg-2">
     <div class="container">
       <div class="row align-items-center" id="header_rows">
@@ -185,7 +183,6 @@
           data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" id="menu_button">
           <i class="fa-solid fa-bars"></i>
         </button>
-
         <div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1"
           id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
           <div class="offcanvas-header">
@@ -201,16 +198,16 @@
             </ul>
           </div>
         </div>
-    
+
           <a class="navbar-brand" href="{% url 'app_common:home' %}">
             <img src="{% static 'app_common/images/logo5.png' %}" alt="Logo" >
           </a>
         </div>
 
 
-     <!-- ==================Unauth full screen header================== -->
+<!-- ==================Unauth full screen header================== -->
 
-     <div class="col-lg-7 col-xl-6 d-none mt-lg-1 d-lg-block d-flex justify-content-center align-items-center" id="NAV_BUTTONS">
+    <div class="col-lg-7 col-xl-6 d-none mt-lg-1 d-lg-block d-flex justify-content-center align-items-center" id="NAV_BUTTONS">
       <!-- <div class="SEARCH-CONTAINER">
         <i class="fa fa-search SEARCH-ICON"></i>
         <input type="text" id="SEARCH-INPUT" placeholder="Search for Products, Brands and More">
@@ -221,7 +218,6 @@
 
               <!-- ==============Unauth Nav buttons============== -->
 
-     
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 d-flex justify-content-evenly align-items-center">
           <button type="button" class="btn" id="search-icon">
             <i class="fa fa-search HeaderIcons  text-success" aria-hidden="true"></i>
@@ -239,30 +235,6 @@
               </span>
             </i>
         </a>
-        <div class="dropdown">
-          <a href="#" class="text-decoration-none btn" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-regular fa-bell HeaderIcons text-success"></i>
-              {% if unread_notifications_count > 0 %}
-                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                      {{ unread_notifications_count }}
-                  </span>
-              {% endif %}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-              {% for notification in notifications %}
-                  <li>
-                      <a class="dropdown-item" href="{{ notification.callback_url }}" target="_blank">
-                          <strong>{{ notification.title }}</strong><br>
-                          <small>{{ notification.description }}</small><br>
-                          <span class="text-muted">{{ notification.date }}</span>
-                      </a>
-                  </li>
-              {% empty %}
-                  <li><span class="dropdown-item text-muted">No new notifications</span></li>
-              {% endfor %}
-          </ul>
-      </div>
-      
         </div>
 
         <form action="" method="post" class="input-group p-lg-2" role="search" id="search-form" style="display: none;">
@@ -274,7 +246,7 @@
         </form>
         
           <!-- ---=========--======-----===========end Unauth Nav buttons========== --========----------->
-      </div>
+      </div>  
     </div>
   </header>
   {% endif %}
@@ -340,7 +312,7 @@
               <ul class="p-0">
                 <h6>Navigation</h6>
                   <li><a href="{% url 'app_common:home' %}">Home</a></li>
-                  <li><a href="">All Products</a></li>
+                  <li><a href="{% url 'product:all_products' %}">All Products</a></li>
                   <li><a href="{% url 'blog:user_blog_list' %}">Blogs</a></li>
                 </ul>
             </div>

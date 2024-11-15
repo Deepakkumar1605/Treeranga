@@ -49,9 +49,9 @@
 <section class="px-lg-5 px-md-3 px-2 py-lg-3 py-md-4 py-3 Shop_by_Collection">
   <div class="row ">
     <!-- Left side image (2x height) -->
-    <div class="col-lg-5 col-md-12 pe-0  ">
+    <div class="col-lg-6 col-md-12 pe-0  ">
         <div class="image-container left-image">
-            <img src="{% static 'app_common/images/gallery1.webp' %}" alt="Clothes" class="img-fluid">
+            <img src="https://theme367-fashion.myshopify.com/cdn/shop/files/banner-menu3_126067f0-5b37-45cb-9f5d-8c3695867bdd.jpg?v=1677842608&width=710" alt="Clothes" class="img-fluid">
             <div class="overlay1">
                 <h5> All Collection</h5>
                 <a href="{% url 'product:all_products' %}">
@@ -61,12 +61,22 @@
         </div>
     </div>
     <!-- Right side images (half-height each) -->
-    <div class="col-lg-7 col-md-12 mt-lg-0 mt-3">
+    <div class="col-lg-6 col-md-12 mt-lg-0 mt-3">
         <div class="row ">
-
-            <div class="col-md-12 right-image mb-md-1">
+            <div class="col-md-12 right-image mb-lg-1">
                 <div class="image-container">
-                    <img src="{% static 'app_common/images/gallery2.webp' %}" alt="Accessories" class="img-fluid">
+                    <img src="https://theme367-fashion.myshopify.com/cdn/shop/articles/Rectangle_254_4.png?v=1676553351" alt="Shoes" class="img-fluid">
+                    <div class="overlay">
+                        <h5>Women's Collection</h5>
+                        <a href="{% url 'product:womens_products' %}">
+                          <button class="moreBtn1">Shop Now</button>
+                      </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 right-image mt-lg-2">
+                <div class="image-container">
+                    <img src="https://theme367-fashion.myshopify.com/cdn/shop/files/banner2_4c0d84ae-a00f-4b67-a459-f36c1bb23581.png?v=1677768411&width=2000" alt="Accessories" class="img-fluid">
                     <div class="overlay">
                         <h5  class="text-white">Men's Collection</h5>
                         <a href="{% url 'product:mens_products' %}">
@@ -75,28 +85,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 right-image  mt-md-2   pe-md-0 ">
-              <div class="image-container ">
-                  <img src="{% static 'app_common/images/gallery3.webp' %}" alt="Shoes" class="women_img">
-                  <div class="overlay2">
-                      <h5>Women's Collection</h5>
-                      <a href="{% url 'product:womens_products' %}">
-                        <button class="moreBtn1">Shop Now</button>
-                    </a>
-                  </div>
-              </div>
-          </div>
-            <div class="col-md-6 right-image   mt-md-2">
-              <div class="image-container ">
-                  <img src="{% static 'app_common/images/gallery4.jpg' %}" alt="Shoes" class="women_img ">
-                  <div class="overlay2">
-                      <h5 class="">Kid's Collection</h5>
-                      <a href="{% url 'product:boys_products' %}">
-                        <button class="moreBtn1">Shop Now</button>
-                    </a>
-                  </div>
-              </div>
-          </div>
+         
         </div>
     </div>
 </div>
