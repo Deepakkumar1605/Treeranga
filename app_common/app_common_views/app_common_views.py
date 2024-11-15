@@ -9,7 +9,7 @@ from users.forms import LoginForm
 from app_common.models import ContactMessage,Banner
 from users.user_views.emails import send_template_email
 from app_common.forms import ContactMessageForm
-from product.models import Category,Products,SimpleProduct,ImageGallery
+from product.models import Category,Products,SimpleProduct,ImageGallery,ProductReview
 from cart.models import Cart
 from django.conf import settings
 from django.db.models import Prefetch
@@ -48,6 +48,17 @@ class HomeView(View):
 
             # Banner
             banners=Banner.objects.filter(active=True).order_by('order')
+
+            reviews = ProductReview.objects.filter(rating=5).order_by('-created_at')[:10]  # Get top 10 reviews (adjust if needed)
+
+            # Prepare a list of reviews with associated product information
+            testimonials = []
+            for review in reviews:
+                testimonials.append({
+                    'review': review,
+                    'product': review.product,  # Associated product
+                    'user': review.user,  # User who gave the review
+                })
 
             # Handle Trending Products (simple and variant)
             trending_products = []
@@ -95,6 +106,7 @@ class HomeView(View):
                 'trending_products': trending_products,
                 'new_products': new_products,
                 'banners': banners,
+                'testimonials': testimonials,
                 'MEDIA_URL': settings.MEDIA_URL,
             }
             return render(request, self.template, context)
