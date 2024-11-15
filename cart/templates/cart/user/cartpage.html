@@ -75,7 +75,6 @@
                     <a href="{% url 'cart:checkout' %}" class="u-button">Place order</a>
                     {% else %}
                     <a class="u-button" disabled>Place order</a>
-                    
                     {% endif %}
                 </div>
             </div>
@@ -118,18 +117,11 @@
                         {% csrf_token %}
                         <label for="coupon_code" class="form-label">Apply Coupon</label>
                         <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
-                        {% if applied_coupon %}
-                        <input type="text" name="coupon_code" id="coupon_code" class="form-control" value="{{applied_coupon}}" required>
-                        {% else %}
                         <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Enter coupon code" required>
-                        {% endif %}
                         <button type="submit" class="btn btn-success mt-2">Apply</button>
                     </form>
                     {% if applied_coupon %}
-                    <!-- Display applied coupon info and remove button -->
                     <p class="mt-3 text-success">Coupon <strong>{{ applied_coupon }}</strong> applied successfully! Discount: ₹{{ cupon_discounted_ammount }}</p>
-                    
-                    <!-- Remove Coupon Button -->
                     <form method="POST" action="{% url 'cart:remove_coupon' %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger mt-2">Remove Coupon</button>
@@ -141,6 +133,25 @@
                         {% endfor %}
                     </p>
                 </div>
+                <div class="border mt-3 p-3">
+                    <h5>Available Coupons</h5>
+                    {% if coupons %}
+                        <ul class="list-group">
+                            {% for coupon in coupons %}
+                                <li class="list-group-item coupon-item" data-code="{{ coupon.code }}">
+                                    <input type="radio" name="coupon-radio" value="{{ coupon.code }}" id="coupon-{{ coupon.code }}" onclick="setCouponCode('{{ coupon.code }}')">
+                                    <label for="coupon-{{ coupon.code }}">
+                                        <strong>{{ coupon.code }}</strong>: {{ coupon.description }} 
+                                        <span class="text-muted">- Valid till {{ coupon.valid_to|date:"d M Y" }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No active coupons available.</p>
+                    {% endif %}
+                </div>
+                
                 <span class="d-flex mt-3 p-2" id="t-Head">
                     <i class="bi bi-shield-fill-check"></i>
                     <p class="ms-2">Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
@@ -164,22 +175,16 @@
     document.addEventListener('DOMContentLoaded', function() {
         var couponForm = document.getElementById('couponForm');
         if (couponForm) {
-            couponForm.addEventListener('submit', function(event) {
-                event.preventDefault();
+            couponForm.addEventListener('submit', function(e) {
+                e.preventDefault();
                 var couponCode = document.getElementById('coupon_code').value;
                 var csrfToken = document.getElementById('csrf_token').value;
 
-                // Validation for coupon code length
-                if (couponCode.length < 5) {
-                    document.getElementById('coupon-message').innerText = "Coupon code is too short!";
-                    return;
-                }
-
-                fetch('{% url "cart:apply_coupon" %}', {
+                fetch("{% url 'cart:apply_coupon' %}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken // Using the CSRF token
+                        'X-CSRFToken': csrfToken
                     },
                     body: JSON.stringify({
                         coupon_code: couponCode
@@ -187,22 +192,20 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data); // This will show what the backend returns in the console
                     if (data.success) {
-                        document.getElementById('coupon-message').innerText = "Coupon applied successfully!";
-                        document.querySelector('.total-amount span:nth-child(2)').innerHTML = `<i class="bi bi-currency-rupee"></i>${data.final_price}`;
-                        window.location.reload()
+                        window.location.reload();  // Reload to reflect applied coupon
                     } else {
-                        document.getElementById('coupon-message').innerText = data.message || "Invalid coupon code.";
+                        document.getElementById('coupon-message').textContent = data.message;
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('coupon-message').innerText = "Error applying the coupon. Please try again.";
-                });
+                .catch(error => console.log(error));
             });
         }
     });
+
+    function setCouponCode(code) {
+        document.getElementById('coupon_code').value = code;
+    }
 </script>
 
 {% endblock content %}
