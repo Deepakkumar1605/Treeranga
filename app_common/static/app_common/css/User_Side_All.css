@@ -1653,7 +1653,7 @@ video {
 }
 
 .review-rating label {
-	font-size: 30px;
+	font-size: 30px !important;
 	color: #ddd;     /* Gray color for unselected stars */
 	cursor: pointer;
 }
