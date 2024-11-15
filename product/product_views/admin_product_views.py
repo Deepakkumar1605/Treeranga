@@ -534,7 +534,7 @@ class AdminReviewManagementView(View):
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
 
-    def post(self, request, p_id):
+    def post(self, request):
         try:
             review_ids = request.POST.getlist('reviews')
 
@@ -551,6 +551,7 @@ class AdminReviewManagementView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
         
 @method_decorator(utils.super_admin_only, name='dispatch')
 class ProductSearch(View):
