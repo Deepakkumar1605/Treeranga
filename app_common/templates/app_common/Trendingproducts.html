@@ -103,15 +103,16 @@
         </div>
         <div class="product-details">
             <h4>{{ item.product.name|truncatechars:15 }}</h4>
-            <p class="price">              {% if item.variant == "no" %}
-              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
-              {% if item.simple_product.product_max_price %}
+            <p class="price">    
+              {% if item.variant == "no" %}
               <span class="original-price" id="max_price"><s>₹{{ item.simple_product.product_max_price }}</s></span>
+              {% if item.simple_product.product_max_price %}
+              <span class="price" id="discount_price">₹{{ item.simple_product.product_discount_price }}</span>
               {% endif %}
             {% else %}
-              <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
-              {% if item.variant_product.product_max_price %}
               <span class="original-price" id="max_price"><s>₹{{ item.variant_product.product_max_price }}</s></span>
+              {% if item.variant_product.product_max_price %}
+              <span class="price" id="discount_price">₹{{ item.variant_product.product_discount_price }}</span>
               {% endif %}
             {% endif %}
           </p>
