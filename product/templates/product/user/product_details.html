@@ -185,16 +185,21 @@ Product Details - {{ product_obj.name }}
                                             <p>Twitter</p>
                                         </a>
 
-                                                                            <!-- Instagram (Link to your profile or the Instagram app) -->
-                                        <a id="shareInstagram" 
-                                            href="https://www.instagram.com/yourprofile/" 
+                                       <a id="shareInstagram" 
+                                            href="https://www.instagram.com/yourusername/" 
                                             target="_blank" 
-                                            title="Share on Instagram" 
+                                            title="Visit Instagram Profile" 
                                             class="text-center d-flex flex-column align-items-center">
                                             <i class="fab fa-instagram" style="color: #C13584;"></i>
                                             <p>Instagram</p>
                                         </a>
-
+                                        <!-- Button to copy Instagram profile link -->
+                                        <!-- Button to copy the current page URL -->
+                                        <button onclick="copyToClipboard()" title="Copy Current URL" 
+                                                class="text-center d-flex flex-column align-items-center">
+                                            <i class="fas fa-link" style="color: #000;"></i>
+                                            <p>Copy URL</p>
+                                        </button>
                                     </div>
                                     
                                 </div>
@@ -605,5 +610,14 @@ Product Details - {{ product_obj.name }}
         .catch(error => console.error('Error:', error));
     });
 </script>
-    
+
+<!-- JavaScript to copy the current URL -->
+<script>
+function copyToClipboard() {
+    const currentUrl = window.location.href;  // Get the current page URL
+    navigator.clipboard.writeText(currentUrl)
+        .then(() => alert("Current URL copied to clipboard!"))
+        .catch(err => console.error("Failed to copy URL: ", err));
+}
+</script>
 {% endblock content %}
