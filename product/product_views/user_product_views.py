@@ -52,15 +52,15 @@ class ShowProductsView(View):
                             'videos': videos
                         })
                 elif product.product_type == "variant":
-                    variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
-                    for variant_product in variant_products:
-                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    variant_products = VariantProduct.objects.filter(product=product, is_visible=True).first()
+                    if variant_products:
+                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_products).first()
                         images = variant_image_gallery.images if variant_image_gallery else []
                         videos = variant_image_gallery.video if variant_image_gallery else []
                         products_with_variants.append({
                             'product': product,
                             'variant': "yes",
-                            'variant_product': variant_product,
+                            'variant_product': variant_products,
                             'images': images,
                             'videos': videos
                         })
