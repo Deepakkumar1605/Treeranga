@@ -71,7 +71,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['full_name', 'email', 'contact']
+        fields = ['full_name', 'email', 'contact','profile_pic']
 
 class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:

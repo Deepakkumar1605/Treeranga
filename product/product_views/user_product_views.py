@@ -126,7 +126,7 @@ class ShowAllProductsView(View):
 
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
-            return render(request, 'app/user/error_page.html', {'error_message': error_message}, status=400)
+            return render_error_page(request, error_message, status_code=400)
 
 
 

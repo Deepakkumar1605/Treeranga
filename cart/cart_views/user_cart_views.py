@@ -63,7 +63,6 @@ class ShowCart(View):
                 applied_coupon = None
                 cupon_discounted_amount = Decimal('0.00')
 
-
         # Initialize totals
         total_original_price = Decimal('0.00')
         total_price = Decimal('0.00')
@@ -78,15 +77,18 @@ class ShowCart(View):
             total_price += discount_price * quantity
             total_discounted_amount += (max_price - discount_price) * quantity
 
+        # Apply coupon discount to the total price
+        final_total_price = (total_price - cupon_discounted_amount).quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+
         # Prepare context
         context = {
             'category_obj': category_obj,
             'products': products,
             'totaloriginalprice': float(total_original_price),
-            'totalPrice': float(total_price) - float(cupon_discounted_amount),
-            'final_cart_value': float(total_price) - float(cupon_discounted_amount),  # Include delivery in final cart value
+            'totalPrice': float(final_total_price),  # Use the rounded final total price
+            'final_cart_value': float(final_total_price),  # Include delivery in final cart value
             'discount_price': float(total_discounted_amount),
-            'cupon_discounted_ammount': cupon_discounted_amount,
+            'cupon_discounted_ammount': float(cupon_discounted_amount),
             'applied_coupon': applied_coupon,
             'MEDIA_URL': settings.MEDIA_URL,
         }
