@@ -1143,7 +1143,7 @@ button:hover .button-text {
 
 .modal-content {
 	
-	width: 90% !important;
+	width: 100% !important;
 }
 /* Style the radio button to hide the default appearance */
 input[type="radio"] {

@@ -144,7 +144,7 @@ Product Details - {{ product_obj.name }}
 
                     <!-- Share Product Modal -->
                     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered "> <!-- Added modal-dialog-centered -->
+                        <div class="modal-dialog modal-dialog-centered  "> <!-- Added modal-dialog-centered -->
                             <div class="modal-content share_Button">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="shareModalLabel">
@@ -154,7 +154,7 @@ Product Details - {{ product_obj.name }}
                                 </div>
                                 <div class="modal-body text-center"> <!-- Centering content -->
                                     <p>Share this product on:</p>
-                                    <div class="d-flex justify-content-center gap-5">
+                                    <div class="d-flex justify-content-between ">
                                         <!-- WhatsApp -->
                                         <a id="shareWhatsApp" 
                                             href="https://wa.me/?text=Check%20out%20this%20product%3A%20{{ product.name }}%21%20Only%20%24{{ product.discount_price }}%21%20View%20it%20here%3A%20{{ request.build_absolute_uri }}" 
@@ -197,8 +197,8 @@ Product Details - {{ product_obj.name }}
                                         <!-- Button to copy the current page URL -->
                                         <button onclick="copyToClipboard()" title="Copy Current URL" 
                                                 class="text-center d-flex flex-column align-items-center">
-                                            <i class="fas fa-link" style="color: #000;"></i>
-                                            <p>Copy URL</p>
+                                                <i class="fa-regular fa-copy text-info"></i>
+                                            <p class="text-primary">Copy URL</p>
                                         </button>
                                     </div>
                                     
