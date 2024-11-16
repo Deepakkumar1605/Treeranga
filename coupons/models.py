@@ -8,6 +8,7 @@ class Coupon(models.Model):
     )
     
     code = models.CharField(max_length=50, unique=True)
+    description = models.TextField(null=True, blank=True)
     discount_type = models.CharField(choices=DISCOUNT_TYPES, max_length=10)
     discount_value = models.DecimalField(max_digits=10, decimal_places=2)
     valid_from = models.DateTimeField()

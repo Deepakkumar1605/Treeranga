@@ -27,10 +27,16 @@ from payment.payment_views.delhivery_api import check_pincode_serviceability
 
 class ShowCart(View):
     def get(self, request):
+        from decimal import Decimal, ROUND_HALF_UP
+        from django.conf import settings
+        from cart.models import Cart
+        from coupons.models import Coupon
+
         category_obj = Category.objects.all()
         user = request.user
 
         cupon_discounted_amount = Decimal('0.00')
+        coupons = Coupon.objects.filter(is_active=True)  # Fetch all active coupons
 
         if user.is_authenticated:
             cart_items = Cart.objects.filter(user=user).first()
@@ -85,15 +91,17 @@ class ShowCart(View):
             'category_obj': category_obj,
             'products': products,
             'totaloriginalprice': float(total_original_price),
-            'totalPrice': float(final_total_price),  # Use the rounded final total price
+            'totalPrice': float(total_price),  # Use the rounded final total price
             'final_cart_value': float(final_total_price),  # Include delivery in final cart value
             'discount_price': float(total_discounted_amount),
             'cupon_discounted_ammount': float(cupon_discounted_amount),
             'applied_coupon': applied_coupon,
+            'coupons': coupons,  # Pass available coupons to the context
             'MEDIA_URL': settings.MEDIA_URL,
         }
 
         return render(request, "cart/user/cartpage.html", context)
+
 
 
 
