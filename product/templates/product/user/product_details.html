@@ -73,6 +73,16 @@ Product Details - {{ product_obj.name }}
                     {% else %}
                         <p>No main image available.</p>
                     {% endif %}
+                    {% if videos %}
+                    {% for video in videos %}
+                        <div class="gallery-item">
+                            <video controls class="thumb" onclick="displayMedia(this)">
+                                <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
                     {% if user.is_authenticated %}
                         <button id="wishlist-btn" class="btn-wishlist position-absolute top-0 end-0 m-2" data-product-id="{{ product_obj.id }}" data-is-variant="{{ variant_param }}">
                             {% if is_added %}
@@ -89,6 +99,7 @@ Product Details - {{ product_obj.name }}
                     {% endif %}
                     
                 </div>
+                
             </div>
 
             <!-- Product Details -->

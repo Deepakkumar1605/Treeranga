@@ -268,7 +268,8 @@ header {
   }
 /* ------------------------search Suggestion------------- */
 #search-suggestions {
-    min-height: 40vh;
+    min-height: 30vh;
+	max-height: 75vh;
     overflow-y: scroll;
     background-color: var(--white);
     padding: 10px 10px;
@@ -291,7 +292,7 @@ header {
     z-index: 1000; 
 }
 .suggestion:hover{
-	background-color: #baeaa6;
+	background-color: #9cddc2;
 }
 .suggestion{
 	padding: 10px; 
