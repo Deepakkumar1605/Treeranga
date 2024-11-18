@@ -1385,6 +1385,65 @@ video {
 	cursor: pointer;
 	padding: 2px 0;
 }
+/*  */
+
+.custom-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.custom-modal-content {
+    position: relative;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.custom-close {
+    position: absolute;
+    top: 70px;
+    right: 15px;
+    color: rgb(255, 255, 255);
+    font-size: 40px;
+   
+    cursor: pointer;
+}
+
+.custom-modal-media {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 30px;
+	font-weight: 300 !important;
+    cursor: pointer;
+    z-index: 1001; /* Ensure buttons are above other content */
+}
+
+.nav-button:first-of-type {
+    left: 10px; /* Position for the left button */
+}
+
+.nav-button:last-of-type {
+    right: 10px; /* Position for the right button */
+}
+/*  */
 
 .product-details {
 	flex: 1 1 50%;

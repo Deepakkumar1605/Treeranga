@@ -5,12 +5,12 @@
 
 <section class="py-lg-2">
     <div class="conatiner">
-        <h4 class="form-header headings_h4 text-center my-lg-4 p-lg-3">Update Simple Product</h4>
+        
         <div class="product-form-container">
             <form action="" class="update-form" method="post" enctype="multipart/form-data"  id="productForm">
                 {% include 'snippets/alert.html' %}
                 {% csrf_token %}
-                
+                <h4 class="text-center  pb-4">Update Simple Product</h4>
                 <div class="row">
                     {% for field in form %}
                         <div class="col-md-6 col-6 col-sm-6 mb-3">

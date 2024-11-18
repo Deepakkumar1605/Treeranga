@@ -37,32 +37,45 @@ Product Details - {{ product_obj.name }}
                         </div>
                     </div>
                 </div>
+<!-- Small Screen container Image field showing -->
+<div class="gallery-container d-lg-none d-block">
+    <div class="gallery-slider">
+        {% if images %}
+            {% for image in images %}
+                <div class="gallery-item">
+                    <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image" class="thumb" onclick="displayMedia(this, '{{ MEDIA_URL }}{{ image }}')">
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No media available.</p>
+        {% endif %}
+        {% if videos %}
+            {% for video in videos %}
+                <div class="gallery-item">
+                    <video controls class="thumb" onclick="displayMedia(this, '{{ MEDIA_URL }}{{ video }}')">
+                        <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
 
-                     <!-- Small Screen container Image field showing -->
-
-                     <div class="gallery-container d-lg-none d-block">
-                        <div class="gallery-slider">
-                            {% if images %}
-                                    {% for image in images %}
-                                        <div class="gallery-item">
-                                            <img src="{{ MEDIA_URL }}{{ image }}" alt="Gallery Image" class="thumb" onclick="displayMedia(this)">
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <p>No media available.</p>
-                                {% endif %}
-                                {% if videos %}
-                                    {% for video in videos %}
-                                        <div class="gallery-item">
-                                            <video controls class="thumb" onclick="displayMedia(this)">
-                                                <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                        </div>
-                    </div>
+<!-- Modal for displaying images/videos -->
+<div id="mediaModal" class="custom-modal">
+    
+    <div class="custom-modal-content">
+        <span class="custom-close  " onclick="closeModal()">&times;</span>
+        <button class="nav-button" onclick="changeMedia(-1)">&#10094;</button>
+        <img id="modalImage" class="custom-modal-media" style="display:none;">
+        <video id="modalVideo" class="custom-modal-media" controls style="display:none;">
+            <source id="videoSource" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <button class="nav-button" onclick="changeMedia(1)">&#10095;</button>
+    </div>
+</div>
      
 
                 <div class="product-image d-lg-block d-none" id="mediaContainer">
@@ -72,16 +85,6 @@ Product Details - {{ product_obj.name }}
                         <img src="{{ MEDIA_URL }}{{ product_obj.image }}" alt="{{ product_obj.name }}" id="mainImage">
                     {% else %}
                         <p>No main image available.</p>
-                    {% endif %}
-                    {% if videos %}
-                    {% for video in videos %}
-                        <div class="gallery-item">
-                            <video controls class="thumb" onclick="displayMedia(this)">
-                                <source src="{{ MEDIA_URL }}{{ video }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                    {% endfor %}
                     {% endif %}
                     {% if user.is_authenticated %}
                         <button id="wishlist-btn" class="btn-wishlist position-absolute top-0 end-0 m-2" data-product-id="{{ product_obj.id }}" data-is-variant="{{ variant_param }}">
@@ -99,7 +102,6 @@ Product Details - {{ product_obj.name }}
                     {% endif %}
                     
                 </div>
-                
             </div>
 
             <!-- Product Details -->
@@ -326,11 +328,11 @@ Product Details - {{ product_obj.name }}
                 {% if item.variant == "yes" %}
                 <a href="{% url 'product:product_detail' item.product.pk %}?variant=yes">
                         <img src="{% if item.images %}{{ MEDIA_URL }}{{ item.images.0 }}{% else %}{% static 'default_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ item.product.name }}" id="card-img1">
-                    </a>
+                </a>
                 {% else %}
-                    <a href="{% url 'product:product_detail' item.product.pk %}?variant=no">
-                        <img src="{% if item.images %}{{ MEDIA_URL }}{{ item.images.0 }}{% else %}{% static 'default_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ item.product.name }}" id="card-img1">
-                    </a>
+                <a href="{% url 'product:product_detail' item.product.pk %}?variant=no">
+                    <img src="{% if item.images %}{{ MEDIA_URL }}{{ item.images.0 }}{% else %}{% static 'default_image.jpg' %}{% endif %}" class="card-img-top" alt="{{ item.product.name }}" id="card-img1">
+                </a>
                 {% endif %}
                 <div class="product-icons">
                     <i class="fa-regular fa-heart"></i>
@@ -625,6 +627,79 @@ function copyToClipboard() {
     navigator.clipboard.writeText(currentUrl)
         .then(() => alert("Current URL copied to clipboard!"))
         .catch(err => console.error("Failed to copy URL: ", err));
+}
+</script>
+<script>
+   let currentMediaIndex = 0; // To keep track of the current media index
+let mediaList = []; // To store the list of media items
+
+function displayMedia(element, mediaUrl) {
+    const modal = document.getElementById("mediaModal");
+    const modalImage = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+    const videoSource = document.getElementById("videoSource");
+    
+    // Reset modal content
+    modalImage.style.display = "none";
+    modalVideo.style.display = "none";
+
+    // Clear the media list and add all media items
+    mediaList = [];
+    document.querySelectorAll('.gallery-item img, .gallery-item video').forEach((item) => {
+        const src = item.tagName === "IMG" ? item.src : item.querySelector('source').src;
+        mediaList.push(src);
+    });
+
+    // Find the index of the clicked media
+    currentMediaIndex = mediaList.indexOf(mediaUrl);
+
+    // Show the media in the modal
+    if (element.tagName === "IMG") {
+        modalImage.src = mediaUrl; // Set the source of the modal image
+        modalImage.style.display = "block"; // Show the image
+    } else if (element.tagName === "VIDEO") {
+        videoSource.src = mediaUrl; // Set the source of the modal video
+        modalVideo.load(); // Load the video
+        modalVideo.style.display = "block"; // Show the video
+    }
+
+    modal.style.display = "block"; // Show the modal
+}
+
+function closeModal() {
+    const modal = document.getElementById("mediaModal");
+    modal.style.display = "none"; // Hide the modal
+}
+
+function changeMedia(direction) {
+    const modalImage = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+    const videoSource = document.getElementById("videoSource");
+
+    // Update the current media index
+    currentMediaIndex += direction;
+
+    // Loop around if we go out of bounds
+    if (currentMediaIndex < 0) {
+        currentMediaIndex = mediaList.length - 1; // Go to the last media
+    } else if (currentMediaIndex >= mediaList.length) {
+        currentMediaIndex = 0; // Go to the first media
+    }
+
+    // Reset modal content
+    modalImage.style.display = "none";
+    modalVideo.style.display = "none";
+
+    // Show the next media in the modal
+    const nextMediaUrl = mediaList[currentMediaIndex];
+    if (nextMediaUrl.endsWith('.mp4')) { // Assuming video URLs end with .mp4
+        videoSource.src = nextMediaUrl; // Set the source of the modal video
+        modalVideo.load(); // Load the video
+        modalVideo.style.display = "block"; // Show the video
+    } else {
+        modalImage.src = nextMediaUrl; // Set the source of the modal image
+        modalImage.style.display = "block"; // Show the image
+    }
 }
 </script>
 {% endblock content %}

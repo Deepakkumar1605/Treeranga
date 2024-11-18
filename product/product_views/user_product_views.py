@@ -216,7 +216,7 @@ class ProductDetailsView(View):
 
         for product in product_list_category_wise:
             if product.product_type == "simple":
-                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
+                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)[:5]
                 for simple_product in simple_product_similar:
                     image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
                     similar_images = image_gallery.images if image_gallery else []
