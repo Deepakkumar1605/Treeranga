@@ -193,7 +193,7 @@ class PaymentSuccess(View):
                 
                # Sample product structure from order.products
                 order_items = []
-
+                print(order_items,"****************************************************************")
                 for product_key, product in order.products.items():
                     item_string = f"name: {product['info']['name']}, sku: {product['info']['sku']}, units: {product['quantity']}, selling_price: {product['info']['discount_price']}, discount: {product['info']['max_price'] - product['info']['discount_price']}, tax: {product['info'].get('tax', '')}, hsn: {product['info'].get('hsn', '')}"
 
