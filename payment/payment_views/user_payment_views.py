@@ -98,7 +98,7 @@ class PaymentSuccess(View):
                     order.save()
                     # # Sample product structure from order.products
                     order_items = []
-
+                    full_address = f"{selected_address.get('Address1', '')} {selected_address.get('Address2', '')}".strip()
                     for product_key, product in order.products.items():
                         item_string = f"name: {product['info']['name']}, sku: {product['info']['sku']}, units: {product['quantity']}, selling_price: {product['info']['discount_price']}, discount: {product['info']['max_price'] - product['info']['discount_price']}, tax: {product['info'].get('tax', '')}, hsn: {product['info'].get('hsn', '')}"
 
@@ -111,7 +111,7 @@ class PaymentSuccess(View):
                             "shipments": [
                                 {
                                     "name": order.full_name,
-                                    "add": selected_address.get('Address1', ''),
+                                    "add": full_address,
                                     "pin": selected_address.get('pincode', ''),
                                     "city": selected_address.get('city', ''),
                                     "state": selected_address.get('state', ''),
@@ -193,7 +193,7 @@ class PaymentSuccess(View):
                 
                # Sample product structure from order.products
                 order_items = []
-
+                full_address = f"{selected_address.get('Address1', '')} {selected_address.get('Address2', '')}".strip()
                 for product_key, product in order.products.items():
                     item_string = f"name: {product['info']['name']}, sku: {product['info']['sku']}, units: {product['quantity']}, selling_price: {product['info']['discount_price']}, discount: {product['info']['max_price'] - product['info']['discount_price']}, tax: {product['info'].get('tax', '')}, hsn: {product['info'].get('hsn', '')}"
 
@@ -204,7 +204,7 @@ class PaymentSuccess(View):
                         "shipments": [
                             {
                                 "name": order.full_name,
-                                "add": selected_address.get('Address1', ''),
+                                "add": full_address,
                                 "pin": selected_address.get('pincode', ''),
                                 "city": selected_address.get('city', ''),
                                 "state": selected_address.get('state', ''),

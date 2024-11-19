@@ -105,14 +105,14 @@ class ShowAllProductsView(View):
                         })
                 elif product.product_type == "variant":
                     # Fetch variant product details and related images and videos
-                    variant_products = VariantProduct.objects.filter(product=product, is_visible=True)
-                    for variant_product in variant_products:
-                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_product).first()
+                    variant_products = VariantProduct.objects.filter(product=product, is_visible=True).first()
+                    if variant_products:
+                        variant_image_gallery = VariantImageGallery.objects.filter(variant_product=variant_products).first()
                         images = variant_image_gallery.images if variant_image_gallery else []
                         videos = variant_image_gallery.video if variant_image_gallery else []
                         products_with_variants.append({
                             'product': product,
-                            'variant_product': variant_product,
+                            'variant_product': variant_products,
                             'is_variant': True,
                             'images': images,
                             'videos': videos
@@ -216,7 +216,7 @@ class ProductDetailsView(View):
 
         for product in product_list_category_wise:
             if product.product_type == "simple":
-                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)
+                simple_product_similar = SimpleProduct.objects.filter(product=product, is_visible=True).exclude(id=product_obj.id)[:5]
                 for simple_product in simple_product_similar:
                     image_gallery = ImageGallery.objects.filter(simple_product=simple_product).first()
                     similar_images = image_gallery.images if image_gallery else []

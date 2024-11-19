@@ -30,6 +30,10 @@ urlpatterns = [
     path('banners/edit/<int:banner_id>/', admin_views.BannerEdit.as_view(), name='web_banner_edit'),
     path('Banners/delete/<int:banner_id>/', admin_views.BannerDelete.as_view(), name='web_banner_delete'),
     
+    path('section/Banners/', admin_views.SectionBannerList.as_view(), name='section_banner_list'),
+    path('section/banners/edit/<int:banner_id>/', admin_views.SectionBannerEdit.as_view(), name='section_banner_edit'),
+    path('section/banners/delete/<int:banner_id>/', admin_views.BannerDelete.as_view(), name='section_banner_delete'),
+    
     
     path('admin/create-notification/', admin_views.CreateNotificationView.as_view(), name='create_notification'),
     path('admin/notifications/', admin_views.AdminNotificationListView.as_view(), name='admin_notification_list'),

@@ -39,7 +39,7 @@ class Order(models.Model):
     address = models.JSONField(default=dict, null=True, blank=True)
     transaction_id = models.TextField(null= True, blank=True)
     date = models.DateField(auto_now_add= True, null=True, blank=True)
-
+    waybill = models.CharField(max_length=255, null=True, blank=True) 
     can_edit = models.BooleanField(default=True) # id a order is canceled or refunded, make it non editable
 
     def __str__(self):

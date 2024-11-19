@@ -1,0 +1,99 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="py-2">
+    <div class="container">
+        <h4 class=" my-lg-4 p-lg-3">Section Banner List</h4>
+        <div class="vstack gap-4">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <p class="">{% include 'snippets/alert.html' %}</p>
+                <a style="margin-left: 1rem;" data-bs-toggle="modal" data-bs-target="#banner_create_modal" class="btn catagory-btn">
+                    <i class="fa fa-plus me-2"></i>Add New Banner
+                </a>
+            </div>
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Banner ID</th>
+                                <th scope="col">Banner Images</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test_table_tbody">
+                            {% for banner in banner_list %}
+                            <tr>
+                                <td>{{ banner.id }}</td>
+                                <td>
+                                    {% if banner.image %}
+                                        <img src="{{ banner.image.url }}" style="height: 50px; width: 150px;" />
+                                    {% else %}
+                                        No Image
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#banner_edit_modal_{{ banner.id }}">
+                                        Edit
+                                    </button>
+                                    <a href="{% url 'app_common:section_banner_delete' banner.id %}" class="text-danger">Delete</a>
+                                </td>
+                            </tr>
+
+                            <!-- Edit Banner Modal -->
+                            <div class="modal fade" id="banner_edit_modal_{{ banner.id }}" tabindex="-1" aria-labelledby="bannerEditModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="bannerEditModalLabel">Edit Banner {{ banner.id }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'app_common:section_banner_edit' banner.id %}" method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                {{ form.as_p }}  <!-- Render the form fields -->
+                                                <br>
+                                                <center>
+                                                    <button class="btn btn-primary" type="submit">Update Banner</button>
+                                                </center>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+    </div>
+</section>
+
+<!-- Banner Create Modal -->
+<div class="modal fade" id="banner_create_modal" tabindex="-1" aria-labelledby="bannerCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bannerCreateModalLabel">Create Banner</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'app_common:section_banner_list' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br>
+                    <center>
+                        <button class="btn btn-primary" type="submit">Add Banner</button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

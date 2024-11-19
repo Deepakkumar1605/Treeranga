@@ -6,7 +6,7 @@ from app_common.models import ContactMessage
 from orders.models import Order
 from product_variations.models import VariantProduct
 from users.forms import LoginForm
-from app_common.models import ContactMessage,Banner
+from app_common.models import ContactMessage,Banner, Sectionbanner
 from users.user_views.emails import send_template_email
 from app_common.forms import ContactMessageForm
 from product.models import Category,Products,SimpleProduct,ImageGallery,ProductReview
@@ -50,7 +50,11 @@ class HomeView(View):
             banners=Banner.objects.filter(active=True).order_by('order')
 
             reviews = ProductReview.objects.filter(rating=5).order_by('-created_at')[:10]  # Get top 10 reviews (adjust if needed)
-
+            
+            all_banners = Sectionbanner.objects.filter(banner_type="all")
+            women_banners = Sectionbanner.objects.filter(banner_type="women")
+            men_banners = Sectionbanner.objects.filter(banner_type="men")
+            
             # Prepare a list of reviews with associated product information
             testimonials = []
             for review in reviews:
@@ -101,6 +105,9 @@ class HomeView(View):
                         })
 
             context = {
+                "all_banners": all_banners,
+                "women_banners": women_banners,
+                "men_banners": men_banners,
                 'categories': categories,
                 'banners': banners,
                 'trending_products': trending_products,

@@ -608,4 +608,3 @@ def remove_coupon(request):
             messages.error(request, 'No coupon applied to remove.')
         return redirect('cart:showcart')
         
-

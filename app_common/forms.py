@@ -1,5 +1,5 @@
 from django import forms
-from app_common.models import ContactMessage,Banner, Notification
+from app_common.models import ContactMessage,Banner, Notification, Sectionbanner
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
@@ -55,3 +55,9 @@ class NotificationForm(forms.ModelForm):
             'callback_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Callback URL'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+        
+        
+class SectionBannerForm(forms.ModelForm):
+    class Meta:
+        model = Sectionbanner
+        fields = ['title', 'image', 'banner_type']
