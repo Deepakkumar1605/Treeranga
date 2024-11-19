@@ -2,6 +2,7 @@ from django.db import models
 from users.models import User
 from helpers import utils
 
+
 class ContactMessage(models.Model):
     uid=models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null= True, blank= True)
@@ -46,3 +47,19 @@ class Notification(models.Model):
     callback_url = models.URLField(max_length=500)
     is_active = models.BooleanField(default=True)
     is_read = models.BooleanField(default=False)
+    
+    
+    
+class Sectionbanner(models.Model):
+    BANNER_TYPES = [
+        ('all', 'All Collection'),
+        ('women', "Women's Collection"),
+        ('men', "Men's Collection"),
+    ]
+
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='banners/')
+    banner_type = models.CharField(max_length=10, choices=BANNER_TYPES)
+
+    def __str__(self):
+        return self.title

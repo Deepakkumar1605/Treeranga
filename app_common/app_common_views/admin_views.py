@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from app_common.error import render_error_page
 from helpers import utils
-from app_common.models import ContactMessage,Banner
+from app_common.models import ContactMessage,Banner, Sectionbanner
 from app_common.forms import ReplyForm,BannerForm
 from users.user_views.emails import send_template_email
 from app_common import forms
@@ -222,3 +222,84 @@ class AdminNotificationDeleteView(View):
         notification = get_object_or_404(models.Notification, pk=pk)
         notification.delete()
         return redirect('app_common:admin_notification_list')  # Adjust with the correct URL name for listing notifications
+
+
+@method_decorator(utils.super_admin_only, name='dispatch')
+class SectionBannerList(View):
+    template =app + "admin/sectionbanner.html"  # Ensure this path matches your templates folder structure
+    model = Sectionbanner
+    form_class = forms.SectionBannerForm
+
+    def get(self, request):
+        try:
+            banner_list = self.model.objects.all()  
+            form = self.form_class()
+            context = {
+                "banner_list": banner_list,
+                "form": form,
+            }
+            return render(request, self.template, context)
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+
+    def post(self, request):
+        try:
+            form = self.form_class(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Banner added successfully.")
+            else:
+                # Loop through form errors and display each error
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+            return redirect('app_common:section_banner_list')
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+        
+        
+@method_decorator(utils.super_admin_only, name='dispatch')
+class SectionBannerEdit(View):
+    form_class = forms.SectionBannerForm
+    model = Sectionbanner
+
+    def get(self, request, banner_id):
+        banner = get_object_or_404(self.model, id=banner_id)
+        form = self.form_class(instance=banner)
+        return render(request, 'path/to/edit_banner.html', {'form': form, 'banner': banner})
+
+    def post(self, request, banner_id):
+        banner = get_object_or_404(self.model, id=banner_id)
+        form = self.form_class(request.POST, request.FILES, instance=banner)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Banner updated successfully.')
+            return redirect('app_common:section_banner_list')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+            return redirect('app_common:section_banner_list')
+        
+        
+@method_decorator(utils.super_admin_only, name='dispatch')
+class BannerDelete(View):
+    model = Sectionbanner
+
+    def get(self, request, banner_id):
+        try:
+            banner = get_object_or_404(self.model, id=banner_id)
+            if banner.image:
+                image_path = banner.image.path
+                default_storage.delete(image_path)  # Delete the image from storage
+                banner.image = None
+
+            banner.delete()
+            messages.success(request, 'Banner deleted successfully.')
+            return redirect('app_common:section_banner_list')
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
