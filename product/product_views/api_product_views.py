@@ -6,12 +6,13 @@ from drf_yasg.utils import swagger_auto_schema
 from helpers import swagger_documentation
 from product import models
 from rest_framework import status
-from product.serializers import CategorySerializer, ImageGallerySerializer, ProductsSerializer, ProductsSerializer, SimpleProductSerializer, VariantImageGallerySerializer, VariantProductSerializer
+from product.serializers import CategorySerializer, CouponSerializer, ImageGallerySerializer, ProductsSerializer, ProductsSerializer, SimpleProductSerializer, VariantImageGallerySerializer, VariantProductSerializer
 
 from rest_framework.views import APIView
 
 from product_variations.models import VariantImageGallery, VariantProduct
 from product.product_views.user_product_views import has_user_ordered_product
+from coupons.models import Coupon
 from users.serializers import ProductReviewSerializer
 from wishlist.models import WishList
 
@@ -633,3 +634,21 @@ class SearchItemsAPIView(APIView):
             "categories": category_serializer.data,
             "search_title": search_title,
         }, status=status.HTTP_200_OK)
+    
+
+class CouponListAPIView(APIView):
+    permission_classes = [IsAuthenticated]  # Only authenticated users can access this view
+
+    @swagger_auto_schema(
+        tags=["Product"],
+        operation_description="All coupons",
+        responses={
+            200: 'Successfully retrieved the coupons',
+            401: 'Unauthorized'
+        }
+    )
+    def get(self, request):
+        coupons = Coupon.objects.all()  
+        coupons_serializer = CouponSerializer(coupons, many=True)
+
+        return Response({'coupons': coupons_serializer.data}) 
