@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from app_common.error import render_error_page
 from helpers import utils
-from app_common.models import ContactMessage,Banner, Sectionbanner
+from app_common.models import ContactMessage,Banner, Sectionbanner, FAQ
 from app_common.forms import ReplyForm,BannerForm
 from users.user_views.emails import send_template_email
 from app_common import forms
@@ -300,6 +300,62 @@ class BannerDelete(View):
             banner.delete()
             messages.success(request, 'Banner deleted successfully.')
             return redirect('app_common:section_banner_list')
+        except Exception as e:
+            error_message = f"An unexpected error occurred: {str(e)}"
+            return render_error_page(request, error_message, status_code=400)
+        
+        
+        
+class FAQCreateView(View):
+    template_name = app + "admin/faq_create.html" 
+    model = FAQ
+    def get(self, request):
+        
+        faq_list = FAQ.objects.all().order_by('id') 
+        form = forms.FAQForm()
+        return render(request, self.template_name, {'form': form, 'faq_list': faq_list})
+
+    def post(self, request):
+        form = forms.FAQForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "FAQ added successfully!")
+            return redirect('app_common:add_faq')  # Adjust this with the actual URL name for listing FAQs
+        return render(request, self.template_name, {'form': form})
+          
+        
+@method_decorator(utils.super_admin_only, name='dispatch')
+class FAQedit(View):
+    form_class = forms.FAQForm 
+    model = models.FAQ 
+
+    def get(self, request, faq_id):
+        faq_list = get_object_or_404(self.model, id=faq_id)
+        form = self.form_class(instance=faq_list)
+        return render(request, 'path/to/faq_create.html', {'form': form, 'faq_list': faq_list})
+
+    def post(self, request, faq_id):
+        faq_list = get_object_or_404(self.model, id=faq_id)
+        form = self.form_class(request.POST, instance=faq_list)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'FAQ updated successfully.')
+            return redirect('app_common:add_faq')  # Replace with your actual URL name for listing FAQs
+        return render(request, 'path/to/faq_create.html', {'form': form, 'faq_list': faq_list})
+    
+    
+@method_decorator(utils.super_admin_only, name='dispatch')
+class FAQDelete(View):
+    model = FAQ
+
+    def get(self, request, faq_id):
+        try:
+            faq_list = get_object_or_404(self.model, id=faq_id)
+
+            faq_list.delete()
+            messages.success(request, 'faq deleted successfully.')
+            return redirect('app_common:add_faq')
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)

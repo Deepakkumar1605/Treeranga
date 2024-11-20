@@ -63,3 +63,15 @@ class Sectionbanner(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=255)  # Stores the FAQ question
+    answer = models.TextField()  # Stores the answer to the question
+    order = models.IntegerField(default=0)  # Used to control the order of FAQs
+
+    class Meta:
+        ordering = ['order']  # Orders FAQs by the 'order' field
+
+    def __str__(self):
+        return self.question

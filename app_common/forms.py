@@ -1,5 +1,5 @@
 from django import forms
-from app_common.models import ContactMessage,Banner, Notification, Sectionbanner
+from app_common.models import ContactMessage,Banner, Notification, Sectionbanner, FAQ
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
@@ -61,3 +61,15 @@ class SectionBannerForm(forms.ModelForm):
     class Meta:
         model = Sectionbanner
         fields = ['title', 'image', 'banner_type']
+        
+        
+        
+class FAQForm(forms.ModelForm):
+    class Meta:
+        model = FAQ
+        fields = ['question', 'answer', 'order']
+        widgets = {
+            'question': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter question'}),
+            'answer': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter answer', 'rows': 5}),
+            'order': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Display order'}),
+        }

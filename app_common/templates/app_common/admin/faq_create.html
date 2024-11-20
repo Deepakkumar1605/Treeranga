@@ -1,0 +1,95 @@
+{% extends 'users/admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="py-2">
+    <div class="container">
+        <h4 class="my-lg-4 p-lg-3">FAQ List</h4>
+        <div class="vstack gap-4">
+            <div class="d-flex justify-content-between flex-column flex-sm-row gap-3">
+                <p class="">{% include 'snippets/alert.html' %}</p>
+                <a style="margin-left: 1rem;" data-bs-toggle="modal" data-bs-target="#faq_create_modal" class="btn catagory-btn">
+                    <i class="fa fa-plus me-2"></i>Add New FAQ
+                </a>
+            </div>
+
+            <div class="tablecard">
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">FAQ ID</th>
+                                <th scope="col">Question</th>
+                                <th scope="col">Answer</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faq_table_tbody">
+                            {% for faq in faq_list %}
+                            <tr>
+                                <td>{{ faq.id }}</td>
+                                <td>{{ faq.question }}</td>
+                                <td>{{ faq.answer }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#faq_edit_modal_{{ faq.id }}">
+                                        Edit
+                                    </button>
+                                    <a href="{% url 'app_common:faq_delete' faq.id %}" class="text-danger">Delete</a>
+                                </td>
+                            </tr>
+
+                            <!-- Edit FAQ Modal -->
+                            <div class="modal fade" id="faq_edit_modal_{{ faq.id }}" tabindex="-1" aria-labelledby="faqEditModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="faqEditModalLabel">Edit FAQ {{ faq.id }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'app_common:faq_edit' faq.id %}" method="post">
+                                                {% csrf_token %}
+                                                {{ form.as_p }}  <!-- Render the form fields -->
+                                                <br>
+                                                <center>
+                                                    <button class="btn btn-primary" type="submit">Update FAQ</button>
+                                                </center>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+    </div>
+</section>
+
+<!-- FAQ Create Modal -->
+<div class="modal fade" id="faq_create_modal" tabindex="-1" aria-labelledby="faqCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="faqCreateModalLabel">Create FAQ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'app_common:add_faq' %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br>
+                    <center>
+                        <button class="btn btn-primary" type="submit">Add FAQ</button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
