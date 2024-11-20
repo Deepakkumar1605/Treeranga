@@ -27,10 +27,6 @@ from payment.payment_views.delhivery_api import check_pincode_serviceability
 
 class ShowCart(View):
     def get(self, request):
-        from decimal import Decimal, ROUND_HALF_UP
-        from django.conf import settings
-        from cart.models import Cart
-        from coupons.models import Coupon
 
         category_obj = Category.objects.all()
         user = request.user

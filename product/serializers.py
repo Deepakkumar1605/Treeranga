@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from product_variations.models import VariantImageGallery, VariantProduct
+from coupons.models import Coupon
 from .models import Category, ImageGallery, SimpleProduct, Products
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -102,3 +103,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'title','image']
+
+
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = "__all__"
