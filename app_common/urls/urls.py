@@ -39,6 +39,10 @@ urlpatterns = [
     path('admin/notifications/', admin_views.AdminNotificationListView.as_view(), name='admin_notification_list'),
     path('notifications/update/<int:pk>/', admin_views.AdminNotificationUpdateView.as_view(), name='update_notification'),
     path('notifications/delete/<int:pk>/', admin_views.AdminNotificationDeleteView.as_view(), name='delete_notification'),
+    
+    path('add-faq/', admin_views.FAQCreateView.as_view(), name='add_faq'),
+    path('faq-edit/<int:faq_id>/', admin_views.FAQedit.as_view(), name='faq_edit'),
+    path('faq-delete/<int:faq_id>/', admin_views.FAQDelete.as_view(), name='faq_delete'),
 
 ] 
 

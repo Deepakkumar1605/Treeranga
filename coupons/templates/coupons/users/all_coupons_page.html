@@ -1,0 +1,33 @@
+{% extends 'app_common/base.html' %}
+{% load static %}
+{% block title %}Coupons{% endblock title %}
+{% block content %}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">Available Coupons</h2>
+
+    {% if all_coupons %}
+        <div class="row">
+            {% for coupon in all_coupons %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ coupon.code }}</h5>
+                            <p class="card-text">Discount: {{ coupon.discount_value }} {{ coupon.get_discount_type_display }}</p>
+                            <p class="card-text">Valid from: {{ coupon.valid_from|date:"M d, Y" }} to {{ coupon.valid_to|date:"M d, Y" }}</p>
+                            {% if coupon.is_valid %}
+                                <p class="text-success">This coupon is valid!</p>
+                            {% else %}
+                                <p class="text-danger">This coupon has expired or is not yet valid.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No valid coupons available at the moment.</p>
+    {% endif %}
+</div>
+
+{% endblock content %}

@@ -298,7 +298,24 @@ them for a full refund
      </div>
  </div>
   <div class="">
+    
     <div class="accordion accordion-flush" id="accordionFlushExample">
+      {% if faqs %}
+      {% for faq in faqs %}
+      <div class="accordion-item shadow-sm mb-4">
+        <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
+          <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter }}">
+            <i class="fas fa-plus me-2"></i> {{ faq.question }}
+          </button>
+        </h2>
+        <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ forloop.counter }}" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            {{ faq.answer }}
+          </div>
+        </div>
+      </div> 
+      {% endfor %}
+      {% else %}
       <div class="accordion-item shadow-sm mb-4">
         <h2 class="accordion-header" id="flush-headingOne">
           <button class="accordion-button collapsed border-bottom text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
@@ -368,6 +385,7 @@ them for a full refund
         </div>
       </div>
     </div>
+    {% endif %}
   </div>
 </section>
 

@@ -6,7 +6,7 @@ from app_common.models import ContactMessage
 from orders.models import Order
 from product_variations.models import VariantProduct
 from users.forms import LoginForm
-from app_common.models import ContactMessage,Banner, Sectionbanner
+from app_common.models import ContactMessage,Banner, Sectionbanner, FAQ
 from users.user_views.emails import send_template_email
 from app_common.forms import ContactMessageForm
 from product.models import Category,Products,SimpleProduct,ImageGallery,ProductReview
@@ -54,6 +54,8 @@ class HomeView(View):
             all_banners = Sectionbanner.objects.filter(banner_type="all")
             women_banners = Sectionbanner.objects.filter(banner_type="women")
             men_banners = Sectionbanner.objects.filter(banner_type="men")
+            
+            faqs = FAQ.objects.all()
             
             # Prepare a list of reviews with associated product information
             testimonials = []
@@ -106,8 +108,10 @@ class HomeView(View):
 
             context = {
                 "all_banners": all_banners,
+                
                 "women_banners": women_banners,
                 "men_banners": men_banners,
+                "faqs": faqs,
                 'categories': categories,
                 'banners': banners,
                 'trending_products': trending_products,
@@ -121,6 +125,7 @@ class HomeView(View):
         except Exception as e:
             error_message = f"An unexpected error occurred: {str(e)}"
             return render_error_page(request, error_message, status_code=400)
+
 
 
 class ContactSupport(View):
